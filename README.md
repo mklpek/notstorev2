@@ -21,6 +21,7 @@
 - **Skeleton Loading**: React Loading Skeleton ile loading states (✅ Aktif)
 - **Lazy Loading**: Code splitting ve performance optimizasyonu (✅ Aktif)
 - **Virtualization**: React Window ile performans optimizasyonu (✅ Aktif)
+- **TON Connect Integration**: Blockchain cüzdan bağlantısı ve ödeme sistemi (✅ YENİ)
 - **Optimized Asset Management**: Statik görseller public/, dinamik ikonlar src/assets/
 - **CSS Modules Architecture**: Tek global theme + modüler bileşen stilleri
 - **Clean Project Structure**: Tutarlı isimlendirme ve optimize edilmiş klasör yapısı
@@ -85,6 +86,18 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 - **320px Height**: Sabit modal yüksekliği
 - **Close Button**: SVG ile kapatma butonu
 
+### 💰 TON Connect Integration (✅ YENİ)
+- **Blockchain Wallet Connection**: TON blockchain cüzdan bağlantısı
+- **Buy Now Functionality**: Ürün detay sayfasında "Buy Now" butonu ile direkt ödeme
+- **Multiple Wallet Support**: Tonkeeper, OpenMask, MyTonWallet ve diğer TON cüzdanları
+- **Transaction Management**: Güvenli blockchain transaction yönetimi
+- **Modal Blur Effect**: Sepet modalı ile aynı blur efekti (rgba(0,0,0,0.7) + blur(8px))
+- **Light Theme**: Beyaz tema kullanımı
+- **Error Handling**: Bağlantı ve transaction hata yönetimi
+- **Provider Pattern**: React Context ile global state yönetimi
+- **Custom Hooks**: useTonConnect hook ile kolay kullanım
+- **Dynamic Styling**: MutationObserver ile gerçek zamanlı stil uygulaması
+
 ## 🛠️ Teknolojiler
 
 - **React 19.1.0** - En güncel UI framework
@@ -99,6 +112,8 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 - **React Window 1.8.11** - Virtualization için performans optimizasyonu (✅ Aktif)
 - **React Window Infinite Loader 1.0.10** - Sonsuz scroll optimizasyonu (✅ Aktif)
 - **React Virtualized Auto Sizer 1.0.26** - Otomatik boyutlandırma (✅ Aktif)
+- **@tonconnect/sdk** - TON blockchain cüzdan bağlantısı (✅ YENİ)
+- **@tonconnect/ui** - TON Connect UI bileşenleri (✅ YENİ)
 - **CSS Modules** - Modüler stil yönetimi
 - **Telegram WebApp SDK 8.0.2** - Telegram entegrasyonu
 - **ESLint 9.25.0** - Code linting
@@ -128,6 +143,7 @@ frontend/
 │   ├── images/                    # Profile images only (2 dosya, ~1.2MB)
 │   │   ├── profile-avatar.png     # Profil avatarı (612KB)
 │   │   └── profile-image.png      # TabBar profil resmi (612KB)
+│   ├── tonconnect-manifest.json   # TON Connect manifest dosyası (201B, 7 satır) - ✅ YENİ
 │   └── vite.svg                   # Vite logo (1.5KB)
 ├── src/                           # Source code
 │   ├── app/                       # Redux store configuration (✅ GÜNCEL)
@@ -234,6 +250,14 @@ frontend/
 │   │   ├── search/                # Search feature (✅ GÜNCEL)
 │   │   │   ├── SearchBar.tsx      # Search bar component (2.3KB, 78 satır)
 │   │   │   └── index.ts           # Search export (41B, 1 satır)
+│   │   ├── tonConnect/            # TON Connect blockchain integration (✅ YENİ)
+│   │   │   ├── TonConnectProvider.tsx # TON Connect React context provider (4.4KB, 135 satır)
+│   │   │   ├── TonConnectButton.tsx   # TON Connect wallet button component (1.2KB, 45 satır)
+│   │   │   ├── TonConnectButton.module.css # TON Connect button styles (528B, 24 satır)
+│   │   │   ├── useTonConnect.ts       # TON Connect custom hook (666B, 20 satır)
+│   │   │   ├── buyNow.ts              # Buy now transaction utilities (2.2KB, 64 satır)
+│   │   │   ├── config.ts              # TON Connect configuration (432B, 18 satır)
+│   │   │   └── index.ts               # TON Connect exports (217B, 3 satır)
 │   │   └── theme/                 # Theme feature (boş - gelecek geliştirme)
 │   ├── hooks/                     # Custom React hooks (✅ GÜNCEL)
 │   │   ├── useDebounce.ts         # Debounce hook (589B, 23 satır)
@@ -266,20 +290,21 @@ frontend/
 
 ### 📊 Dosya İstatistikleri - ✅ GÜNCEL
 
-**Toplam Dosya Sayısı:** ~150+ dosya (node_modules ve .git hariç) - ✅ GÜNCEL
+**Toplam Dosya Sayısı:** ~160+ dosya (node_modules ve .git hariç) - ✅ GÜNCEL
 
 **Kategoriler:**
-- **Kaynak Kod:** 80+ dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
+- **Kaynak Kod:** 90+ dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
 - **Assets:** 13 dosya (SVG/PNG icons - src/assets/) - ✅ GÜNCEL
 - **Public Images:** 2 dosya (PNG görselleri - public/images/) - ✅ OPTİMİZE EDİLDİ
 - **Public Fonts:** 3 dosya (SF Pro Rounded font ailesi - public/fonts/) - ✅ YENİ
+- **TON Connect Manifest:** 1 dosya (tonconnect-manifest.json) - ✅ YENİ
 - **Konfigürasyon:** 15 dosya (JSON/JS/TS)
 - **Git/Husky:** 20+ dosya (.husky/ klasörü dahil)
 - **Scripts:** Build ve deployment scriptleri (✅ YENİ)
 
 **Kod Satırları:**
-- **TypeScript/TSX/CSS:** ~5,000+ satır - ✅ GÜNCEL
-- **Toplam:** ~5,000+ satır kod
+- **TypeScript/TSX/CSS:** ~6,000+ satır - ✅ GÜNCEL
+- **Toplam:** ~6,000+ satır kod
 
 ## 🎯 Uygulama Akışı ve Navigasyon - ✅ GÜNCEL
 
@@ -331,6 +356,7 @@ interface RootState {
 - React Router DOM entegrasyonu
 - Telegram WebApp SDK başlatma
 - Redux Provider entegrasyonu
+- TonConnectProvider entegrasyonu (✅ YENİ)
 - Tema renkleri uygulama
 - Cart modal state yönetimi
 - Modern routing yapısı
@@ -425,6 +451,8 @@ interface RootState {
 #### **Footer.tsx**
 - Alt navigasyon
 - ItemPage için özel footer
+- TON Connect entegrasyonu ile "Buy Now" butonu (✅ YENİ)
+- Cüzdan bağlantısı ve blockchain transaction yönetimi (✅ YENİ)
 
 #### **NoResultsFound.tsx** (859B, 23 satır) - ✅ YENİ
 - Arama sonucu bulunamadığında gösterilen bileşen
@@ -500,6 +528,7 @@ interface RootState {
 - ✅ Utility classes
 - ✅ Animasyonlar (fadeIn)
 - ✅ Responsive breakpoints
+- ✅ TON Connect modal blur efekti stilleri (✅ YENİ)
 
 **CSS Modules Stratejisi:**
 - ✅ Her bileşen kendi `.module.css` dosyası
@@ -695,6 +724,7 @@ interface RootState {
 - **Empty State Components**: EmptyState bileşeni (✅ YENİ)
 - **Progressive Image Loading**: ProgressiveImage bileşeni (✅ YENİ)
 - **Empty History API Entegrasyonu**: getEmptyHistory entegrasyonu (✅ YENİ)
+- **TON Connect Integration**: Blockchain cüzdan bağlantısı ve ödeme sistemi (✅ YENİ)
 
 ### ⚠️ Kritik Eksiklikler
 - **History Feature**: Geliştirme aşaması (✅ API entegrasyonu tamamlandı)
@@ -755,6 +785,7 @@ interface RootState {
 - **CSS Modules**: Modüler stil sistemi
 - **Advanced Skeleton System**: ItemPageSkeleton, TabBarSkeleton, HeaderSkeleton (✅ YENİ)
 - **Skeleton Theme Hook**: useSkeletonTheme hook (✅ YENİ)
+- **TON Connect Integration**: Blockchain cüzdan bağlantısı ve ödeme sistemi (✅ YENİ)
 
 ### ⚠️ Kritik Sorunlar:
 - **History UI Slice**: Geliştirme aşamasında (API entegrasyonu tamamlandı)
@@ -768,9 +799,9 @@ interface RootState {
 - **Checkout Process**: Ödeme süreci
 
 ### 📈 Kod Metrikleri - ✅ GÜNCEL:
-- **Toplam Satır:** ~5,000+ satır - ✅ GÜNCEL
+- **Toplam Satır:** ~6,000+ satır - ✅ GÜNCEL
 - **Component Sayısı:** 50+ bileşen - ✅ GÜNCEL
-- **Feature Modülü:** 5 modül (1 geliştirme aşamasında, 1 boş)
+- **Feature Modülü:** 6 modül (1 geliştirme aşamasında, 1 boş) - ✅ GÜNCEL
 - **Custom Hook:** 2 aktif hook (useDebounce, useSkeletonTheme)
 - **Test Coverage:** Başlangıç seviyesi (1 test dosyası)
 - **Bundle Size:** Optimize edilmiş (lazy loading ile)
