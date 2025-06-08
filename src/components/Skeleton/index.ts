@@ -7,4 +7,4 @@ export { default as HeaderSkeleton } from './HeaderSkeleton';
 export { default as AccountPageSkeleton } from './AccountPageSkeleton';
 
 // Skeleton elementlerini export et
-export * from './SkeletonElements'; 
+export * from './SkeletonElements';

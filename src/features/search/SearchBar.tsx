@@ -75,4 +75,4 @@ const SearchBar: React.FC<SearchBarProps> = ({ isOpen, onClose, onSearch }) => {
 }
 
 export default SearchBar
-*/ 
+*/

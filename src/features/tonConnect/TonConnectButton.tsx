@@ -22,7 +22,7 @@ const TonConnectButton: React.FC<TonConnectButtonProps> = ({ className = '', sty
   // Cüzdan bilgilerini güvenli bir şekilde gösterelim
   const getWalletInfo = () => {
     if (!wallet) return 'Wallet';
-    
+
     // wallet.name özelliği doğrudan mevcut olmayabilir
     // o yüzden any tipini kullanarak güvenli erişim sağlıyoruz
     const walletAny = wallet as any;
@@ -30,16 +30,14 @@ const TonConnectButton: React.FC<TonConnectButtonProps> = ({ className = '', sty
   };
 
   return (
-    <button 
-      className={`${styles.tonConnectButton} ${className}`} 
+    <button
+      className={`${styles.tonConnectButton} ${className}`}
       onClick={handleClick}
       style={style}
     >
-      {isConnected 
-        ? `${getWalletInfo()} Connected` 
-        : 'Connect Wallet'}
+      {isConnected ? `${getWalletInfo()} Connected` : 'Connect Wallet'}
     </button>
   );
 };
 
-export default TonConnectButton; 
+export default TonConnectButton;

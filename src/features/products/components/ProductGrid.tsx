@@ -7,7 +7,7 @@ import styles from './ProductGrid.module.css';
 const ProductGrid: React.FC = () => {
   const catalogueResult = useGetCatalogueQuery();
   const { error, isLoading } = catalogueResult;
-  
+
   // EntityAdapter ile normalize edilmiş veriyi al
   const products = selectProductsByQuery(catalogueResult, '');
 
@@ -32,4 +32,4 @@ const ProductGrid: React.FC = () => {
   );
 };
 
-export default ProductGrid; 
+export default ProductGrid;

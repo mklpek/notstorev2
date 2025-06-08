@@ -8,13 +8,16 @@ import { useMemo } from 'react';
 export const useSkeletonTheme = () => {
   // Theme değerlerini memoize et
   // Sadece bir kez hesaplanır ve asla yeniden hesaplanmaz
-  const themeValues = useMemo(() => ({
-    baseColor: 'var(--skeleton-base-color, rgba(255, 255, 255, 0.05))',
-    highlightColor: 'var(--skeleton-highlight-color, rgba(255, 255, 255, 0.08))',
-    borderRadius: 4,
-    animationDuration: 1.5,
-    enableAnimation: true,
-  }), []);
-  
+  const themeValues = useMemo(
+    () => ({
+      baseColor: 'var(--skeleton-base-color, rgba(255, 255, 255, 0.05))',
+      highlightColor: 'var(--skeleton-highlight-color, rgba(255, 255, 255, 0.08))',
+      borderRadius: 4,
+      animationDuration: 1.5,
+      enableAnimation: true,
+    }),
+    []
+  );
+
   return themeValues;
-}; 
+};

@@ -13,8 +13,8 @@ const useTonConnect = () => {
     closeModal: () => tonConnectUI.closeModal(),
     disconnect: () => tonConnectUI.disconnect(),
     // Send transaction metodu - ileri seviye kullanımlar için
-    sendTransaction: tonConnectUI.sendTransaction.bind(tonConnectUI)
+    sendTransaction: tonConnectUI.sendTransaction.bind(tonConnectUI),
   };
 };
 
-export default useTonConnect; 
+export default useTonConnect;

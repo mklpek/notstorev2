@@ -9,12 +9,7 @@ interface EmptyStateProps {
   actionText?: string;
 }
 
-const EmptyState: React.FC<EmptyStateProps> = ({ 
-  type, 
-  query, 
-  onAction, 
-  actionText 
-}) => {
+const EmptyState: React.FC<EmptyStateProps> = ({ type, query, onAction, actionText }) => {
   // Type'a göre mesaj ve icon belirleme
   const getContent = () => {
     switch (type) {
@@ -23,28 +18,28 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           icon: hatchingChick,
           title: 'Henüz sipariş geçmişiniz yok',
           description: 'Sipariş verdiğinizde burada görünecek',
-          action: actionText || 'Alışverişe Başla'
+          action: actionText || 'Alışverişe Başla',
         };
       case 'cart':
         return {
           icon: hatchingChick,
           title: 'Sepetiniz boş',
           description: 'Sepetinize ürün ekleyin',
-          action: actionText || 'Alışverişe Devam Et'
+          action: actionText || 'Alışverişe Devam Et',
         };
       case 'search':
         return {
           icon: hatchingChick,
           title: 'Sonuç bulunamadı',
           description: query ? `"${query}" için sonuç bulunamadı` : 'Bu stilde ürün bulunamadı',
-          action: actionText || 'Tüm Ürünleri Göster'
+          action: actionText || 'Tüm Ürünleri Göster',
         };
       default:
         return {
           icon: hatchingChick,
           title: 'İçerik bulunamadı',
           description: 'Henüz içerik bulunmuyor',
-          action: actionText || 'Ana Sayfaya Dön'
+          action: actionText || 'Ana Sayfaya Dön',
         };
     }
   };
@@ -61,10 +56,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         <p className={styles.description}>{content.description}</p>
       </div>
       {onAction && (
-        <button 
-          className={styles.actionButton} 
-          onClick={onAction}
-        >
+        <button className={styles.actionButton} onClick={onAction}>
           {content.action}
         </button>
       )}
@@ -72,4 +64,4 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   );
 };
 
-export default EmptyState; 
+export default EmptyState;

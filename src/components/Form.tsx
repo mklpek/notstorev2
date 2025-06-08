@@ -59,17 +59,17 @@ const Form: React.FC<{
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       setIsSubmitting(true);
-      
+
       onSubmit({ name, email, message });
-      
+
       setName('');
       setEmail('');
       setMessage('');
       setIsSubmitting(false);
-      
+
       if (nameRef.current) {
         nameRef.current.focus();
       }
@@ -79,13 +79,15 @@ const Form: React.FC<{
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.formGroup}>
-        <label htmlFor="name" className={styles.label}>İsim</label>
+        <label htmlFor="name" className={styles.label}>
+          İsim
+        </label>
         <input
           id="name"
           ref={nameRef}
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
           disabled={isSubmitting}
         />
@@ -93,13 +95,15 @@ const Form: React.FC<{
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="email" className={styles.label}>E-posta</label>
+        <label htmlFor="email" className={styles.label}>
+          E-posta
+        </label>
         <input
           id="email"
           ref={emailRef}
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
           disabled={isSubmitting}
         />
@@ -107,12 +111,14 @@ const Form: React.FC<{
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="message" className={styles.label}>Mesaj</label>
+        <label htmlFor="message" className={styles.label}>
+          Mesaj
+        </label>
         <textarea
           id="message"
           ref={messageRef}
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={e => setMessage(e.target.value)}
           className={`${styles.textarea} ${errors.message ? styles.inputError : ''}`}
           rows={5}
           disabled={isSubmitting}
@@ -129,4 +135,4 @@ const Form: React.FC<{
   );
 };
 
-export default Form; 
+export default Form;

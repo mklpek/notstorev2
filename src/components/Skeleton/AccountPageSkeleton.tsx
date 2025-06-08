@@ -8,9 +8,9 @@ interface AccountPageSkeletonProps {
   historyItemCount?: number;
 }
 
-const AccountPageSkeleton: React.FC<AccountPageSkeletonProps> = ({ 
-  showHistory = false, 
-  historyItemCount = 6 
+const AccountPageSkeleton: React.FC<AccountPageSkeletonProps> = ({
+  showHistory = false,
+  historyItemCount = 6,
 }) => {
   return (
     <div className={styles.accountPageSkeleton}>
@@ -20,7 +20,7 @@ const AccountPageSkeleton: React.FC<AccountPageSkeletonProps> = ({
         <div className={styles.avatarSkeleton}>
           <CircleSkeleton size={120} />
         </div>
-        
+
         {/* Name Skeleton */}
         <div className={styles.infoSkeleton}>
           <TextSkeleton width={80} height={32} />
@@ -35,14 +35,14 @@ const AccountPageSkeleton: React.FC<AccountPageSkeletonProps> = ({
           <div className={styles.historyHeaderSkeleton}>
             <TextSkeleton width={70} height={24} />
           </div>
-          
+
           {/* History Items Skeleton */}
           <div className={styles.historyItemsSkeleton}>
             {Array.from({ length: historyItemCount }).map((_, index) => (
               <div key={index} className={styles.historyLineSkeleton}>
                 {/* History Item Avatar */}
                 <ImageSkeleton borderRadius={12} />
-                
+
                 {/* History Item Info */}
                 <div className={styles.historyInfoSkeleton}>
                   <div className={styles.productInfoSkeleton}>
@@ -78,4 +78,4 @@ const AccountPageSkeleton: React.FC<AccountPageSkeletonProps> = ({
 // React DevTools için komponent adı
 AccountPageSkeleton.displayName = 'AccountPageSkeleton';
 
-export default AccountPageSkeleton; 
+export default AccountPageSkeleton;

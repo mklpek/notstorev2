@@ -25,7 +25,7 @@
   width: 120px;
   height: 120px;
   border-radius: 120px;
-  background: linear-gradient(135deg, #A6C2FF 0%, #948FFF 100%);
+  background: linear-gradient(135deg, #a6c2ff 0%, #948fff 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,13 +51,17 @@
 }
 
 .name {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 26px;
   line-height: 1.2307692307692308em;
   letter-spacing: 1.4615384431985707%;
   text-align: left;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   padding: 0;
   width: auto;
@@ -114,13 +118,17 @@
 
 /* Title - Figma'dan eklenen */
 .title {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 26px;
   line-height: 1.2307692307692308em;
   letter-spacing: 1.4615384431985707%;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -129,7 +137,11 @@
 
 /* Description - Figma'dan eklenen */
 .description {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 400;
   font-size: 17px;
   line-height: 1.2941176470588236em;
@@ -150,7 +162,11 @@
   height: 429px;
   width: 100%;
   color: rgba(255, 255, 255, 0.7);
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 17px;
 }
 
@@ -174,12 +190,16 @@
 }
 
 .historyTitle {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 20px;
   line-height: 1.2em;
   text-align: left;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   padding: 0;
 }
@@ -255,11 +275,15 @@
 
 .loadMoreButton {
   background-color: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+  color: #ffffff;
   border: none;
   border-radius: 12px;
   padding: 8px 16px;
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 15px;
   cursor: pointer;
@@ -287,7 +311,11 @@
 }
 
 .productCategory {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 12px;
   line-height: 1.1666666666666667em;
@@ -305,13 +333,17 @@
 }
 
 .productName {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 17px;
   line-height: 1.411764705882353em;
   letter-spacing: -4.117646988700418%;
   text-align: left;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 /* Purchase Info Section */
@@ -323,7 +355,11 @@
 }
 
 .purchaseDate {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 12px;
   line-height: 1.1666666666666667em;
@@ -341,11 +377,15 @@
 }
 
 .price {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 17px;
   line-height: 1.411764705882353em;
   letter-spacing: -4.117646988700418%;
   text-align: right;
-  color: #FFFFFF;
-} 
+  color: #ffffff;
+}

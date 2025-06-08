@@ -69,7 +69,7 @@
 .icon {
   width: 24px;
   height: 24px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 /* Profile Container - Figma Pozisyonlama */
@@ -94,15 +94,19 @@
 
 /* Tab Text - Figma Birebir Uyumlu */
 .text {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 510;
   font-size: 10px;
   line-height: 1.2em;
   letter-spacing: 0.6599999964237213%;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   padding: 0;
   width: auto;
   height: auto;
-} 
+}

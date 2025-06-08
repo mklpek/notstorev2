@@ -1,32 +1,32 @@
-import React, { useState } from 'react'
-import { useInView } from 'react-intersection-observer'
-import type { Item } from '../../../api/notApi'
-import { useAppSelector } from '../../../app/hooks'
-import { selectIsInCart } from '../../cart/selectors'
-import ImageGallery from './ImageGallery'
-import CartTagIcon from '../../../components/Icons/CartTagIcon'
-import styles from './ProductCard.module.css'
+import React, { useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import type { Item } from '../../../api/notApi';
+import { useAppSelector } from '../../../app/hooks';
+import { selectIsInCart } from '../../cart/selectors';
+import ImageGallery from './ImageGallery';
+import CartTagIcon from '../../../components/Icons/CartTagIcon';
+import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
-  product: Item
-  onProductClick?: ((productId: number) => void) | undefined
+  product: Item;
+  onProductClick?: ((productId: number) => void) | undefined;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { ref, inView } = useInView({
     triggerOnce: true,
-    threshold: 0.1
-  })
-  
+    threshold: 0.1,
+  });
+
   // Ürünün sepette olup olmadığını kontrol et
-  const isInCart = useAppSelector(selectIsInCart(product.id))
+  const isInCart = useAppSelector(selectIsInCart(product.id));
 
   const handleCardClick = () => {
     if (onProductClick) {
-      onProductClick(product.id)
+      onProductClick(product.id);
     }
-  }
+  };
 
   // Figma tasarımına göre kategori ve ismi birleştir
   const displayTitle = `${product.category} ${product.name}`;
@@ -36,7 +36,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
       <div className={styles.imageContainer}>
         {inView && (
           <>
-            <ImageGallery 
+            <ImageGallery
               images={product.images}
               currentIndex={currentImageIndex}
               onIndexChange={setCurrentImageIndex}
@@ -58,7 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductCard 
+export default ProductCard;

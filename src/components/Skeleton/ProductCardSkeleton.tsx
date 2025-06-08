@@ -34,4 +34,4 @@ const ProductCardSkeleton: React.FC<ProductCardSkeletonProps> = React.memo(({ co
 // React DevTools için komponent adı
 ProductCardSkeleton.displayName = 'ProductCardSkeleton';
 
-export default ProductCardSkeleton; 
+export default ProductCardSkeleton;

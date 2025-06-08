@@ -17,10 +17,7 @@ const slice = createSlice({
   name: 'cart',
   initialState: cartAdapter.getInitialState(),
   reducers: {
-    addItem: (
-      state,
-      { payload }: PayloadAction<Omit<CartItem, 'qty'>>
-    ) => {
+    addItem: (state, { payload }: PayloadAction<Omit<CartItem, 'qty'>>) => {
       const existing = state.entities[payload.id];
       if (existing && typeof existing.qty === 'number') {
         existing.qty += 1;
@@ -31,13 +28,10 @@ const slice = createSlice({
     removeItem: (state, { payload }: PayloadAction<number>) => {
       cartAdapter.removeOne(state, payload);
     },
-    changeQty: (
-      state,
-      { payload }: PayloadAction<{ id: number; delta: 1 | -1 }>
-    ) => {
+    changeQty: (state, { payload }: PayloadAction<{ id: number; delta: 1 | -1 }>) => {
       const item = state.entities[payload.id];
       if (!item || typeof item.qty !== 'number') return;
-      
+
       if (item.qty + payload.delta <= 0) {
         cartAdapter.removeOne(state, payload.id);
       } else {
@@ -49,4 +43,4 @@ const slice = createSlice({
 });
 
 export const { addItem, removeItem, changeQty, clearCart } = slice.actions;
-export default slice.reducer; 
+export default slice.reducer;

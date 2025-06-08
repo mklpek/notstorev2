@@ -1,12 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './styles/theme.css'
-import { Provider } from 'react-redux'
-import { store, persistor } from './app/store.ts'
-import { BrowserRouter } from 'react-router-dom'
-import { PersistGate } from 'redux-persist/integration/react'
-import 'virtual:svg-icons-register' // SVG sprite eklentisi için
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './styles/theme.css';
+import { Provider } from 'react-redux';
+import { store, persistor } from './app/store.ts';
+import { BrowserRouter } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
+import 'virtual:svg-icons-register'; // SVG sprite eklentisi için
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -17,5 +17,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </BrowserRouter>
       </PersistGate>
     </Provider>
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);

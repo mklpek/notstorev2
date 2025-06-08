@@ -79,13 +79,17 @@
 
 /* Title Text - Figma: SF Pro, 590 weight, 26px */
 .titleText {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 26px;
   line-height: 1.2307692307692308em;
   letter-spacing: 1.4615384431985707%;
   text-align: left;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   width: auto;
   height: auto;
@@ -121,7 +125,7 @@
 .shareIcon {
   width: 28px;
   height: 28px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 /* Description - Figma: column, flex-end, stretch, gap 16px, padding 0px 16px */
@@ -138,13 +142,17 @@
 
 /* Description Text - Figma: SF Pro, 400 weight, 17px */
 .descriptionText {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 400;
   font-size: 17px;
   line-height: 1.2941176470588236em;
   letter-spacing: -2.5294118067797493%;
   text-align: left;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   width: 100%;
   height: auto;
@@ -178,18 +186,26 @@
 
 /* Tag Text - Figma: SF Pro, 590 weight, 12px */
 .tagNumber {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 12px;
   line-height: 1.1666666666666667em;
   letter-spacing: -1.6666666915019352%;
   text-align: left;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .tagCurrency,
 .tagText {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 12px;
   line-height: 1.1666666666666667em;
@@ -274,7 +290,8 @@
 }
 
 /* Sticker görsel ölçekleme modları */
-.stickerFill, .stickerStretch {
+.stickerFill,
+.stickerStretch {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -301,7 +318,7 @@
 }
 
 .stickerActive::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -309,7 +326,7 @@
   bottom: 0;
   width: 100%;
   height: 100%;
-  border: 1px solid #FFFFFF;
+  border: 1px solid #ffffff;
   border-radius: 16px; /* Parent ile aynı radius */
   box-sizing: border-box; /* Border içeri dahil */
   pointer-events: none; /* Tıklama olaylarını etkilemesin */
@@ -321,4 +338,4 @@
 
 .stickerImage {
   display: none;
-} 
+}

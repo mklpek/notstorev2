@@ -67,18 +67,18 @@ const addTonConnectModalStyles = () => {
       -webkit-backdrop-filter: blur(8px) !important;
     }
   `;
-  
+
   document.head.appendChild(style);
 };
 
 // MutationObserver ile DOM değişikliklerini izle ve modal açıldığında stil uygula
 const observeTonConnectModal = () => {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
         if (node.nodeType === Node.ELEMENT_NODE) {
           const element = node as Element;
-          
+
           // TON Connect modal elementlerini kontrol et
           if (
             element.tagName?.toLowerCase().includes('tc-') ||
@@ -86,11 +86,12 @@ const observeTonConnectModal = () => {
             element.className?.includes('tc-') ||
             element.getAttribute('data-tc-modal') ||
             element.getAttribute('data-tonconnect-modal') ||
-            (element.getAttribute('style')?.includes('position: fixed') && 
-             element.getAttribute('style')?.includes('z-index'))
+            (element.getAttribute('style')?.includes('position: fixed') &&
+              element.getAttribute('style')?.includes('z-index'))
           ) {
             // Modal backdrop'a blur efekti uygula
-            const backdrop = element.querySelector('[class*="backdrop"], [data-backdrop]') || element;
+            const backdrop =
+              element.querySelector('[class*="backdrop"], [data-backdrop]') || element;
             if (backdrop instanceof HTMLElement) {
               backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
               backdrop.style.backdropFilter = 'blur(8px)';
@@ -105,7 +106,7 @@ const observeTonConnectModal = () => {
 
   observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
   });
 
   return observer;
@@ -115,10 +116,10 @@ const TonConnectProvider: React.FC<TonConnectProviderProps> = ({ children }) => 
   useEffect(() => {
     // Dinamik stil ekle
     addTonConnectModalStyles();
-    
+
     // DOM değişikliklerini izle
     const observer = observeTonConnectModal();
-    
+
     // Cleanup
     return () => {
       observer.disconnect();
@@ -126,10 +127,8 @@ const TonConnectProvider: React.FC<TonConnectProviderProps> = ({ children }) => 
   }, []);
 
   return (
-    <TonConnectUIContext.Provider value={tonConnectUI}>
-      {children}
-    </TonConnectUIContext.Provider>
+    <TonConnectUIContext.Provider value={tonConnectUI}>{children}</TonConnectUIContext.Provider>
   );
 };
 
-export default TonConnectProvider; 
+export default TonConnectProvider;

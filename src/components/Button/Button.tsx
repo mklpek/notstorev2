@@ -19,8 +19,10 @@ const Button = ({
     variant === 'secondary' ? styles.secondary : '',
     size === 'small' ? styles.small : '',
     size === 'large' ? styles.large : '',
-    className
-  ].filter(Boolean).join(' ');
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <button className={buttonClasses} {...props}>
@@ -29,4 +31,4 @@ const Button = ({
   );
 };
 
-export default Button; 
+export default Button;

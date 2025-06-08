@@ -8,7 +8,9 @@
   width: 100%;
   max-width: 390px;
   margin: 0 auto;
-  transition: height 0.2s ease-out, padding 0.2s ease-out;
+  transition:
+    height 0.2s ease-out,
+    padding 0.2s ease-out;
 }
 
 .header.searchOpen {
@@ -24,7 +26,11 @@
 }
 
 .headerTitle {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 26px;
   line-height: 1.23;
@@ -100,7 +106,11 @@
   border: none;
   outline: none;
   color: #ffffff;
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 400;
   font-size: 17px;
   line-height: 1.29;
@@ -140,7 +150,11 @@
 }
 
 .cancelButton {
-  font-family: 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro Rounded',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 400;
   font-size: 18px;
   line-height: 1.33;
@@ -189,8 +203,8 @@
   .header {
     transition: none;
   }
-  
+
   /* .typer {
     animation: none;
   } */
-} 
+}

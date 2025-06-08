@@ -1,18 +1,18 @@
-import React, { useRef, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import Footer from '../../../components/Footer'
-import ShareIcon from '../../../components/Icons/ShareIcon'
-import { useGetCatalogueQuery, catalogSelectors } from '../../../api/notApi'
-import styles from './ItemPage.module.css'
-import ItemPageSkeleton from '../../../components/Skeleton/ItemPageSkeleton'
-import ProgressiveImage from '../../../components/ProgressiveImage'
+import React, { useRef, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Footer from '../../../components/Footer';
+import ShareIcon from '../../../components/Icons/ShareIcon';
+import { useGetCatalogueQuery, catalogSelectors } from '../../../api/notApi';
+import styles from './ItemPage.module.css';
+import ItemPageSkeleton from '../../../components/Skeleton/ItemPageSkeleton';
+import ProgressiveImage from '../../../components/ProgressiveImage';
 
 const ItemPage: React.FC = () => {
-  const { productId } = useParams<{ productId: string }>()
-  const navigate = useNavigate()
-  const sliderRef = useRef<HTMLDivElement>(null)
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
-  
+  const { productId } = useParams<{ productId: string }>();
+  const navigate = useNavigate();
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
   // API'den ürün verilerini çek - selectFromResult kullanarak doğrudan ürünü alalım
   const { product, isLoading, error } = useGetCatalogueQuery(undefined, {
     selectFromResult: ({ data, isLoading, error }) => {
@@ -20,35 +20,35 @@ const ItemPage: React.FC = () => {
       if (!data || isLoading) {
         return { product: undefined, isLoading, error };
       }
-      
+
       // catalogSelectors.selectById ile doğrudan ürünü al - O(1) işlem
       const foundProduct = catalogSelectors.selectById(data, Number(productId));
-      
+
       return {
         product: foundProduct,
         isLoading,
-        error
+        error,
       };
-    }
+    },
   });
-  
+
   // Back butonunu ele almak için
   const handleBack = () => {
-    navigate('/')
-  }
-  
+    navigate('/');
+  };
+
   // Slider image'e tıklama
   const handleImageClick = (index: number) => {
-    setActiveImageIndex(index)
-  }
-  
+    setActiveImageIndex(index);
+  };
+
   // Yükleme durumunda ItemPageSkeleton göster
   if (isLoading) {
-    return <ItemPageSkeleton />
+    return <ItemPageSkeleton />;
   }
-  
+
   if (error || !product) {
-    return <div className={styles.error}>Ürün bulunamadı</div>
+    return <div className={styles.error}>Ürün bulunamadı</div>;
   }
 
   // Figma tasarımına göre kategori ve ismi birleştir
@@ -61,13 +61,13 @@ const ItemPage: React.FC = () => {
     if (match && match[2]) {
       return {
         percentage: match[1], // "100%"
-        material: match[2].toUpperCase() // "COTTON"
+        material: match[2].toUpperCase(), // "COTTON"
       };
     }
     // Eğer parse edilemezse, orijinal değeri döndür
     return {
       percentage: fabricText,
-      material: 'FABRIC'
+      material: 'FABRIC',
     };
   };
 
@@ -96,9 +96,7 @@ const ItemPage: React.FC = () => {
 
             {/* Description */}
             <div className={styles.description}>
-              <p className={styles.descriptionText}>
-                {product.description}
-              </p>
+              <p className={styles.descriptionText}>{product.description}</p>
             </div>
           </div>
 
@@ -128,16 +126,16 @@ const ItemPage: React.FC = () => {
               görselleri tekrar indirmesini engeller.
             */}
             {product.images.map((imageSrc, index) => (
-              <div 
-                key={imageSrc} 
-                style={{ 
+              <div
+                key={imageSrc}
+                style={{
                   display: index === activeImageIndex ? 'block' : 'none',
                   width: '100%',
-                  height: '100%'
+                  height: '100%',
                 }}
               >
-                <ProgressiveImage 
-                  src={imageSrc} 
+                <ProgressiveImage
+                  src={imageSrc}
                   alt={`${displayTitle} - ${index + 1}`}
                   className={styles.bigStickerImage}
                 />
@@ -153,13 +151,13 @@ const ItemPage: React.FC = () => {
         <div className={styles.sliderContainer}>
           <div className={styles.stickersSlider} ref={sliderRef}>
             {product.images.map((image, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`${styles.sticker} ${index === activeImageIndex ? styles.stickerActive : ''}`}
                 onClick={() => handleImageClick(index)}
               >
                 {/* Tüm slider görselleri için ProgressiveImage kullan */}
-                <ProgressiveImage 
+                <ProgressiveImage
                   src={image}
                   alt={`${displayTitle} - thumb ${index + 1}`}
                   className={styles.stickerFill}
@@ -168,11 +166,11 @@ const ItemPage: React.FC = () => {
             ))}
           </div>
         </div>
-        
+
         <Footer product={product} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ItemPage 
+export default ItemPage;

@@ -35,4 +35,4 @@ const TabBarSkeleton = React.memo(() => {
 // React DevTools için komponent adı
 TabBarSkeleton.displayName = 'TabBarSkeleton';
 
-export default TabBarSkeleton; 
+export default TabBarSkeleton;

@@ -13,14 +13,14 @@ import themeReducer from '../features/theme/themeSlice';
 const cartPersistConfig = {
   key: 'cart',
   storage,
-  whitelist: ['entities', 'ids'] // Sadece adapter verilerini persist et
+  whitelist: ['entities', 'ids'], // Sadece adapter verilerini persist et
 };
 
 // Theme persist konfigürasyonu
 const themePersistConfig = {
   key: 'theme',
   storage,
-  whitelist: ['mode'] // Sadece mod tercihini persist et
+  whitelist: ['mode'], // Sadece mod tercihini persist et
 };
 
 // Tüm reducerları birleştir
@@ -44,7 +44,7 @@ const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,
   // Redux persist için serileştirme kontrollerini özelleştir
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         // Redux persist işlemleri için serileştirme kontrolünü devre dışı bırak
@@ -59,4 +59,4 @@ export const persistor = persistStore(store);
 
 /* Single-store typing helpers */
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch; 
+export type AppDispatch = typeof store.dispatch;

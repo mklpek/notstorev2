@@ -6,4 +6,4 @@ export interface CartItem {
   currency: string; // 'NOT'
   image: string;
   qty: number;
-} 
+}

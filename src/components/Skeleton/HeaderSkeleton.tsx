@@ -19,4 +19,4 @@ const HeaderSkeleton = React.memo(() => {
 // React DevTools için komponent adı
 HeaderSkeleton.displayName = 'HeaderSkeleton';
 
-export default HeaderSkeleton; 
+export default HeaderSkeleton;

@@ -53,12 +53,16 @@
 }
 
 .productTitle {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 17px;
   line-height: 1.41176; /* Approximately 24px */
   letter-spacing: -0.041em; /* Approximately -0.7px or -4.11% of 17px */
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   text-align: left;
   align-self: stretch;
@@ -68,12 +72,16 @@
 }
 
 .productPrice {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 1.42857; /* Approximately 20px */
   letter-spacing: -0.014em; /* Approximately -0.2px or -1.42% of 14px */
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
   display: flex;
   align-items: center;
@@ -88,4 +96,4 @@
 .priceCurrency {
   color: rgba(255, 255, 255, 0.5);
   /* Inherits font styles from .productPrice */
-} 
+}

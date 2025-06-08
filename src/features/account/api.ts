@@ -6,16 +6,16 @@ import type { ApiResponse } from '../products/api';
 /** -----------  Ortak Tip Tanımlamaları  ----------- */
 export interface Purchase {
   timestamp: number; // Unix zaman damgası, benzersiz ID olarak kullanılır
-  id: number;        // ürün ID'si
+  id: number; // ürün ID'si
   total: number;
-  currency: string;  // 'NOT'
+  currency: string; // 'NOT'
 }
 
 /** ----------- History EntityAdapter ----------- */
 // History için özel EntityAdapter
 export const historyAdapter = createEntityAdapter<Purchase>({
   // sortComparer ile sıralama yap
-  sortComparer: (a, b) => b.timestamp - a.timestamp
+  sortComparer: (a, b) => b.timestamp - a.timestamp,
 });
 
 // History state tipi - rawPurchases kaldırıldı
@@ -23,31 +23,28 @@ export type HistoryState = ReturnType<typeof historyAdapter.getInitialState>;
 
 /** -----------  Account API Dilimi  ----------- */
 export const accountApi = createApi({
-  reducerPath: 'accountApi',                             // store'daki anahtar
-  baseQuery  : fetchBaseQuery({
+  reducerPath: 'accountApi', // store'daki anahtar
+  baseQuery: fetchBaseQuery({
     baseUrl: 'https://not-contest-cdn.openbuilders.xyz/api/',
   }),
-  tagTypes   : ['History'],
-  endpoints  : builder => ({
+  tagTypes: ['History'],
+  endpoints: builder => ({
     /** GET /history.json  →  Purchase[] (kullanıcının sipariş geçmişi varsa) */
     getHistory: builder.query<HistoryState, void>({
       query: () => 'history.json',
       transformResponse: (response: unknown) => {
         // Type guard ile tip kontrolü
         const typedResponse = response as ApiResponse<Purchase[]>;
-        
+
         // Hata kontrolü - ok: false ise hata fırlat
         if (!typedResponse.ok) {
           throw new Error(typedResponse.error.message || 'API Hatası');
         }
-        
+
         const purchases = typedResponse.data;
         // Normalize edilmiş veriyi EntityAdapter ile hazırla - setAll kullanarak
-        const normalized = historyAdapter.setAll(
-          historyAdapter.getInitialState(),
-          purchases
-        );
-        return normalized;  // rawPurchases artık yok
+        const normalized = historyAdapter.setAll(historyAdapter.getInitialState(), purchases);
+        return normalized; // rawPurchases artık yok
       },
       providesTags: ['History'],
     }),
@@ -58,19 +55,16 @@ export const accountApi = createApi({
       transformResponse: (response: unknown) => {
         // Type guard ile tip kontrolü
         const typedResponse = response as ApiResponse<Purchase[]>;
-        
+
         // Hata kontrolü - ok: false ise hata fırlat
         if (!typedResponse.ok) {
           throw new Error(typedResponse.error.message || 'API Hatası');
         }
-        
+
         const purchases = typedResponse.data;
         // Normalize edilmiş veriyi EntityAdapter ile hazırla - setAll kullanarak
-        const normalized = historyAdapter.setAll(
-          historyAdapter.getInitialState(),
-          purchases
-        );
-        return normalized;  // rawPurchases artık yok
+        const normalized = historyAdapter.setAll(historyAdapter.getInitialState(), purchases);
+        return normalized; // rawPurchases artık yok
       },
       providesTags: ['History'],
     }),
@@ -81,20 +75,20 @@ export const accountApi = createApi({
 export const historySelectors = historyAdapter.getSelectors();
 
 /* Store'dan history seçici */
-export const selectHistory = (state: RootState) => 
+export const selectHistory = (state: RootState) =>
   state[accountApi.reducerPath]?.queries?.getHistory?.data as HistoryState | undefined;
 
 // Hook tiplerini burada tanımlayarak, import hatalarının önüne geçiyoruz
 export type UseGetHistoryQueryResult = ReturnType<typeof accountApi.endpoints.getHistory.useQuery>;
-export type UseGetEmptyHistoryQueryResult = ReturnType<typeof accountApi.endpoints.getEmptyHistory.useQuery>;
+export type UseGetEmptyHistoryQueryResult = ReturnType<
+  typeof accountApi.endpoints.getEmptyHistory.useQuery
+>;
 
 /* History için yardımcı selektörler - EntityAdapter kullanarak */
-export const selectHistoryItems = (
-  result: UseGetHistoryQueryResult
-): Purchase[] => {
+export const selectHistoryItems = (result: UseGetHistoryQueryResult): Purchase[] => {
   // Veri yoksa boş dizi döndür
   if (!result.data) return [];
-  
+
   // EntityAdapter ile sorgu sonucundan geçmişi çek
   return historySelectors.selectAll(result.data);
 };
@@ -131,20 +125,13 @@ export const {
  * direkt olarak manipüle eder, bu da herhangi bir slice'a gerek kalmadan
  * veri ekleme imkanı sağlar.
  */
-export const addPurchaseToHistory = (
-  dispatch: any, 
-  purchase: Purchase
-) => {
+export const addPurchaseToHistory = (dispatch: any, purchase: Purchase) => {
   // Cache'den mevcut history verisini al
   const historyQueryArg = undefined; // void argüman
   dispatch(
-    accountApi.util.updateQueryData(
-      'getHistory', 
-      historyQueryArg, 
-      (draft) => {
-        // Adapter yardımıyla yeni satın almayı ekle
-        historyAdapter.addOne(draft, purchase);
-      }
-    )
+    accountApi.util.updateQueryData('getHistory', historyQueryArg, draft => {
+      // Adapter yardımıyla yeni satın almayı ekle
+      historyAdapter.addOne(draft, purchase);
+    })
   );
-}; 
+};

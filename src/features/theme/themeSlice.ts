@@ -12,8 +12,8 @@ interface ThemeState {
 
 // Başlangıç durumu
 const initialState: ThemeState = {
-  mode: 'system',         // Default olarak sistem ayarlarını kullan
-  prefersDarkColors: false // Başlangıçta açık tema
+  mode: 'system', // Default olarak sistem ayarlarını kullan
+  prefersDarkColors: false, // Başlangıçta açık tema
 };
 
 // Tema slice'ını oluşturma
@@ -25,12 +25,12 @@ export const themeSlice = createSlice({
     setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
       state.mode = action.payload;
     },
-    
+
     // Sistem renk tercihini güncelleyen eylem
     setPrefersDarkColors: (state, action: PayloadAction<boolean>) => {
       state.prefersDarkColors = action.payload;
-    }
-  }
+    },
+  },
 });
 
 // Eylem oluşturucuları dışa aktarma
@@ -41,13 +41,13 @@ export const selectThemeMode = (state: RootState) => state.theme?.mode;
 export const selectEffectiveTheme = (state: RootState) => {
   const mode = state.theme?.mode;
   const prefersDarkColors = state.theme?.prefersDarkColors;
-  
+
   if (mode === 'system') {
     return prefersDarkColors ? 'dark' : 'light';
   }
-  
+
   return mode;
 };
 
 // Reducer'ı dışa aktarma
-export default themeSlice.reducer; 
+export default themeSlice.reducer;

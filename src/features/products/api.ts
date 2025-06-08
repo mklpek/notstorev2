@@ -9,8 +9,8 @@ export interface Item {
   category: string;
   description: string;
   price: number;
-  currency: string;          // her zaman 'NOT'
-  left: number;              // stok
+  currency: string; // her zaman 'NOT'
+  left: number; // stok
   tags: { fabric: string };
   images: string[];
 }
@@ -35,7 +35,7 @@ export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 /** ----------- Catalog EntityAdapter ----------- */
 export const catalogAdapter = createEntityAdapter<Item>({
   // Adapter için sortComparer ekliyoruz - bu sayede sıralamayı rawItems olmadan koruyabiliriz
-  sortComparer: (a, b) => a.id - b.id
+  sortComparer: (a, b) => a.id - b.id,
 });
 
 // Catalog tipini tanımla - rawItems kaldırıldı
@@ -43,31 +43,28 @@ export type CatalogState = ReturnType<typeof catalogAdapter.getInitialState>;
 
 /** -----------  Products API Dilimi  ----------- */
 export const productsApi = createApi({
-  reducerPath: 'productsApi',                              // store'daki anahtar
-  baseQuery  : fetchBaseQuery({
+  reducerPath: 'productsApi', // store'daki anahtar
+  baseQuery: fetchBaseQuery({
     baseUrl: 'https://not-contest-cdn.openbuilders.xyz/api/',
   }),
-  tagTypes   : ['Catalogue'],
-  endpoints  : builder => ({
+  tagTypes: ['Catalogue'],
+  endpoints: builder => ({
     /** GET /items.json  →  Item[] */
     getCatalogue: builder.query<CatalogState, void>({
       query: () => 'items.json',
       transformResponse: (response: unknown) => {
         // Type guard ile tip kontrolü
         const typedResponse = response as ApiResponse<Item[]>;
-        
+
         // Hata kontrolü - ok: false ise hata fırlat
         if (!typedResponse.ok) {
           throw new Error(typedResponse.error.message || 'API Hatası');
         }
-        
+
         const items = typedResponse.data;
-        // Normalize edilmiş veriyi EntityAdapter ile hazırla - setAll kullanarak 
-        const normalized = catalogAdapter.setAll(
-          catalogAdapter.getInitialState(),
-          items
-        );
-        return normalized;  // rawItems artık yok
+        // Normalize edilmiş veriyi EntityAdapter ile hazırla - setAll kullanarak
+        const normalized = catalogAdapter.setAll(catalogAdapter.getInitialState(), items);
+        return normalized; // rawItems artık yok
       },
       providesTags: ['Catalogue'],
     }),
@@ -78,29 +75,31 @@ export const productsApi = createApi({
 export const catalogSelectors = catalogAdapter.getSelectors();
 
 /* Store'dan catalog seçici */
-export const selectCatalogue = (state: RootState) => 
+export const selectCatalogue = (state: RootState) =>
   state[productsApi.reducerPath]?.queries?.getCatalogue?.data as CatalogState | undefined;
 
 // useGetCatalogueQuery hook tipini burada tanımlayarak, import hatalarının önüne geçiyoruz
-export type UseGetCatalogueQueryResult = ReturnType<typeof productsApi.endpoints.getCatalogue.useQuery>;
+export type UseGetCatalogueQueryResult = ReturnType<
+  typeof productsApi.endpoints.getCatalogue.useQuery
+>;
 
 /* Arama için yardımcı fonksiyon - EntityAdapter kullanarak */
 export const selectProductsByQuery = (
-  result: UseGetCatalogueQueryResult, 
+  result: UseGetCatalogueQueryResult,
   query: string
 ): Item[] => {
   // Veri yoksa boş dizi döndür
   if (!result.data) return [];
-  
+
   // Tüm ürünleri entity adapter üzerinden al
   const allProducts = catalogSelectors.selectAll(result.data);
-  
+
   // Arama yoksa tümünü döndür
   if (!query) return allProducts;
-  
+
   // Arama varsa filtrele
-  return allProducts.filter((p: Item) => 
-    (`${p.category} ${p.name}`).toLowerCase().includes(query.toLowerCase())
+  return allProducts.filter((p: Item) =>
+    `${p.category} ${p.name}`.toLowerCase().includes(query.toLowerCase())
   );
 };
 
@@ -108,4 +107,4 @@ export const selectProductsByQuery = (
 export const {
   useGetCatalogueQuery,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
-} = productsApi; 
+} = productsApi;

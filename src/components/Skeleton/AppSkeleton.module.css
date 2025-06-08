@@ -23,7 +23,11 @@
 }
 
 .headerTitle {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 590;
   font-size: 26px;
   line-height: 1.23;
@@ -119,4 +123,4 @@
   100% {
     background-position: calc(200px + 100%) 0;
   }
-} 
+}

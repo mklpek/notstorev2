@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './ItemPageSkeleton.module.css';
-import { 
-  TextSkeleton 
-} from './SkeletonElements';
+import { TextSkeleton } from './SkeletonElements';
 
 /**
  * ItemPage (Ürün Detay) skeleton bileşeni
@@ -11,7 +9,7 @@ import {
 const ItemPageSkeleton = React.memo(() => {
   // Slider küçük resimleri için bir dizi oluştur
   const sliderImagesCount = 5;
-  
+
   return (
     <div className={styles.itemPage} aria-busy="true" aria-label="Ürün detayı yükleniyor">
       <div className={styles.body}>
@@ -37,7 +35,7 @@ const ItemPageSkeleton = React.memo(() => {
               <TextSkeleton height={17} width="60%" />
             </div>
           </div>
-          
+
           {/* Tags */}
           <div className={styles.tags}>
             <div className={styles.tag}>
@@ -54,9 +52,7 @@ const ItemPageSkeleton = React.memo(() => {
 
         {/* Big Sticker Container */}
         <div className={styles.bigStickerContainer}>
-          <div className={styles.bigSticker}>
-            {/* Büyük görsel için skeleton arka plan */}
-          </div>
+          <div className={styles.bigSticker}>{/* Büyük görsel için skeleton arka plan */}</div>
         </div>
       </div>
 
@@ -72,16 +68,14 @@ const ItemPageSkeleton = React.memo(() => {
             ))}
           </div>
         </div>
-        
+
         {/* Footer */}
         <div className={styles.footer}>
           <div className={styles.body}>
             {/* Add to Cart Button Skeleton */}
-            <div className={styles.addToCartButton}>
-            </div>
+            <div className={styles.addToCartButton}></div>
             {/* Buy Now Button Skeleton */}
-            <div className={styles.buyNowButton}>
-            </div>
+            <div className={styles.buyNowButton}></div>
           </div>
         </div>
       </div>
@@ -92,4 +86,4 @@ const ItemPageSkeleton = React.memo(() => {
 // React DevTools için komponent adı
 ItemPageSkeleton.displayName = 'ItemPageSkeleton';
 
-export default ItemPageSkeleton; 
+export default ItemPageSkeleton;

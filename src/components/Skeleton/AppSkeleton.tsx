@@ -13,12 +13,12 @@ const AppSkeleton = React.memo(() => {
     <div className={styles.wrapper} aria-busy="true" aria-label="Sayfa yükleniyor">
       {/* Header Skeleton */}
       <HeaderSkeleton />
-      
+
       {/* Product Grid Skeleton */}
       <section className={styles.grid} aria-busy="true" aria-label="Ürünler yükleniyor">
         <ProductCardSkeleton count={6} />
       </section>
-      
+
       {/* TabBar Skeleton */}
       <TabBarSkeleton />
     </div>
@@ -28,4 +28,4 @@ const AppSkeleton = React.memo(() => {
 // React DevTools için komponent adı
 AppSkeleton.displayName = 'AppSkeleton';
 
-export default AppSkeleton; 
+export default AppSkeleton;

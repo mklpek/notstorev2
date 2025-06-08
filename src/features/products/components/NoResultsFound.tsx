@@ -12,12 +12,10 @@ const NoResultsFound: React.FC = () => {
       </div>
       <div className={styles.textContainer}>
         <h2 className={styles.title}>Not Found</h2>
-        <p className={styles.description}>
-          This style doesn't exist
-        </p>
+        <p className={styles.description}>This style doesn't exist</p>
       </div>
     </div>
   );
 };
 
-export default NoResultsFound; 
+export default NoResultsFound;

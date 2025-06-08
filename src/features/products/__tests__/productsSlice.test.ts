@@ -18,4 +18,4 @@ describe('productsSlice', () => {
 });
 */
 
-export {}; // TypeScript modül olarak tanıması için 
+export {}; // TypeScript modül olarak tanıması için

@@ -84,7 +84,11 @@
 }
 
 .title {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 20px;
   font-weight: 590;
   line-height: 1.2;
@@ -94,7 +98,11 @@
 }
 
 .description {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 17px;
   font-weight: 400;
   line-height: 1.29;
@@ -124,7 +132,11 @@
   color: var(--tg-theme-bg-color, #000000);
   border: none;
   border-radius: 12px;
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 17px;
   font-weight: 590;
   line-height: 1.29;
@@ -220,7 +232,11 @@
 }
 
 .itemNamePrimary {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 12px;
   font-weight: 590;
   line-height: 1.17;
@@ -229,7 +245,11 @@
 }
 
 .itemNameSecondary {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 17px;
   font-weight: 590;
   line-height: 1.41;
@@ -238,7 +258,11 @@
 }
 
 .itemPrice {
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 17px;
   font-weight: 400;
   line-height: 1.29;
@@ -273,8 +297,12 @@
   margin-top: 16px;
   padding: 12px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 18px;
   font-weight: 600;
   color: var(--tg-theme-text-color, #ffffff);
-} 
+}

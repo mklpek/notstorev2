@@ -1,35 +1,35 @@
-import React, { useRef, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { useAppSelector } from '../../app/hooks'
-import { selectCartCount } from '../../features/cart/selectors'
-import SearchIcon from '../Icons/SearchIcon'
-import BasketIcon from '../Icons/BasketIcon'
-import DeleteIcon from '../Icons/DeleteIcon'
-import styles from './Header.module.css'
+import React, { useRef, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
+import { selectCartCount } from '../../features/cart/selectors';
+import SearchIcon from '../Icons/SearchIcon';
+import BasketIcon from '../Icons/BasketIcon';
+import DeleteIcon from '../Icons/DeleteIcon';
+import styles from './Header.module.css';
 
 interface HeaderProps {
-  onCartClick?: () => void
-  onSearchOpen?: (isOpen: boolean) => void
+  onCartClick?: () => void;
+  onSearchOpen?: (isOpen: boolean) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
   // URL search params kullanımı - arama parametresini URL'den almak için
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  
+
   // Sepetteki toplam ürün sayısını al
   const cartCount = useAppSelector(selectCartCount);
-  
+
   // Arama barının açık olup olmadığını URL'den al
   const isSearchOpen = !!query || searchParams.has('search');
-  
-  const inputRef = useRef<HTMLInputElement>(null)
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isSearchOpen && inputRef.current) {
-      inputRef.current.focus()
+      inputRef.current.focus();
     }
-  }, [isSearchOpen])
+  }, [isSearchOpen]);
 
   useEffect(() => {
     // Search durumunu parent bileşene bildir
@@ -41,12 +41,12 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
   const handleSearchClick = () => {
     // Arama butonuna tıklandığında search parametresini URL'e ekle
     setSearchParams({ search: 'true' }, { replace: true });
-  }
+  };
 
   const handleSearchClose = () => {
     // Tüm query parametrelerini temizle
     setSearchParams({}, { replace: true });
-  }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -57,13 +57,13 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
       // Input boşsa arama modunda kal ama q parametresini kaldır
       setSearchParams({ search: 'true' }, { replace: true });
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       handleSearchClose();
     }
-  }
+  };
 
   const handleClearInput = () => {
     // Input değerini temizle ve search modunda kal
@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }
+  };
 
   return (
     <header className={`${styles.header} ${isSearchOpen ? styles.searchOpen : ''}`}>
@@ -92,7 +92,11 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
               autoFocus
             />
             {query && (
-              <button className={styles.clearButton} onClick={handleClearInput} aria-label="Clear search">
+              <button
+                className={styles.clearButton}
+                onClick={handleClearInput}
+                aria-label="Clear search"
+              >
                 <DeleteIcon />
               </button>
             )}
@@ -123,7 +127,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
         </>
       )}
     </header>
-  )
-}
+  );
+};
 
-export default Header 
+export default Header;

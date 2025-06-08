@@ -1,44 +1,44 @@
-import React, { useMemo } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import ProductCard from './components/ProductCard'
-import { useGetCatalogueQuery, catalogSelectors } from '../../api/notApi'
-import type { Item } from '../../api/notApi'
-import styles from './ProductGrid.module.css'
-import { useDebouncedValue } from '../../hooks/useDebounce'
-import NoResultsFound from './components/NoResultsFound'
-import ProductCardSkeleton from '../../components/Skeleton/ProductCardSkeleton'
-import { ApiErrorMessage } from '../../components'
+import React, { useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import ProductCard from './components/ProductCard';
+import { useGetCatalogueQuery, catalogSelectors } from '../../api/notApi';
+import type { Item } from '../../api/notApi';
+import styles from './ProductGrid.module.css';
+import { useDebouncedValue } from '../../hooks/useDebounce';
+import NoResultsFound from './components/NoResultsFound';
+import ProductCardSkeleton from '../../components/Skeleton/ProductCardSkeleton';
+import { ApiErrorMessage } from '../../components';
 
 // 'count' parametresini değişken hale getiriyoruz
 const SKELETON_COUNT = 6;
 
 const ProductGrid: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rawQuery = searchParams.get('q') || '';
-  
-  // Debounce ederek, kullanıcı her tuşa bastığında değil, 
+
+  // Debounce ederek, kullanıcı her tuşa bastığında değil,
   // 300ms duraklamadan sonra arama yapmasını sağlıyoruz
   const debouncedQuery = useDebouncedValue(rawQuery.trim(), 300);
-  
+
   // RTK Query kullanımı - refetch fonksiyonunu doğrudan alıyoruz
   const { isLoading, error, data, refetch } = useGetCatalogueQuery();
-  
+
   // Filtrelenmiş ürünleri hesapla
   const filteredProducts = useMemo(() => {
     if (!data) return [];
-    
+
     // Tüm ürünleri adapter selektörü ile al
     const allProducts = catalogSelectors.selectAll(data);
-    
+
     // Arama yoksa tüm ürünleri döndür
     if (!debouncedQuery) {
       return allProducts;
     }
-    
+
     // Arama terimine göre filtrele
-    return allProducts.filter((p: Item) => 
-      (`${p.category} ${p.name}`).toLowerCase().includes(debouncedQuery.toLowerCase())
+    return allProducts.filter((p: Item) =>
+      `${p.category} ${p.name}`.toLowerCase().includes(debouncedQuery.toLowerCase())
     );
   }, [data, debouncedQuery]);
 
@@ -46,21 +46,20 @@ const ProductGrid: React.FC = () => {
   // navigate fonksiyonu değişmediği sürece yeniden oluşturulmayacak
   const handleProductClick = useMemo(() => {
     return (productId: number) => {
-      navigate(`/product/${productId}`)
-    }
+      navigate(`/product/${productId}`);
+    };
   }, [navigate]);
 
   // Skeleton render etme için memoize edilmiş bir değer kullanıyoruz
   // isLoading değişmediği sürece bu kısım yeniden render edilmeyecek
-  const loadingContent = useMemo(() => (
-    <div 
-      className={styles.productGrid} 
-      aria-busy="true" 
-      aria-label="Ürünler yükleniyor"
-    >
-      <ProductCardSkeleton count={SKELETON_COUNT} />
-    </div>
-  ), []);
+  const loadingContent = useMemo(
+    () => (
+      <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
+        <ProductCardSkeleton count={SKELETON_COUNT} />
+      </div>
+    ),
+    []
+  );
 
   if (isLoading) {
     return loadingContent;
@@ -90,14 +89,10 @@ const ProductGrid: React.FC = () => {
   return (
     <div className={styles.productGrid}>
       {filteredProducts.map((product: Item) => (
-        <ProductCard 
-          key={product.id} 
-          product={product} 
-          onProductClick={handleProductClick}
-        />
+        <ProductCard key={product.id} product={product} onProductClick={handleProductClick} />
       ))}
     </div>
   );
-}
+};
 
-export default ProductGrid 
+export default ProductGrid;

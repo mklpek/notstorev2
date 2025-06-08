@@ -9,7 +9,7 @@ interface ProgressiveImageProps {
   width?: string | number;
   height?: string | number;
   style?: React.CSSProperties;
-  loading?: "lazy" | "eager";
+  loading?: 'lazy' | 'eager';
   sizes?: string;
 }
 
@@ -21,14 +21,14 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   height,
   style,
   loading = 'lazy',
-  sizes = '100vw'
+  sizes = '100vw',
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [isIntersecting, setIsIntersecting] = useState(false);
-  
+
   // Görsel URL güvenlik kontrolü
   const secureSrc = src || '';
-  
+
   // IntersectionObserver ile görünürlük tespiti
   useEffect(() => {
     // Eğer loading eager ise görünürlük tespitine gerek yok
@@ -36,9 +36,9 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       setIsIntersecting(true);
       return;
     }
-    
+
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         if (entries[0]?.isIntersecting) {
           setIsIntersecting(true);
           observer.disconnect();
@@ -46,10 +46,10 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       },
       { rootMargin: '200px', threshold: 0.01 } // 200px yukarıdan yüklemeye başla
     );
-    
+
     // Görüntülenebilir ekranda olmasa bile düşük kaliteli blur görsel yüklensin
     setIsIntersecting(true);
-    
+
     return () => {
       observer.disconnect();
     };
@@ -58,19 +58,19 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   // srcset oluştur - farklı çözünürlükler için
   const createSrcSet = () => {
     if (!secureSrc) return '';
-    
+
     try {
       // Temel URL ve querystring (? veya & ile başlamalı)
       const baseUrl = secureSrc.split('?')[0];
       const hasQuery = secureSrc.includes('?');
       const queryPrefix = hasQuery ? '&' : '?';
-      
+
       // Farklı genişlikler için srcset değerleri
       return [
         `${baseUrl}${queryPrefix}width=320&format=webp 320w`,
-        `${baseUrl}${queryPrefix}width=640&format=webp 640w`, 
+        `${baseUrl}${queryPrefix}width=640&format=webp 640w`,
         `${baseUrl}${queryPrefix}width=960&format=webp 960w`,
-        `${baseUrl}${queryPrefix}width=1280&format=webp 1280w`
+        `${baseUrl}${queryPrefix}width=1280&format=webp 1280w`,
       ].join(', ');
     } catch (error) {
       console.warn('srcSet oluşturma hatası:', error);
@@ -79,22 +79,19 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   };
 
   return (
-    <div 
-      className={`${styles.container} ${className || ''}`} 
-      style={{ width, height, ...style }}
-    >
+    <div className={`${styles.container} ${className || ''}`} style={{ width, height, ...style }}>
       {/* Düşük kaliteli LQIP - eager loading */}
       <img
-        src={lqip(secureSrc, 16)} 
+        src={lqip(secureSrc, 16)}
         aria-hidden="true"
-        loading="eager" 
+        loading="eager"
         fetchPriority="high"
         className={`${styles.image} ${styles.placeholder} ${loaded ? styles.fadeOut : styles.fadeIn}`}
         alt=""
         width={width}
         height={height}
       />
-      
+
       {/* Tam kaliteli görsel - lazy loading */}
       {isIntersecting && (
         <img
@@ -114,4 +111,4 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   );
 };
 
-export default React.memo(ProgressiveImage); 
+export default React.memo(ProgressiveImage);

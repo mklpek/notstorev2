@@ -6,31 +6,33 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production';
-  
+
   return {
     plugins: [
       react(),
       createSvgIconsPlugin({
         iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
-        symbolId: 'icon-[name]',     // <use xlinkHref="#icon-basket">
+        symbolId: 'icon-[name]', // <use xlinkHref="#icon-basket">
         svgoOptions: {
           plugins: [
             {
               name: 'cleanupIDs',
-              active: true
+              active: true,
             },
             {
               name: 'removeViewBox',
-              active: false // viewBox kaldırılmamalı, bu hesaplamaları bozabilir
+              active: false, // viewBox kaldırılmamalı, bu hesaplamaları bozabilir
             },
             {
               name: 'removeDimensions',
-              active: true // width/height çıkar, viewBox kullan
+              active: true, // width/height çıkar, viewBox kullan
             },
-          ]
+          ],
         },
       }),
     ],
+    // Font dosyalarının asset olarak işlenmesi için
+    assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.otf'],
     build: {
       // Üretim için optimizasyonlar
       minify: isProduction ? 'terser' : false,
@@ -43,6 +45,20 @@ export default defineConfig(({ mode }) => {
             'redux-vendor': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
             'ui-vendor': ['react-loading-skeleton', 'react-window', 'react-virtualized-auto-sizer'],
           },
+          // Asset dosyalarının isimlendirme formatı
+          assetFileNames: assetInfo => {
+            if (!assetInfo.name) {
+              return `assets/[name].[hash][extname]`;
+            }
+
+            if (/\.(woff|woff2|ttf|otf)$/.test(assetInfo.name)) {
+              return `fonts/[name].[hash][extname]`;
+            }
+            if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name)) {
+              return `images/[name].[hash][extname]`;
+            }
+            return `assets/[name].[hash][extname]`;
+          },
         },
       },
     },
@@ -53,4 +69,4 @@ export default defineConfig(({ mode }) => {
       }),
     },
   };
-}); 
+});

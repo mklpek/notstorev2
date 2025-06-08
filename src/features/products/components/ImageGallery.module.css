@@ -81,7 +81,7 @@
 .dotActive {
   width: 20px;
   height: 4px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 4px;
   backdrop-filter: blur(20px);
-} 
+}
