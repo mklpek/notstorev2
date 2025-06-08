@@ -9,6 +9,10 @@ import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useSkeletonTheme } from './hooks/useSkeletonTheme';
 import { TonConnectProvider } from './features/tonConnect';
+import { useDispatch } from 'react-redux';
+import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
+import { getUserProfilePhoto } from './api/telegramApi';
+import type { TelegramUser } from './features/account/userSlice';
 
 // Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
@@ -18,6 +22,7 @@ const AccountPage = lazy(() => import('./features/account/AccountPage'));
 
 function App() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
@@ -26,6 +31,41 @@ function App() {
     // Telegram WebApp SDK'sını başlat
     WebApp.ready();
     WebApp.expand();
+
+    // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
+    const initUser = async () => {
+      try {
+        // TypeScript null/undefined kontrolü
+        if (WebApp?.initDataUnsafe?.user) {
+          const user = WebApp.initDataUnsafe.user;
+
+          // TelegramUser tipine uygun veriyi hazırla
+          const userDetails: TelegramUser = {
+            id: user.id,
+            first_name: user.first_name,
+          };
+
+          // Opsiyonel alanları kontrol ederek ekle
+          if (user.last_name) userDetails.last_name = user.last_name;
+          if (user.username) userDetails.username = user.username;
+          if (user.language_code) userDetails.language_code = user.language_code;
+          if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
+
+          // Önce temel kullanıcı bilgilerini Redux'a kaydet
+          dispatch(setTelegramUser(userDetails));
+
+          // Ardından profil fotoğrafını API'den al ve güncelle
+          const photoUrl = await getUserProfilePhoto(user.id);
+          if (photoUrl) {
+            dispatch(setUserPhotoUrl(photoUrl));
+          }
+        }
+      } catch (error) {
+        console.error('Telegram kullanıcı bilgileri alınamadı:', error);
+      }
+    };
+
+    initUser();
 
     // Telegram tema renklerini uygula
     document.documentElement.style.setProperty(
@@ -40,7 +80,7 @@ function App() {
       '--tg-theme-hint-color',
       WebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
     );
-  }, []);
+  }, [dispatch]);
 
   // Fonksiyonları useCallback ile sarmalıyoruz
   // Sadece bağımlılıkları değiştiğinde yeniden oluşturulurlar

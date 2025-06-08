@@ -1,6 +1,8 @@
 import React from 'react';
 import StoreIcon from '../Icons/StoreIcon';
 import styles from './TabBar.module.css';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../app/store';
 
 interface TabBarProps {
   activeTab?: 'store' | 'profile';
@@ -8,6 +10,10 @@ interface TabBarProps {
 }
 
 const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => {
+  // Redux'tan Telegram kullanıcı bilgilerini al
+  const userState = useSelector((state: RootState) => state.user);
+  const user = userState.user;
+
   const handleTabClick = (tab: 'store' | 'profile') => {
     if (onTabChange) {
       onTabChange(tab);
@@ -35,10 +41,14 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => 
         >
           <div className={styles.iconContainer}>
             <div className={styles.profileContainer}>
-              <img src="/images/profile-image.png" alt="Profile" className={styles.profileImage} />
+              <img
+                src={user?.photoUrl || '/images/profile-image.png'}
+                alt="Profile"
+                className={styles.profileImage}
+              />
             </div>
           </div>
-          <span className={styles.text}>Alex</span>
+          <span className={styles.text}>{user?.first_name || 'Profile'}</span>
         </div>
       </div>
     </div>

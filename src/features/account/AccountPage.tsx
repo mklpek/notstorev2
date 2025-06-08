@@ -10,8 +10,14 @@ import { useGetCatalogueQuery, catalogSelectors } from '../products/api';
 import type { Purchase } from './api';
 import { AccountPageSkeleton } from '../../components/Skeleton';
 import { ApiErrorMessage } from '../../components';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../app/store';
 
 const AccountPage: React.FC = () => {
+  // Redux'tan Telegram kullanıcı bilgilerini al
+  const userState = useSelector((state: RootState) => state.user);
+  const user = userState.user;
+
   // Gösterilecek öğe sayısını tutan state
   const [visibleCount, setVisibleCount] = useState(20);
 
@@ -145,10 +151,15 @@ const AccountPage: React.FC = () => {
       {/* Account Header */}
       <div className={styles.accountHeader}>
         <div className={styles.avatar}>
-          <img src="/images/profile-avatar.png" alt="Alex" className={styles.avatarImage} />
+          <img
+            src={user?.photoUrl || '/images/profile-avatar.png'}
+            alt={user?.first_name || 'Avatar'}
+            className={styles.avatarImage}
+          />
         </div>
         <div className={styles.info}>
-          <h1 className={styles.name}>Alex</h1>
+          <h1 className={styles.name}>{user?.first_name || 'User'}</h1>
+          {user?.username && <p className={styles.username}>@{user.username}</p>}
         </div>
       </div>
 
@@ -198,22 +209,36 @@ const AccountPage: React.FC = () => {
               );
             })}
 
-            {/* Otomatik yükleme için görünmez sentinel element */}
+            {/* Yüklenecek daha veri varsa "Yükleniyor" sentinel */}
             {remainingItems > 0 && (
-              <div ref={sentinelRef} className={styles.sentinel} aria-hidden="true">
-                {/* Yükleme göstergesi */}
-                <div className={styles.loadingIndicator}>Daha fazla yükleniyor...</div>
+              <div ref={sentinelRef} className={styles.loadingMore}>
+                Loading more items...
               </div>
             )}
           </div>
         </div>
       ) : (
-        // History yoksa - Figma'daki boş durum tasarımı
-        <div className={styles.emptyState}>
-          <div className={styles.emptyStateContent}>
-            <div className={styles.emptyStateText}>
-              <h2 className={styles.emptyStateTitle}>No history yet</h2>
-              <p className={styles.emptyStateDescription}>Your purchase history will appear here</p>
+        // History yoksa - Collections
+        <div className={styles.collectionsContainer}>
+          <div className={styles.collectionsHeader}>
+            <div className={styles.collectionsTitle}>Collections</div>
+          </div>
+
+          <div className={styles.collections}>
+            <div className={styles.collection}>
+              <div className={styles.emojiPlaceholder}>🔥</div>
+              <span className={styles.collectionLabel}>Favorite</span>
+              <span className={styles.collectionCount}>0</span>
+            </div>
+            <div className={styles.collection}>
+              <div className={styles.emojiPlaceholder}>⌚️</div>
+              <span className={styles.collectionLabel}>Watch later</span>
+              <span className={styles.collectionCount}>0</span>
+            </div>
+            <div className={styles.collection}>
+              <div className={styles.emojiPlaceholder}>💎</div>
+              <span className={styles.collectionLabel}>Premium</span>
+              <span className={styles.collectionCount}>0</span>
             </div>
           </div>
         </div>

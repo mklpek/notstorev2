@@ -50,8 +50,41 @@ interface Document {
   ): void;
 }
 
+// Telegram WebApp tiplerini genişletiyoruz
+interface WebAppUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+  is_premium?: boolean;
+}
+
+interface WebAppInitData {
+  user?: WebAppUser;
+  chat_type?: string;
+  hash?: string;
+  // Diğer initData alanları
+}
+
+interface TelegramWebApp {
+  ready: () => void;
+  expand: () => void;
+  close: () => void;
+  initDataUnsafe: WebAppInitData;
+  themeParams: {
+    bg_color?: string;
+    text_color?: string;
+    hint_color?: string;
+    button_color?: string;
+    button_text_color?: string;
+    [key: string]: string | undefined;
+  };
+  // Diğer WebApp metodları
+}
+
 interface Window {
   Telegram: {
-    WebApp: any;
+    WebApp: TelegramWebApp;
   };
 }

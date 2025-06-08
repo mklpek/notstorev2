@@ -5,6 +5,7 @@ import { productsApi } from '../features/products/api';
 import { accountApi } from '../features/account/api';
 import cartReducer from '../features/cart/cartSlice';
 import themeReducer from '../features/theme/themeSlice';
+import userReducer from '../features/account/userSlice';
 // import historyReducer from '../features/history/historySlice'; // Yorum satırı yapıldı
 
 // Cart state'ini local storage'da kalıcı tutmak için persist konfigürasyonu
@@ -29,13 +30,14 @@ const rootReducer = combineReducers({
   [accountApi.reducerPath]: accountApi.reducer,
   cart: persistReducer(cartPersistConfig, cartReducer),
   theme: persistReducer(themePersistConfig, themeReducer),
+  user: userReducer, // Telegram kullanıcı bilgileri - persist ETMİYORUZ
 });
 
 // Root persist config - API'leri blacklist'e ekle
 const rootPersistConfig = {
   key: 'root',
   storage,
-  blacklist: [productsApi.reducerPath, accountApi.reducerPath], // API'leri persist etme
+  blacklist: [productsApi.reducerPath, accountApi.reducerPath, 'user'], // API'leri ve user'ı persist etme
 };
 
 // Birleştirilmiş reducerı persist et
