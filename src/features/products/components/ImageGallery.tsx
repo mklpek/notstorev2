@@ -46,7 +46,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onInd
         <ProgressiveImage
           src={currentImageSrc}
           alt={`Ürün resmi ${currentIndex + 1}`}
-          className={styles.image}
+          className={styles.image || ''}
         />
       </div>
 

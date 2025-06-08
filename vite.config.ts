@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => {
             },
             {
               name: 'removeDimensions',
-              active: true, // width/height çıkar, viewBox kullan
+              active: true,
             },
           ],
         },

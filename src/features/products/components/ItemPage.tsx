@@ -125,9 +125,9 @@ const ItemPage: React.FC = () => {
               Bu yöntem, `src` değiştirmekten daha güvenilirdir ve tarayıcının
               görselleri tekrar indirmesini engeller.
             */}
-            {product.images.map((imageSrc, index) => (
+            {product.images.map((image, index) => (
               <div
-                key={imageSrc}
+                key={image}
                 style={{
                   display: index === activeImageIndex ? 'block' : 'none',
                   width: '100%',
@@ -135,9 +135,9 @@ const ItemPage: React.FC = () => {
                 }}
               >
                 <ProgressiveImage
-                  src={imageSrc}
+                  src={image}
                   alt={`${displayTitle} - ${index + 1}`}
-                  className={styles.bigStickerImage}
+                  className={styles.bigStickerImage || ''}
                 />
               </div>
             ))}
@@ -160,7 +160,7 @@ const ItemPage: React.FC = () => {
                 <ProgressiveImage
                   src={image}
                   alt={`${displayTitle} - thumb ${index + 1}`}
-                  className={styles.stickerFill}
+                  className={styles.stickerFill || ''}
                 />
               </div>
             ))}
