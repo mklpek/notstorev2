@@ -1,0 +1,324 @@
+/* Main Item Page Container */
+.itemPage {
+  width: 100%;
+  height: 100vh;
+  background-color: #000000;
+  position: relative;
+  overflow-y: auto;
+}
+
+/* Body Container - Figma: 390x652px */
+.body {
+  width: 390px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding-bottom: 174px;
+}
+
+/* Fixed Bottom Content */
+.fixedBottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: #000000;
+}
+
+/* Stickers Info - Figma: column, center, stretch */
+.stickersInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  width: 100%;
+  height: auto;
+}
+
+/* Stickers Collections - Figma: column, stretch */
+.stickersCollections {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  height: auto;
+}
+
+/* Header - Figma: row, space-between, gap 8px, padding 16px 16px 12px */
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-self: stretch;
+  gap: 8px;
+  padding: 16px 16px 12px;
+  width: 100%;
+  height: auto;
+}
+
+.left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  height: auto;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  height: auto;
+}
+
+/* Title Text - Figma: SF Pro, 590 weight, 26px */
+.titleText {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 26px;
+  line-height: 1.2307692307692308em;
+  letter-spacing: 1.4615384431985707%;
+  text-align: left;
+  color: #FFFFFF;
+  margin: 0;
+  width: auto;
+  height: auto;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  height: auto;
+}
+
+.shareButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.shareButton:hover {
+  opacity: 0.7;
+}
+
+.shareIcon {
+  width: 28px;
+  height: 28px;
+  color: #FFFFFF;
+}
+
+/* Description - Figma: column, flex-end, stretch, gap 16px, padding 0px 16px */
+.description {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-self: stretch;
+  gap: 16px;
+  padding: 0px 16px;
+  width: 100%;
+  height: auto;
+}
+
+/* Description Text - Figma: SF Pro, 400 weight, 17px */
+.descriptionText {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.2941176470588236em;
+  letter-spacing: -2.5294118067797493%;
+  text-align: left;
+  color: #FFFFFF;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  white-space: pre-line;
+}
+
+/* Tags - Figma: row, stretch, gap 8px, padding 16px 16px 20px */
+.tags {
+  display: flex;
+  flex-direction: row;
+  align-self: stretch;
+  gap: 8px;
+  padding: 16px 16px 20px;
+  width: 100%;
+  height: auto;
+}
+
+/* Tag - Figma: row, center, gap 2px, padding 2px 8px, border-radius 10px */
+.tag {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  width: auto;
+  height: auto;
+}
+
+/* Tag Text - Figma: SF Pro, 590 weight, 12px */
+.tagNumber {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 12px;
+  line-height: 1.1666666666666667em;
+  letter-spacing: -1.6666666915019352%;
+  text-align: left;
+  color: #FFFFFF;
+}
+
+.tagCurrency,
+.tagText {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 12px;
+  line-height: 1.1666666666666667em;
+  letter-spacing: -1.6666666915019352%;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Big Sticker Container - Figma: row, center, gap 10px, padding 0px 16px, fill */
+.bigStickerContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 0px 16px;
+  width: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Big Sticker - Figma: row, stretch, gap 10px, padding 10px, width 358px, fill, border-radius 20px */
+.bigSticker {
+  align-self: stretch;
+  width: 358px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.bigStickerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+/* Slider Container */
+.sliderContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+}
+
+/* Stickers Slider - Figma: row, center, gap 8px, padding 8px 16px, width 390px */
+.stickersSlider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+  height: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+}
+
+/* Hide scrollbar */
+.stickersSlider::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sticker - Figma: row, flex-end, padding 6px, 100x100px, border-radius 16px */
+.sticker {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* Sticker görsel ölçekleme modları */
+.stickerFill, .stickerStretch {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.stickerFill img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stickerStretch img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Active sticker has white border - Figma: stroke_QZLAUH */
+.stickerActive {
+}
+
+.stickerActive::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #FFFFFF;
+  border-radius: 16px; /* Parent ile aynı radius */
+  box-sizing: border-box; /* Border içeri dahil */
+  pointer-events: none; /* Tıklama olaylarını etkilemesin */
+}
+
+.sticker:hover {
+  opacity: 0.8;
+}
+
+.stickerImage {
+  display: none;
+} 

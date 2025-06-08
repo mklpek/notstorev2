@@ -1,0 +1,53 @@
+.productGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: stretch;
+  align-items: stretch;
+  column-gap: 12px;
+  row-gap: 28px;
+  padding: 0px 16px;
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  min-height: 400px; /* Minimum yükseklik */
+  position: relative; /* Positioning context */
+}
+
+.virtualGrid {
+  width: 100% !important; /* React-window inline stillerini override et */
+  outline: none !important; /* Focus outline'ı kaldır */
+  overflow-x: hidden !important; /* Yatay scroll'u gizle */
+}
+
+/* AutoSizer için içerik konteyneri */
+.autoSizerContainer {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+/* Legacy fallback stili */
+.legacyGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.loading,
+.error,
+.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 16px;
+  color: var(--tg-theme-hint-color, #999);
+  width: 100%;
+  text-align: center;
+}
+
+.error {
+  color: var(--tg-theme-destructive-text-color, #ff4444);
+} 

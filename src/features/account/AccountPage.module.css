@@ -1,0 +1,351 @@
+/* Main Account Page Container */
+.accountPage {
+  width: 390px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 40px 0px 0px;
+  margin: 0 auto;
+  min-height: 100vh; /* height: 100vh yerine min-height kullan */
+}
+
+/* Account Header */
+.accountHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  height: auto;
+}
+
+/* Avatar Container */
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 120px;
+  background: linear-gradient(135deg, #A6C2FF 0%, #948FFF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.avatarImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 120px;
+}
+
+/* Info Section */
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: auto;
+  height: auto;
+}
+
+.name {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 26px;
+  line-height: 1.2307692307692308em;
+  letter-spacing: 1.4615384431985707%;
+  text-align: left;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+
+/* Collections Section - History olmadığında gösterilir */
+.collections {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  height: 429px;
+}
+
+/* Emoji Placeholder */
+.emojiPlaceholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  padding: 0px 16px 20px;
+  width: 100%;
+  height: 429px;
+}
+
+.placeholderBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+}
+
+.placeholderImage {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Text Frame - Figma'dan eklenen */
+.textFrame {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+}
+
+/* Title - Figma'dan eklenen */
+.title {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 26px;
+  line-height: 1.2307692307692308em;
+  letter-spacing: 1.4615384431985707%;
+  text-align: center;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* Description - Figma'dan eklenen */
+.description {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.2941176470588236em;
+  letter-spacing: -2.5294118067797493%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 429px;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;
+}
+
+/* History Container - History olduğunda gösterilir */
+.historyContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-self: stretch;
+}
+
+/* History Header */
+.historyHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  gap: 8px;
+  padding: 16px;
+  width: 100%;
+}
+
+.historyTitle {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 20px;
+  line-height: 1.2em;
+  text-align: left;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+}
+
+/* History Items Container */
+.historyItems {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 8px;
+  padding: 0px 16px;
+  width: 100%;
+}
+
+/* History Line Item */
+.historyLine {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  gap: 12px;
+  padding: 4px 0px;
+  width: 100%;
+  border-radius: 16px;
+}
+
+/* History Item Avatar */
+.historyAva {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  background-color: rgba(255, 255, 255, 0.1); /* Placeholder while loading */
+}
+
+/* Sentinel Element - otomatik yükleme için görünmez element */
+.sentinel {
+  height: 20px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+/* Load More Container */
+.loadMoreContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 0;
+  margin-top: 8px;
+  /* Görsel olarak gizle ama ekran okuyucular için erilebilir bırak */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Klavye kullanıcıları için odaklandığında görünür yap */
+.loadMoreContainer:focus-within {
+  position: static;
+  width: 100%;
+  height: auto;
+  padding: 16px 0;
+  margin: 8px 0 0 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+.loadMoreButton {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.loadMoreButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* History Item Info Container */
+.historyInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  flex: 1;
+}
+
+/* Product Info Section */
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.productCategory {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 12px;
+  line-height: 1.1666666666666667em;
+  letter-spacing: -1.6666666915019352%;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.productNameContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.productName {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 17px;
+  line-height: 1.411764705882353em;
+  letter-spacing: -4.117646988700418%;
+  text-align: left;
+  color: #FFFFFF;
+}
+
+/* Purchase Info Section */
+.purchaseInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.purchaseDate {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 12px;
+  line-height: 1.1666666666666667em;
+  letter-spacing: -1.6666666915019352%;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.priceContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.price {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 17px;
+  line-height: 1.411764705882353em;
+  letter-spacing: -4.117646988700418%;
+  text-align: right;
+  color: #FFFFFF;
+} 

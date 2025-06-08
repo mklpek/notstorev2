@@ -1,0 +1,42 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.modalContent {
+  background-color: var(--tg-theme-bg-color, #000000);
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-width: 390px;
+  max-height: 90vh;
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Boş sepet modalı için sabit yükseklik */
+.emptyModal {
+  height: 320px;
+}
+
+/* Dolu sepet modalı için dinamik yükseklik */
+.filledModal {
+  /* Height belirtilmedi, içeriğe göre uzayacak */
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+} 

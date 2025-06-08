@@ -1,0 +1,22 @@
+.mainLayout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--background-color);
+  color: var(--text-color);
+  position: relative;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding-bottom: 80px; /* Tab bar için boşluk (Home Indicator olmadan) */
+  padding-top: 8px; /* Header ile içerik arasında boşluk */
+}
+
+.contentNoHeader {
+  padding-top: 0;
+  gap: 0;
+} 

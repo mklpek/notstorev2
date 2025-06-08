@@ -1,0 +1,132 @@
+/* Footer Container */
+.footer {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1000;
+}
+
+/* Body Container */
+.body {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: stretch;
+  align-self: stretch;
+  gap: 12px;
+  padding: 8px 16px 0px;
+  width: 100%;
+  height: auto;
+}
+
+/* Button Base */
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 0px 24px;
+  flex: 1;
+  height: 50px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 17px;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+/* Add to Cart Button */
+.addToCart {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+}
+
+/* Buy Now Button */
+.buyNow {
+  background-color: #FFFFFF;
+  color: #000000;
+}
+
+/* Labels */
+.labels {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: auto;
+}
+
+/* Quantity Counter - For the minus sign */
+.quantityButton {
+  color: #FFFFFF;
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  letter-spacing: normal;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 8px;
+  text-align: center;
+  user-select: none;
+  border-radius: 4px;
+}
+
+/* Quantity display number - Wrapped in Ghost button */
+.quantity {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 20px;
+  color: #FFFFFF;
+
+  /* Representing Figma's "Small button (Ghost)" which wraps the quantity '1' */
+  /* This component is 20px wide, hug height, borderRadius 50px in Figma. */
+  /* To make it appear as a 20x20 circular (transparent) area for the text: */
+  display: inline-flex; /* Use flex to center content */
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering */
+  width: 20px;  /* Fixed width from Figma */
+  height: 20px; /* Make height equal to width for a circle */
+  border-radius: 50%; /* Ensures circular shape if it had a background/border */
+  /* No background or border for a "ghost" effect, as per Figma */
+  text-align: center;
+  /* line-height: 1.2; was here, flex centering handles text better in fixed size box */
+  user-select: none;
+}
+
+/* Count icon - For the plus sign */
+.countIcon {
+  color: #FFFFFF;
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 590;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  letter-spacing: normal;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 8px;
+  text-align: center;
+  user-select: none;
+  border-radius: 4px;
+} 

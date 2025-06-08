@@ -1,0 +1,108 @@
+/* Tab Bar Container */
+.tabBar {
+  width: 390px;
+  background-color: #000000;
+  border-top: 0.33px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+/* Body Container */
+.body {
+  display: flex;
+  flex-direction: row;
+  padding: 0px 20px;
+  width: 390px;
+  height: auto;
+}
+
+/* Individual Tab */
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 64px 1px;
+  flex: 1;
+  height: auto;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.tab:hover {
+  opacity: 0.8;
+}
+
+/* Tab States */
+.tab.active {
+  opacity: 1;
+}
+
+.tab.active:hover {
+  opacity: 1;
+}
+
+.tab.idle {
+  opacity: 0.6;
+}
+
+.tab.idle .text {
+  opacity: 0.2;
+}
+
+/* Icon Container */
+.iconContainer {
+  width: 40px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Store Icon */
+.icon {
+  width: 24px;
+  height: 24px;
+  color: #FFFFFF;
+}
+
+/* Profile Container - Figma Pozisyonlama */
+.profileContainer {
+  width: 26px;
+  height: 26px;
+  border-radius: 24px;
+  position: absolute;
+  top: 4px;
+  left: 7px;
+}
+
+.profileImage {
+  width: 24px;
+  height: 24px;
+  border-radius: 40px;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  object-fit: cover;
+}
+
+/* Tab Text - Figma Birebir Uyumlu */
+.text {
+  font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 510;
+  font-size: 10px;
+  line-height: 1.2em;
+  letter-spacing: 0.6599999964237213%;
+  text-align: center;
+  color: #FFFFFF;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+} 
