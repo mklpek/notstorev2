@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import WebApp from '@twa-dev/sdk';
 import CartModal from './features/cart/CartModal';
 import AppSkeleton from './components/Skeleton/AppSkeleton';
@@ -20,39 +20,46 @@ const ProductGrid = lazy(() => import('./features/products/ProductGrid'));
 const ItemPage = lazy(() => import('./features/products/components/ItemPage'));
 const AccountPage = lazy(() => import('./features/account/AccountPage'));
 
-// Telegram tema renklerini güncelleme fonksiyonu
-const updateTelegramTheme = () => {
-  document.documentElement.style.setProperty(
-    '--tg-theme-bg-color',
-    WebApp.themeParams.bg_color || '#000000'
-  );
-  document.documentElement.style.setProperty(
-    '--tg-theme-text-color',
-    WebApp.themeParams.text_color || '#ffffff'
-  );
-  document.documentElement.style.setProperty(
-    '--tg-theme-hint-color',
-    WebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
-  );
-};
+// Telegram BackButton Hook
+function useTelegramBackButton() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isRoot = location.pathname === '/';
+
+    if (isRoot) {
+      // Ana sayfada BackButton gizle
+      WebApp.BackButton.hide();
+    } else {
+      // Alt sayfalarda BackButton göster
+      WebApp.BackButton.show();
+
+      // BackButton tıklandığında navigate(-1) ile geri git
+      const handleBackClick = () => navigate(-1);
+      WebApp.BackButton.onClick(handleBackClick);
+
+      // Component unmount olduğunda event listener'ı kaldır
+      return () => {
+        WebApp.BackButton.offClick(handleBackClick);
+      };
+    }
+  }, [location, navigate]);
+}
 
 function App() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const dispatch = useDispatch();
 
+  // Telegram BackButton Hook'unu kullan
+  useTelegramBackButton();
+
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
 
   useEffect(() => {
-    // Telegram WebApp SDK'sını başlat
+    // Telegram WebApp SDK'sını başlat - expand() çağrısını kaldırdık
     WebApp.ready();
-    WebApp.expand();
-
-    // Tema renklerini uygula
-    updateTelegramTheme();
-
-    // Tema değişikliklerini dinle
-    WebApp.onEvent('themeChanged', updateTelegramTheme);
 
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
@@ -89,10 +96,36 @@ function App() {
 
     initUser();
 
-    // Cleanup
-    return () => {
-      WebApp.offEvent('themeChanged', updateTelegramTheme);
-    };
+    // Telegram tema renklerini uygula
+    document.documentElement.style.setProperty(
+      '--tg-theme-bg-color',
+      WebApp.themeParams.bg_color || '#000000'
+    );
+    document.documentElement.style.setProperty(
+      '--tg-theme-text-color',
+      WebApp.themeParams.text_color || '#ffffff'
+    );
+    document.documentElement.style.setProperty(
+      '--tg-theme-hint-color',
+      WebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
+    );
+
+    // Versiyonu uygunsa şeffaf header ayarla
+    try {
+      if (WebApp.isVersionAtLeast && WebApp.isVersionAtLeast('6.1')) {
+        // @ts-expect-error: tiplerde uyumsuzluk
+        WebApp.setHeaderColor('transparent');
+        WebApp.setBackgroundColor('#000000');
+
+        // Üst çubukta başlık ayarla (6.2+ versiyonlarında çalışır)
+        if (WebApp.isVersionAtLeast('6.2')) {
+          // @ts-expect-error: WebApp.setHeaderTitle tipi için
+          WebApp.setHeaderTitle('NOT Store');
+        }
+      }
+    } catch (e) {
+      console.warn('Telegram header rengi ayarlanamadı:', e);
+    }
   }, [dispatch]);
 
   // Fonksiyonları useCallback ile sarmalıyoruz

@@ -12,8 +12,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
-  padding-bottom: 80px; /* Tab bar için boşluk (Home Indicator olmadan) */
-  padding-top: 8px; /* Header ile içerik arasında boşluk */
+  /* TabBar + Home Indicator için daha doğru boşluk */
+  padding-bottom: calc(80px + var(--tg-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)));
+  /* padding-top kaldırıldı, çünkü artık safe-area-inset-top ile #root üzerinden kontrol ediliyor */
 }
 
 .contentNoHeader {

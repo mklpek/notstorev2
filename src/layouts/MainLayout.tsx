@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
 import styles from './MainLayout.module.css';
-import { useTelegramNav } from '../hooks/useTelegramNav';
 
 interface MainLayoutProps {
   onCartClick?: () => void;
@@ -13,9 +12,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  // Telegram navigasyon hook'unu kullan
-  useTelegramNav();
 
   const activeTab: 'store' | 'profile' = pathname.startsWith('/profile') ? 'profile' : 'store';
   const showHeader = activeTab === 'store';
