@@ -67,10 +67,28 @@ interface WebAppInitData {
   // Diğer initData alanları
 }
 
+interface TelegramBackButton {
+  show: () => void;
+  hide: () => void;
+  onClick: (callback: () => void) => void;
+  offClick: (callback: () => void) => void;
+  isVisible: boolean;
+}
+
+interface TelegramSettingsButton {
+  show: () => void;
+  hide: () => void;
+  onClick: (callback: () => void) => void;
+  offClick: (callback: () => void) => void;
+  isVisible: boolean;
+}
+
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
   close: () => void;
+  requestFullscreen: () => void;
+  setHeaderColor: (color: string) => void;
   initDataUnsafe: WebAppInitData;
   themeParams: {
     bg_color?: string;
@@ -80,6 +98,11 @@ interface TelegramWebApp {
     button_text_color?: string;
     [key: string]: string | undefined;
   };
+  BackButton: TelegramBackButton;
+  SettingsButton: TelegramSettingsButton;
+  onEvent: (eventType: string, eventHandler: () => void) => void;
+  offEvent: (eventType: string, eventHandler: () => void) => void;
+  openLink: (url: string) => void;
   // Diğer WebApp metodları
 }
 

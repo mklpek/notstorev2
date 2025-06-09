@@ -26,6 +26,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
 
   return (
     <div className={styles.mainLayout}>
+      {/* Görünmez safe-area padding */}
+      <div className={styles.tgSafePad} />
+
       {showHeader && (
         <Header {...(onCartClick && { onCartClick })} onSearchOpen={handleSearchOpenChange} />
       )}

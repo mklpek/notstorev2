@@ -67,6 +67,8 @@ export default defineConfig(({ mode }) => {
       ...(isProduction && {
         'process.env.NODE_ENV': JSON.stringify('production'),
       }),
+      // Telegram WebApp betik UMD compatibility için
+      global: 'window',
     },
   };
 });
