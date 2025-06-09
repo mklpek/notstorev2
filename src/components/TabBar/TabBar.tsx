@@ -14,6 +14,9 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => 
   const userState = useSelector((state: RootState) => state.user);
   const user = userState.user;
 
+  // Kullanıcı adını oluştur
+  const displayName = user ? user.first_name || '' : 'Profile';
+
   const handleTabClick = (tab: 'store' | 'profile') => {
     if (onTabChange) {
       onTabChange(tab);
@@ -46,9 +49,14 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => 
                 alt="Profile"
                 className={styles.profileImage}
               />
+              {user?.is_premium && (
+                <div className={styles.premiumIndicator} title="Premium User">
+                  ⭐
+                </div>
+              )}
             </div>
           </div>
-          <span className={styles.text}>{user?.first_name || 'Profile'}</span>
+          <span className={styles.text}>{displayName}</span>
         </div>
       </div>
     </div>
