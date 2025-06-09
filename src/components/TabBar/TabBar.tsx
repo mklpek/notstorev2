@@ -45,7 +45,7 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => 
           <div className={styles.iconContainer}>
             <div className={styles.profileContainer}>
               <img
-                src={user?.photoUrl || '/images/profile-image.png'}
+                src={user?.photoUrl || '/images/profile-avatar.png'}
                 alt="Profile"
                 className={styles.profileImage}
               />

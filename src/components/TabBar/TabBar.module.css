@@ -1,98 +1,130 @@
 /* Tab Bar Container */
 .tabBar {
+  width: 390px;
+  background-color: #000000;
+  border-top: 0.33px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  height: 56px;
-  padding: 4px 8px;
-  z-index: 100;
-  background-color: var(--tg-theme-bg-color);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
 }
 
 /* Body Container */
 .body {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: row;
+  padding: 0px 20px;
+  width: 390px;
+  height: auto;
 }
 
 /* Individual Tab */
 .tab {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 8px 0;
-  transition: opacity 0.2s;
+  gap: 2px;
+  padding: 2px 64px 1px;
+  flex: 1;
+  height: auto;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.tab:hover {
+  opacity: 0.8;
+}
+
+/* Tab States */
+.tab.active {
+  opacity: 1;
+}
+
+.tab.active:hover {
+  opacity: 1;
 }
 
 .tab.idle {
   opacity: 0.6;
 }
 
-.tab.active {
-  opacity: 1;
+.tab.idle .text {
+  opacity: 0.8;
 }
 
 /* Icon Container */
 .iconContainer {
-  position: relative;
+  width: 40px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2px;
+  position: relative;
 }
 
 /* Store Icon */
 .icon {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
 }
 
 /* Profile Container - Figma Pozisyonlama */
 .profileContainer {
-  position: relative;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  border-radius: 24px;
+  position: absolute;
+  top: 4px;
+  left: 7px;
   overflow: hidden;
 }
 
 .profileImage {
-  width: 100%;
-  height: 100%;
+  width: 24px;
+  height: 24px;
+  border-radius: 40px;
+  position: absolute;
+  top: 1px;
+  left: 1px;
   object-fit: cover;
 }
 
+/* Premium göstergesi */
 .premiumIndicator {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 12px;
-  height: 12px;
+  bottom: -1px;
+  right: -1px;
+  width: 10px;
+  height: 10px;
   background-color: #ffd700;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
-  border: 1px solid var(--tg-theme-bg-color);
+  font-size: 6px;
+  border: 1px solid #000000;
+  z-index: 2;
 }
 
 /* Tab Text - Figma Birebir Uyumlu */
 .text {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--tg-theme-text-color);
-  margin-top: 2px;
-  line-height: 1.2;
-  white-space: nowrap;
-  max-width: 80px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-family:
+    'SF Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 510;
+  font-size: 10px;
+  line-height: 1.2em;
+  letter-spacing: 0.6599999964237213%;
   text-align: center;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
 }
