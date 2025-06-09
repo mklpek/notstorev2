@@ -161,29 +161,9 @@ const AccountPage: React.FC = () => {
             alt={fullName}
             className={styles.avatarImage}
           />
-          {user?.is_premium && (
-            <div className={styles.premiumBadge} title="Premium User">
-              ⭐
-            </div>
-          )}
         </div>
         <div className={styles.info}>
           <h1 className={styles.name}>{fullName}</h1>
-          {user?.username && <p className={styles.username}>@{user.username}</p>}
-
-          {/* Telegram kullanıcı ID */}
-          {user?.id && (
-            <p className={styles.userInfo}>
-              <span className={styles.userInfoLabel}>ID:</span> {user.id}
-            </p>
-          )}
-
-          {/* Dil bilgisi */}
-          {user?.language_code && (
-            <p className={styles.userInfo}>
-              <span className={styles.userInfoLabel}>Dil:</span> {user.language_code.toUpperCase()}
-            </p>
-          )}
         </div>
       </div>
 
