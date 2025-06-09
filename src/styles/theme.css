@@ -62,6 +62,10 @@
 
   /* Layout */
   --container-max-width: 390px;
+
+  /* Safe Area Insets - Telegram ve iOS/Android */
+  --safe-area-inset-top: var(--tg-safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --safe-area-inset-bottom: var(--tg-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
 }
 
 /* Base HTML Elements */
@@ -79,7 +83,7 @@ body {
   overflow-x: hidden;
   max-width: var(--container-max-width); /* iOS Telegram'da yatay scroll kaçmasını engeller */
   margin: 0 auto;
-  padding-bottom: calc(var(--tg-safe-area-inset-bottom, env(safe-area-inset-bottom, 0px)));
+  padding-bottom: var(--safe-area-inset-bottom);
 }
 
 #root {
@@ -89,7 +93,7 @@ body {
   margin: 0 auto;
   background: var(--background-color);
   color: var(--text-color);
-  padding-top: calc(var(--tg-safe-area-inset-top, env(safe-area-inset-top, 0px)));
+  padding-top: var(--safe-area-inset-top);
 }
 
 /* Button Reset */

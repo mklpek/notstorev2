@@ -14,11 +14,21 @@ import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
 import { getUserProfilePhoto } from './api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
 
+// Lint kuralını tüm dosya için devre dışı bırak
+
 // Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
 const ProductGrid = lazy(() => import('./features/products/ProductGrid'));
 const ItemPage = lazy(() => import('./features/products/components/ItemPage'));
 const AccountPage = lazy(() => import('./features/account/AccountPage'));
+
+// SafeArea interface
+interface SafeAreaInsets {
+  top: number;
+  bottom: number;
+  left?: number;
+  right?: number;
+}
 
 // Telegram BackButton Hook
 function useTelegramBackButton() {
@@ -31,9 +41,20 @@ function useTelegramBackButton() {
     if (isRoot) {
       // Ana sayfada BackButton gizle
       WebApp.BackButton.hide();
+
+      // Ana sayfada SettingsButton göster - profil sayfasına gider
+      if (WebApp.SettingsButton) {
+        WebApp.SettingsButton.show();
+        WebApp.SettingsButton.onClick(() => navigate('/profile'));
+      }
     } else {
       // Alt sayfalarda BackButton göster
       WebApp.BackButton.show();
+
+      // Alt sayfalarda SettingsButton gizle
+      if (WebApp.SettingsButton) {
+        WebApp.SettingsButton.hide();
+      }
 
       // BackButton tıklandığında navigate(-1) ile geri git
       const handleBackClick = () => navigate(-1);
@@ -42,9 +63,51 @@ function useTelegramBackButton() {
       // Component unmount olduğunda event listener'ı kaldır
       return () => {
         WebApp.BackButton.offClick(handleBackClick);
+        if (WebApp.SettingsButton) {
+          // @ts-expect-error: Telegram WebApp tiplerinde doğru tanımlanmamış
+          WebApp.SettingsButton.offClick();
+        }
       };
     }
   }, [location, navigate]);
+}
+
+// Safe Area değişikliklerini izleyen hook
+function useSafeAreaObserver() {
+  useEffect(() => {
+    // safeAreaChanged olayını dinle
+    const handleSafeAreaChange = (insets: SafeAreaInsets) => {
+      if (insets && typeof insets === 'object') {
+        if ('top' in insets) {
+          document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
+        }
+        if ('bottom' in insets) {
+          document.documentElement.style.setProperty(
+            '--tg-safe-area-inset-bottom',
+            `${insets.bottom}px`
+          );
+        }
+      }
+    };
+
+    // Başlangıçtaki değerleri ayarla
+    if (WebApp.safeAreaInset) {
+      handleSafeAreaChange(WebApp.safeAreaInset);
+    }
+
+    try {
+      // @ts-expect-error: Telegram WebApp tiplerinde doğru tanımlanmamış
+      WebApp.onEvent('safeAreaChanged', handleSafeAreaChange);
+
+      return () => {
+        // @ts-expect-error: Telegram WebApp tiplerinde doğru tanımlanmamış
+        WebApp.offEvent('safeAreaChanged', handleSafeAreaChange);
+      };
+    } catch (e) {
+      console.warn('Telegram safeAreaChanged event dinlenemedi:', e);
+      return () => {};
+    }
+  }, []);
 }
 
 function App() {
@@ -53,6 +116,9 @@ function App() {
 
   // Telegram BackButton Hook'unu kullan
   useTelegramBackButton();
+
+  // Safe Area değişikliklerini izle
+  useSafeAreaObserver();
 
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
@@ -113,13 +179,13 @@ function App() {
     // Versiyonu uygunsa şeffaf header ayarla
     try {
       if (WebApp.isVersionAtLeast && WebApp.isVersionAtLeast('6.1')) {
-        // @ts-expect-error: tiplerde uyumsuzluk
+        // @ts-expect-error: 'transparent' string tipini kabul etmeli
         WebApp.setHeaderColor('transparent');
         WebApp.setBackgroundColor('#000000');
 
         // Üst çubukta başlık ayarla (6.2+ versiyonlarında çalışır)
         if (WebApp.isVersionAtLeast('6.2')) {
-          // @ts-expect-error: WebApp.setHeaderTitle tipi için
+          // @ts-expect-error: WebApp.setHeaderTitle tipinde doğru tanımlanmamış
           WebApp.setHeaderTitle('NOT Store');
         }
       }
