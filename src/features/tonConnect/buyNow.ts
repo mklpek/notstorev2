@@ -1,4 +1,5 @@
 import type { SendTransactionRequest } from '@tonconnect/ui';
+import type { TonConnectUI } from '@tonconnect/ui';
 import type { Item } from '../products/api';
 import type { CartItem } from '../cart/types';
 
@@ -80,7 +81,7 @@ export const createCartTransaction = (
  * @returns Promise<boolean> - Kullanıcı cüzdana bağlı mı
  */
 export const ensureWalletConnection = async (
-  tonConnectUI: any,
+  tonConnectUI: TonConnectUI,
   onModalOpen?: () => void
 ): Promise<boolean> => {
   if (!tonConnectUI.connected) {

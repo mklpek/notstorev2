@@ -108,7 +108,9 @@ const observeTonConnectModal = () => {
     });
   });
 
-  observer.observe(document.body, {
+  // Sadece modal eklendiği root'u izle
+  const root = document.querySelector('#tc-modal-root') ?? document.body;
+  observer.observe(root, {
     childList: true,
     subtree: true,
   });

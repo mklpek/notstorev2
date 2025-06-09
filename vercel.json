@@ -4,29 +4,5 @@
   "framework": "vite",
   "env": {
     "NODE_ENV": "production"
-  },
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://not-contest-cdn.openbuilders.xyz https://telegram.org https://*.telegram-cdn.org; connect-src 'self' https://api.telegram.org https://not-contest-cdn.openbuilders.xyz https://raw.githubusercontent.com; frame-ancestors https://t.me; font-src 'self' data:;"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "/images/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ]
+  }
 }

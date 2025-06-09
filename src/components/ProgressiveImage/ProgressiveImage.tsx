@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { lqip } from '../../utils/lqip';
 import styles from './ProgressiveImage.module.css';
 
@@ -25,6 +25,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [isIntersecting, setIsIntersecting] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Görsel URL güvenlik kontrolü
   const secureSrc = src || '';
@@ -47,8 +48,10 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       { rootMargin: '200px', threshold: 0.01 } // 200px yukarıdan yüklemeye başla
     );
 
-    // Görüntülenebilir ekranda olmasa bile düşük kaliteli blur görsel yüklensin
-    setIsIntersecting(true);
+    // containerRef.current'ı observe et
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
     return () => {
       observer.disconnect();
@@ -67,10 +70,10 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
       // Farklı genişlikler için srcset değerleri
       return [
-        `${baseUrl}${queryPrefix}width=320&format=webp 320w`,
-        `${baseUrl}${queryPrefix}width=640&format=webp 640w`,
-        `${baseUrl}${queryPrefix}width=960&format=webp 960w`,
-        `${baseUrl}${queryPrefix}width=1280&format=webp 1280w`,
+        `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '320', format: 'webp' }).toString()} 320w`,
+        `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '640', format: 'webp' }).toString()} 640w`,
+        `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '960', format: 'webp' }).toString()} 960w`,
+        `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '1280', format: 'webp' }).toString()} 1280w`,
       ].join(', ');
     } catch (error) {
       console.warn('srcSet oluşturma hatası:', error);
@@ -79,7 +82,11 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   };
 
   return (
-    <div className={`${styles.container} ${className || ''}`} style={{ width, height, ...style }}>
+    <div
+      ref={containerRef}
+      className={`${styles.container} ${className || ''}`}
+      style={{ width, height, ...style }}
+    >
       {/* Düşük kaliteli LQIP - eager loading */}
       <img
         src={lqip(secureSrc, 16)}

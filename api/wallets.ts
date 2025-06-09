@@ -12,7 +12,8 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     const data = await res.text();
 
-    response.setHeader('Cache-Control', 's-maxage=86400'); // Cache for 1 day
+    response.setHeader('Access-Control-Allow-Origin', '*'); // Telegram iframe'i için
+    response.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
     response.setHeader('Content-Type', 'application/json');
     response.status(200).send(data);
   } catch (error) {
