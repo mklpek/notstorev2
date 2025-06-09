@@ -1,3 +1,0 @@
-/*  
-  Content-Security-Policy: default-src 'self' blob:; style-src 'self' 'unsafe-inline' 'nonce-%csp%'; img-src 'self' data: https://not-contest-cdn.openbuilders.xyz https://telegram.org https://*.telegram-cdn.org; connect-src 'self' https://api.telegram.org https://not-contest-cdn.openbuilders.xyz https://not-store-telegram.vercel.app; frame-ancestors https://t.me; font-src 'self' data:;
-  Cache-Control: public, max-age=3600 
