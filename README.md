@@ -22,6 +22,9 @@
 - **Lazy Loading**: Code splitting ve performance optimizasyonu (✅ Aktif)
 - **Virtualization**: React Window ile performans optimizasyonu (✅ Aktif)
 - **TON Connect Integration**: Blockchain cüzdan bağlantısı ve ödeme sistemi (✅ TAMAMLANDı)
+- **CSP Optimization**: Content Security Policy optimizasyonu ve Vercel uyumluluğu (✅ YENİ)
+- **ESLint Compliance**: TypeScript strict mode ve lint kuralları uyumluluğu (✅ YENİ)
+- **API Proxy System**: GitHub raw içeriği için proxy endpoint'leri (✅ YENİ)
 - **Optimized Asset Management**: Statik görseller public/, dinamik ikonlar src/assets/
 - **CSS Modules Architecture**: Tek global theme + modüler bileşen stilleri
 - **Clean Project Structure**: Tutarlı isimlendirme ve optimize edilmiş klasör yapısı
@@ -123,6 +126,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 - **React Virtualized Auto Sizer 1.0.26** - Otomatik boyutlandırma (✅ Aktif)
 - **@tonconnect/sdk** - TON blockchain cüzdan bağlantısı (✅ YENİ)
 - **@tonconnect/ui** - TON Connect UI bileşenleri (✅ YENİ)
+- **@vercel/node** - Vercel Edge Functions için tip desteği (✅ YENİ)
 - **CSS Modules** - Modüler stil yönetimi
 - **Telegram WebApp SDK 8.0.2** - Telegram entegrasyonu
 - **ESLint 9.25.0** - Code linting
@@ -144,6 +148,8 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 ├── dist/                          # Build output directory
 ├── node_modules/                  # NPM dependencies
 ├── scripts/                       # Build ve deployment scriptleri
+├── api/                           # Vercel Edge Functions (✅ YENİ)
+│   └── wallets.ts                 # TON wallets proxy (TypeScript) (1.2KB, 28 satır)
 ├── public/                        # Static public files
 │   ├── fonts/                     # Font files (✅ GÜNCEL)
 │   │   ├── SF Pro Rounded.woff2   # SF Pro Rounded font (515KB)
@@ -263,15 +269,18 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── SearchBar.tsx      # Search bar component (2.3KB, 78 satır)
 │   │   │   └── index.ts           # Search export (41B, 1 satır)
 │   │   ├── tonConnect/            # TON Connect blockchain integration (✅ TAMAMLANDı)
-│   │   │   ├── TonConnectProvider.tsx # TON Connect React context provider (4.4KB, 135 satır)
+│   │   │   ├── TonConnectProvider.tsx # TON Connect React context provider (4.2KB, 130 satır) - ✅ GÜNCEL
+│   │   │   ├── TonConnectContext.ts   # TON Connect React context (250B, 6 satır) - ✅ YENİ
 │   │   │   ├── TonConnectButton.tsx   # TON Connect wallet button component (1.2KB, 45 satır)
 │   │   │   ├── TonConnectButton.module.css # TON Connect button styles (528B, 24 satır)
 │   │   │   ├── SuccessModal.tsx       # Transaction success modal (987B, 37 satır) - ✅ YENİ
 │   │   │   ├── SuccessModal.module.css # Success modal styles (2.8KB, 133 satır) - ✅ YENİ
 │   │   │   ├── useTonConnect.ts       # TON Connect custom hook (666B, 20 satır)
 │   │   │   ├── buyNow.ts              # Buy now transaction utilities (3.9KB, 111 satır)
-│   │   │   ├── config.ts              # TON Connect configuration (432B, 18 satır)
-│   │   │   └── index.ts               # TON Connect exports (275B, 4 satır)
+│   │   │   ├── config.ts              # TON Connect configuration (580B, 22 satır) - ✅ GÜNCEL
+│   │   │   ├── utils/                 # TON Connect utilities (✅ YENİ)
+│   │   │   │   └── dom.ts             # DOM manipulation helpers (420B, 12 satır) - ✅ YENİ
+│   │   │   └── index.ts               # TON Connect exports (320B, 6 satır) - ✅ GÜNCEL
 │   │   └── theme/                 # Theme feature (boş - gelecek geliştirme)
 │   │       └── themeSlice.ts      # Theme slice (1.6KB, 53 satır)
 │   ├── hooks/                     # Custom React hooks (✅ GÜNCEL)
@@ -305,11 +314,12 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 ### 📊 Dosya İstatistikleri - ✅ GÜNCEL
 
-**Toplam Dosya Sayısı:** ~170+ dosya (node_modules ve .git hariç) - ✅ GÜNCEL
+**Toplam Dosya Sayısı:** ~175+ dosya (node_modules ve .git hariç) - ✅ GÜNCEL
 
 **Kategoriler:**
 
-- **Kaynak Kod:** 100+ dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
+- **Kaynak Kod:** 105+ dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
+- **API Endpoints:** 1 dosya (Vercel Edge Functions) - ✅ YENİ
 - **Assets:** 13 dosya (SVG/PNG icons - src/assets/) - ✅ GÜNCEL
 - **Public Images:** 2 dosya (PNG görselleri - public/images/) - ✅ OPTİMİZE EDİLDİ
 - **Public Fonts:** 2 dosya (SF Pro Rounded font ailesi - public/fonts/) - ✅ GÜNCEL
@@ -320,8 +330,8 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 **Kod Satırları:**
 
-- **TypeScript/TSX/CSS:** ~7,000+ satır - ✅ GÜNCEL
-- **Toplam:** ~7,000+ satır kod
+- **TypeScript/TSX/CSS:** ~7,200+ satır - ✅ GÜNCEL
+- **Toplam:** ~7,200+ satır kod
 
 ## 🎯 Uygulama Akışı ve Navigasyon - ✅ GÜNCEL
 
@@ -786,6 +796,11 @@ interface RootState {
 - **Progressive Image Loading**: ProgressiveImage bileşeni (✅ YENİ)
 - **Empty History API Entegrasyonu**: getEmptyHistory entegrasyonu (✅ YENİ)
 - **TON Connect Integration**: Blockchain cüzdan bağlantısı ve ödeme sistemi (✅ TAMAMLANDı)
+- **CSP Optimization**: Content Security Policy optimizasyonu ve Vercel uyumluluğu (✅ YENİ)
+- **ESLint Compliance**: TypeScript strict mode ve lint kuralları uyumluluğu (✅ YENİ)
+- **API Proxy System**: GitHub raw içeriği için proxy endpoint'leri (✅ YENİ)
+- **DOM Utilities**: setBlur ve diğer DOM manipulation helpers (✅ YENİ)
+- **Context Separation**: React Fast Refresh uyumluluğu için context ayrımı (✅ YENİ)
 
 ### ⚠️ Kritik Eksiklikler
 
@@ -854,6 +869,11 @@ interface RootState {
 - **Advanced Skeleton System**: ItemPageSkeleton, TabBarSkeleton, HeaderSkeleton (✅ YENİ)
 - **Skeleton Theme Hook**: useSkeletonTheme hook (✅ YENİ)
 - **TON Connect Integration**: Blockchain cüzdan bağlantısı ve ödeme sistemi (✅ TAMAMLANDı)
+- **CSP Optimization**: Content Security Policy optimizasyonu ve Vercel uyumluluğu (✅ YENİ)
+- **ESLint Compliance**: TypeScript strict mode ve lint kuralları uyumluluğu (✅ YENİ)
+- **API Proxy System**: GitHub raw içeriği için proxy endpoint'leri (✅ YENİ)
+- **DOM Utilities**: setBlur ve diğer DOM manipulation helpers (✅ YENİ)
+- **Context Separation**: React Fast Refresh uyumluluğu için context ayrımı (✅ YENİ)
 
 ### ⚠️ Kritik Sorunlar:
 
@@ -870,7 +890,7 @@ interface RootState {
 
 ### 📈 Kod Metrikleri - ✅ GÜNCEL:
 
-- **Toplam Satır:** ~7,000+ satır - ✅ GÜNCEL
+- **Toplam Satır:** ~7,200+ satır - ✅ GÜNCEL
 - **Component Sayısı:** 60+ bileşen - ✅ GÜNCEL
 - **Feature Modülü:** 6 modül (1 geliştirme aşamasında) - ✅ GÜNCEL
 - **Custom Hook:** 2 aktif hook (useDebounce, useSkeletonTheme)
@@ -887,6 +907,72 @@ interface RootState {
 2. **Theme Feature UI Geliştirme**: Mevcut slice'a UI bileşenlerinin eklenmesi
 
 3. **Utils Klasörü Genişletme**: Daha fazla utility fonksiyonunun eklenmesi
+
+## 🔒 CSP ve Deployment Optimizasyonu - ✅ YENİ
+
+### 🛡️ Content Security Policy (CSP)
+
+Vercel deployment'ında Telegram Mini App CSP kısıtlamalarını aşmak için optimize edilmiş güvenlik politikası:
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://not-contest-cdn.openbuilders.xyz https://telegram.org https://*.telegram-cdn.org; connect-src 'self' https://api.telegram.org https://not-contest-cdn.openbuilders.xyz https://raw.githubusercontent.com; frame-ancestors https://t.me; font-src 'self' data:;"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 🔧 ESLint Compliance
+
+Husky pre-commit hook'larını geçmek için tüm TypeScript strict mode kurallarına uyumluluk:
+
+- **@typescript-eslint/ban-ts-comment**: `@ts-ignore` yerine `@ts-expect-error` kullanımı
+- **@typescript-eslint/no-explicit-any**: Tip güvenliği için `any` yerine spesifik tipler
+- **react-refresh/only-export-components**: Fast Refresh uyumluluğu için context ayrımı
+
+### 🌐 API Proxy System
+
+GitHub raw içeriği için Vercel Edge Functions:
+
+```typescript
+// api/wallets.ts - TON Connect wallet listesi proxy
+export default async function handler(request: VercelRequest, response: VercelResponse) {
+  const res = await fetch(
+    'https://raw.githubusercontent.com/ton-blockchain/wallets-list/main/wallets-v2.json'
+  );
+  response.setHeader('Cache-Control', 's-maxage=86400');
+  response.status(200).send(await res.text());
+}
+```
+
+### 🎯 BotFather Domain Konfigürasyonu
+
+Telegram BotFather'da `/setdomain` komutu ile eklenmesi gereken domainler:
+
+1. `not-contest-cdn.openbuilders.xyz` - Ürün görselleri ve API
+2. `raw.githubusercontent.com` - TON Connect wallet listesi (opsiyonel, proxy kullanılıyor)
+
+### 🔄 DOM Utilities
+
+Type-safe DOM manipulation için yardımcı fonksiyonlar:
+
+```typescript
+// src/features/tonConnect/utils/dom.ts
+export function setBlur(el: HTMLElement, color: string = 'rgba(0, 0, 0, 0.7)'): void {
+  el.style.backgroundColor = color;
+  el.style.backdropFilter = 'blur(8px)';
+  const css = el.style as CSSStyleDeclaration & { webkitBackdropFilter?: string };
+  css.webkitBackdropFilter = 'blur(8px)';
+}
+```
 
 ## 📄 Lisans
 

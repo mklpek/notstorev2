@@ -6,9 +6,6 @@ import { MANIFEST_URL, TON_CONNECT_UI_CONFIG, WALLETS_LIST_URL } from './config'
 import { TonConnectUIContext } from './TonConnectContext';
 import { setBlur } from './utils/dom';
 
-// TonConnectUI dil tipi için yardımcı tip
-type TonConnectLanguage = 'en' | 'ru' | 'tr';
-
 interface TonConnectProviderProps {
   children: ReactNode;
 }

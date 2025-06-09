@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { TonConnectUIContext } from './TonConnectProvider';
+import { TonConnectUIContext } from './TonConnectContext';
 
 const useTonConnect = () => {
   const tonConnectUI = useContext(TonConnectUIContext);
