@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { TonConnectUI } from '@tonconnect/ui';
-import { MANIFEST_URL, TON_CONNECT_UI_CONFIG } from './config';
+import type { Locales } from '@tonconnect/ui';
+import { MANIFEST_URL, TON_CONNECT_UI_CONFIG, WALLETS_LIST_URL } from './config';
+import { TonConnectUIContext } from './TonConnectContext';
+import { setBlur } from './utils/dom';
+
+// TonConnectUI dil tipi için yardımcı tip
+type TonConnectLanguage = 'en' | 'ru' | 'tr';
 
 interface TonConnectProviderProps {
   children: ReactNode;
@@ -12,11 +18,15 @@ interface TonConnectProviderProps {
 const tonConnectUI = new TonConnectUI({
   manifestUrl: MANIFEST_URL,
   uiPreferences: TON_CONNECT_UI_CONFIG.uiPreferences,
-  language: TON_CONNECT_UI_CONFIG.language as any,
+  language: TON_CONNECT_UI_CONFIG.language as Locales,
 });
 
-// React context oluşturalım
-export const TonConnectUIContext = React.createContext<TonConnectUI>(tonConnectUI);
+// TON Connect walletsList URL'yi manuel override et
+// @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+if (tonConnectUI.connector && tonConnectUI.connector.walletsList) {
+  // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+  tonConnectUI.connector.walletsList.walletsListSource = WALLETS_LIST_URL;
+}
 
 // TON Connect modal blur efekti için dinamik stil ekleme
 const addTonConnectModalStyles = () => {
@@ -93,10 +103,7 @@ const observeTonConnectModal = () => {
             const backdrop =
               element.querySelector('[class*="backdrop"], [data-backdrop]') || element;
             if (backdrop instanceof HTMLElement) {
-              backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-              backdrop.style.backdropFilter = 'blur(8px)';
-              // WebKit prefix için any tipini kullan
-              (backdrop.style as any).webkitBackdropFilter = 'blur(8px)';
+              setBlur(backdrop);
             }
           }
         }
