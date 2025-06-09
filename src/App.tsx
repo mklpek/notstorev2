@@ -20,6 +20,22 @@ const ProductGrid = lazy(() => import('./features/products/ProductGrid'));
 const ItemPage = lazy(() => import('./features/products/components/ItemPage'));
 const AccountPage = lazy(() => import('./features/account/AccountPage'));
 
+// Telegram tema renklerini güncelleme fonksiyonu
+const updateTelegramTheme = () => {
+  document.documentElement.style.setProperty(
+    '--tg-theme-bg-color',
+    WebApp.themeParams.bg_color || '#000000'
+  );
+  document.documentElement.style.setProperty(
+    '--tg-theme-text-color',
+    WebApp.themeParams.text_color || '#ffffff'
+  );
+  document.documentElement.style.setProperty(
+    '--tg-theme-hint-color',
+    WebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
+  );
+};
+
 function App() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -31,6 +47,12 @@ function App() {
     // Telegram WebApp SDK'sını başlat
     WebApp.ready();
     WebApp.expand();
+
+    // Tema renklerini uygula
+    updateTelegramTheme();
+
+    // Tema değişikliklerini dinle
+    WebApp.onEvent('themeChanged', updateTelegramTheme);
 
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
@@ -67,19 +89,10 @@ function App() {
 
     initUser();
 
-    // Telegram tema renklerini uygula
-    document.documentElement.style.setProperty(
-      '--tg-theme-bg-color',
-      WebApp.themeParams.bg_color || '#000000'
-    );
-    document.documentElement.style.setProperty(
-      '--tg-theme-text-color',
-      WebApp.themeParams.text_color || '#ffffff'
-    );
-    document.documentElement.style.setProperty(
-      '--tg-theme-hint-color',
-      WebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
-    );
+    // Cleanup
+    return () => {
+      WebApp.offEvent('themeChanged', updateTelegramTheme);
+    };
   }, [dispatch]);
 
   // Fonksiyonları useCallback ile sarmalıyoruz

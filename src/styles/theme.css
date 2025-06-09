@@ -79,6 +79,8 @@ body {
   overflow-x: hidden;
   max-width: var(--container-max-width); /* iOS Telegram'da yatay scroll kaçmasını engeller */
   margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 #root {
