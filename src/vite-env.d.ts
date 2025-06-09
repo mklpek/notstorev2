@@ -67,29 +67,6 @@ interface WebAppInitData {
   // Diğer initData alanları
 }
 
-interface SafeAreaInsets {
-  top: number;
-  bottom: number;
-  left?: number;
-  right?: number;
-}
-
-interface BackButton {
-  show: () => void;
-  hide: () => void;
-  onClick: (callback: () => void) => void;
-  offClick: (callback: () => void) => void;
-  isVisible: boolean;
-}
-
-interface SettingsButton {
-  show: () => void;
-  hide: () => void;
-  onClick: (callback: () => void) => void;
-  offClick: (callback?: () => void) => void;
-  isVisible: boolean;
-}
-
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
@@ -103,15 +80,6 @@ interface TelegramWebApp {
     button_text_color?: string;
     [key: string]: string | undefined;
   };
-  BackButton: BackButton;
-  SettingsButton: SettingsButton;
-  isVersionAtLeast: (version: string) => boolean;
-  setHeaderColor: (color: string | 'bg_color' | 'secondary_bg_color') => void;
-  setHeaderTitle: (title: string) => void;
-  setBackgroundColor: (color: string) => void;
-  safeAreaInset?: SafeAreaInsets;
-  onEvent: (eventName: string, callback: (params: any) => void) => void;
-  offEvent: (eventName: string, callback: (params: any) => void) => void;
   // Diğer WebApp metodları
 }
 
