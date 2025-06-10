@@ -71,12 +71,6 @@
 
   /* Layout */
   --container-max-width: 390px;
-
-  /* Safe Area Mixin Functions - CSS Custom Properties */
-  --safe-inset-top: max(env(safe-area-inset-top), var(--tg-safe-area-inset-top, 0));
-  --safe-inset-right: max(env(safe-area-inset-right), var(--tg-safe-area-inset-right, 0));
-  --safe-inset-bottom: max(env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
-  --safe-inset-left: max(env(safe-area-inset-left), var(--tg-safe-area-inset-left, 0));
 }
 
 /* Base HTML Elements */
@@ -94,8 +88,11 @@ body {
   overflow-x: hidden;
   max-width: var(--container-max-width); /* iOS Telegram'da yatay scroll kaçmasını engeller */
   margin: 0 auto;
-  padding: 0; /* Safe-area padding'i bileşenlere taşıyoruz */
-  scroll-padding-bottom: var(--safe-inset-bottom); /* Scroll-to-anchor bug'ını önler */
+  /* Telegram safe area inset paddingleri */
+  padding-top: var(--tg-safe-area-inset-top, 0);
+  padding-left: var(--tg-safe-area-inset-left, 0);
+  padding-right: var(--tg-safe-area-inset-right, 0);
+  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
 }
 
 #root {
@@ -162,25 +159,42 @@ a {
   padding: var(--spacing-lg);
 }
 
+/* Safe area ile ilgili yardımcı sınıflar */
+.tg-safe-pad-top {
+  padding-top: var(--tg-safe-area-inset-top, 0);
+}
+
+.tg-safe-pad-bottom {
+  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
+}
+
+.tg-safe-pad-left {
+  padding-left: var(--tg-safe-area-inset-left, 0);
+}
+
+.tg-safe-pad-right {
+  padding-right: var(--tg-safe-area-inset-right, 0);
+}
+
 /* Safe area yardımcı sınıfları */
 .tg-safe-pad-top {
-  padding-top: var(--safe-inset-top);
+  padding-top: var(--tg-safe-area-inset-top);
 }
 .tg-safe-pad-right {
-  padding-right: var(--safe-inset-right);
+  padding-right: var(--tg-safe-area-inset-right);
 }
 .tg-safe-pad-bottom {
-  padding-bottom: var(--safe-inset-bottom);
+  padding-bottom: var(--tg-safe-area-inset-bottom);
 }
 .tg-safe-pad-left {
-  padding-left: var(--safe-inset-left);
+  padding-left: var(--tg-safe-area-inset-left);
 }
 
 .tg-safe-height-top {
-  height: var(--safe-inset-top);
+  height: var(--tg-safe-area-inset-top);
 }
 .tg-safe-height-bot {
-  height: var(--safe-inset-bottom);
+  height: var(--tg-safe-area-inset-bottom);
 }
 
 .tg-viewport-height {

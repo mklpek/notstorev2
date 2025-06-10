@@ -26,8 +26,8 @@ export default function useTelegramHeader() {
     }
 
     /* --- transparent system bar --------------------------------------- */
-    // setHeaderColor sadece Bot API 8.0+ destekler ve expanded durumda çalışır
-    if (tgVer >= 8.0 && wa.isExpanded) {
+    // setHeaderColor sadece Bot API 8.0+ destekler
+    if (tgVer >= 8.0) {
       safeCall('setHeaderColor', '#00000000');
     }
 
