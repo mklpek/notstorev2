@@ -1,7 +1,5 @@
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route } from 'react-router-dom';
-// Telegram WebApp SDK'yı CDN üzerinden yüklüyoruz
-import WebApp from './telegram-webapp-script';
 import CartModal from './features/cart/CartModal';
 import AppSkeleton from './components/Skeleton/AppSkeleton';
 import ItemPageSkeleton from './components/Skeleton/ItemPageSkeleton';
@@ -14,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
 import { getUserProfilePhoto } from './api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
+import useTelegramHeader from './hooks/useTelegramHeader';
 
 // Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
@@ -25,20 +24,47 @@ function App() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const dispatch = useDispatch();
 
+  // Telegram header hook'unu kullan - tüm kontroller bu hook içerisinde
+  useTelegramHeader();
+
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
 
+  // Telegram tema renklerini uygula
   useEffect(() => {
-    // Telegram WebApp SDK'sını başlat
-    WebApp.ready();
-    WebApp.expand();
+    try {
+      const wa = window.Telegram?.WebApp;
+      if (!wa) return;
 
+      // Tema renklerini CSS değişkenlerine ayarla
+      document.documentElement.style.setProperty(
+        '--tg-theme-bg-color',
+        wa.themeParams.bg_color || '#000000'
+      );
+      document.documentElement.style.setProperty(
+        '--tg-theme-text-color',
+        wa.themeParams.text_color || '#ffffff'
+      );
+      document.documentElement.style.setProperty(
+        '--tg-theme-hint-color',
+        wa.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
+      );
+    } catch {
+      /* ignored */
+    }
+  }, []);
+
+  // Kullanıcı bilgilerini yükle
+  useEffect(() => {
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
       try {
+        const wa = window.Telegram?.WebApp;
+        if (!wa) return;
+
         // TypeScript null/undefined kontrolü
-        if (WebApp?.initDataUnsafe?.user) {
-          const user = WebApp.initDataUnsafe.user;
+        if (wa?.initDataUnsafe?.user) {
+          const user = wa.initDataUnsafe.user;
 
           // TelegramUser tipine uygun veriyi hazırla
           const userDetails: TelegramUser = {
@@ -61,26 +87,12 @@ function App() {
             dispatch(setUserPhotoUrl(photoUrl));
           }
         }
-      } catch (error) {
-        console.error('Telegram kullanıcı bilgileri alınamadı:', error);
+      } catch {
+        /* ignored – a warning is already printed above */
       }
     };
 
     initUser();
-
-    // Telegram tema renklerini uygula
-    document.documentElement.style.setProperty(
-      '--tg-theme-bg-color',
-      WebApp.themeParams.bg_color || '#000000'
-    );
-    document.documentElement.style.setProperty(
-      '--tg-theme-text-color',
-      WebApp.themeParams.text_color || '#ffffff'
-    );
-    document.documentElement.style.setProperty(
-      '--tg-theme-hint-color',
-      WebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
-    );
   }, [dispatch]);
 
   // Fonksiyonları useCallback ile sarmalıyoruz

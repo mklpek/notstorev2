@@ -67,6 +67,19 @@ interface WebAppInitData {
   // Diğer initData alanları
 }
 
+// Telegram WebApp için genişletilmiş tipler
+interface TelegramWebAppButton {
+  show?: () => void;
+  hide?: () => void;
+  onClick?: (callback: () => void) => void;
+  offClick?: (callback: () => void) => void;
+  setText?: (text: string) => void;
+  enable?: () => void;
+  disable?: () => void;
+  showProgress?: (leaveActive?: boolean) => void;
+  hideProgress?: () => void;
+}
+
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
@@ -79,6 +92,20 @@ interface TelegramWebApp {
     button_color?: string;
     button_text_color?: string;
     [key: string]: string | undefined;
+  };
+  // Yeni metodlar - opsiyonel çünkü eski versiyonlarda olmayabilir
+  requestFullscreen?: () => void;
+  setHeaderColor?: (color: string) => void;
+  openLink?: (url: string) => void;
+  BackButton?: TelegramWebAppButton;
+  SettingsButton?: TelegramWebAppButton;
+  onEvent?: (eventType: string, handler: (...args: unknown[]) => void) => void;
+  offEvent?: (eventType: string, handler: (...args: unknown[]) => void) => void;
+  safeAreaInset?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
   };
   // Diğer WebApp metodları
 }
