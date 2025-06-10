@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { TonConnectUI } from '@tonconnect/ui';
 import type { Locales } from '@tonconnect/ui';
-import { MANIFEST_URL, TON_CONNECT_UI_CONFIG, WALLETS_LIST_URL } from './config';
+import { MANIFEST_URL, TON_CONNECT_UI_CONFIG } from './config';
 import { TonConnectUIContext } from './TonConnectContext';
 import { setBlur } from './utils/dom';
 
@@ -10,20 +10,50 @@ interface TonConnectProviderProps {
   children: ReactNode;
 }
 
+// TON Connect walletsList URL'sini çalışma zamanında ayarla
+// Bu şekilde window.location'a build zamanında değil, çalışma zamanında erişiyoruz
+const getWalletsListUrl = () => {
+  return `${window.location.origin}/api/wallets`;
+};
+
 // TonConnectUI sınıfını kullanarak provider oluşturacağız
 // @tonconnect/ui, TonConnectUIProvider doğrudan export etmiyor
-const tonConnectUI = new TonConnectUI({
-  manifestUrl: MANIFEST_URL,
-  uiPreferences: TON_CONNECT_UI_CONFIG.uiPreferences,
-  language: TON_CONNECT_UI_CONFIG.language as Locales,
-});
+const createTonConnectUI = () => {
+  try {
+    const ui = new TonConnectUI({
+      manifestUrl: MANIFEST_URL,
+      uiPreferences: TON_CONNECT_UI_CONFIG.uiPreferences,
+      language: TON_CONNECT_UI_CONFIG.language as Locales,
+    });
 
-// TON Connect walletsList URL'yi manuel override et
-// @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
-if (tonConnectUI.connector && tonConnectUI.connector.walletsList) {
-  // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
-  tonConnectUI.connector.walletsList.walletsListSource = WALLETS_LIST_URL;
-}
+    // TON Connect walletsList URL'yi manuel override et
+    if (ui.connector) {
+      // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+      if (ui.connector.walletsList) {
+        try {
+          // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+          ui.connector.walletsList.walletsListSource = getWalletsListUrl();
+        } catch (error) {
+          console.error('Failed to set wallets list source:', error);
+        }
+      }
+    }
+
+    return ui;
+  } catch (error) {
+    console.error('Failed to initialize TonConnectUI:', error);
+    // Fallback olarak minimal bir TonConnectUI objesi döndür
+    return {
+      connector: {
+        connected: false,
+        connect: () => Promise.resolve(),
+        disconnect: () => {},
+      },
+      openModal: () => {},
+      closeModal: () => {},
+    } as unknown as TonConnectUI;
+  }
+};
 
 // TON Connect modal blur efekti için dinamik stil ekleme
 const addTonConnectModalStyles = () => {
@@ -119,6 +149,9 @@ const observeTonConnectModal = () => {
 };
 
 const TonConnectProvider: React.FC<TonConnectProviderProps> = ({ children }) => {
+  // useMemo ile TonConnectUI örneğini oluştur - böylece sadece bir kez yaratılır
+  const tonConnectUI = useMemo(() => createTonConnectUI(), []);
+
   useEffect(() => {
     // Dinamik stil ekle
     addTonConnectModalStyles();

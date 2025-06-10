@@ -6,6 +6,12 @@ export const useTelegramHeader = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    // Telegram WebApp kontrolü
+    if (!window.Telegram?.WebApp) {
+      console.warn('Telegram WebApp not available. Skipping header configuration.');
+      return;
+    }
+
     const wa = window.Telegram.WebApp;
     wa.ready();
 
@@ -40,6 +46,11 @@ export const useTelegramHeader = () => {
 
   // Viewport yüksekliğini güncelleme
   useEffect(() => {
+    // Telegram WebApp kontrolü
+    if (!window.Telegram?.WebApp) {
+      return;
+    }
+
     const wa = window.Telegram.WebApp;
     const setVH = () =>
       document.documentElement.style.setProperty('--tg-viewport-height', `${wa.viewportHeight}px`);
