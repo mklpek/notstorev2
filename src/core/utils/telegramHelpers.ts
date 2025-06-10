@@ -38,17 +38,21 @@ export function canUse(method: keyof TelegramWebApp): boolean {
 }
 
 /**
- * Telegram WebApp metodunu güvenli şekilde çağırır
+ * Telegram WebApp metodunu güvenli şekilde çağırır - Telegram 2.0 API uyumlu
+ * Console warning'lerini temizler ve tip güvenliği sağlar
  */
-export function safeCall<T extends keyof TelegramWebApp>(method: T, ...args: unknown[]): boolean {
+export function safeCall<T extends keyof TelegramWebApp>(method: T, ...args: unknown[]): unknown {
   try {
     const wa = window.Telegram?.WebApp;
-    if (!wa || typeof wa[method] !== 'function') return false;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (wa[method] as any)(...args);
-    return true;
+    // Fonksiyon tanımlı ve typeof === 'function' mı?
+    if (typeof wa?.[method] === 'function') {
+      // @ts-expect-error: dinamik çağrı - Telegram API'nin doğası gereği
+      return wa[method](...args);
+    }
+
+    return undefined;
   } catch {
-    return false;
+    return undefined;
   }
 }

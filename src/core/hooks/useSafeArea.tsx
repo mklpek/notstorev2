@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import { getTgVersion, canUse } from '../utils/telegramHelpers';
+import { getTgVersion, safeCall } from '../utils/telegramHelpers';
 
 // Safe Area Context tipi
 interface SafeAreaInsets {
@@ -133,18 +133,16 @@ export function useSafeAreaInsets() {
 
     try {
       // viewport_changed eventi - tüm versiyonlarda mevcut
-      if (canUse('onEvent')) {
-        wa.onEvent('viewport_changed', viewportHandler);
+      if (safeCall('onEvent', 'viewport_changed', viewportHandler)) {
         cleanupFns.push(() => {
-          if (wa.offEvent) wa.offEvent('viewport_changed', viewportHandler);
+          safeCall('offEvent', 'viewport_changed', viewportHandler);
         });
       }
 
       // safe_area_changed eventi - sadece TG >= 8.0
-      if (tgVer >= 8.0 && canUse('onEvent')) {
-        wa.onEvent('safe_area_changed', safeAreaHandler);
+      if (tgVer >= 8.0 && safeCall('onEvent', 'safe_area_changed', safeAreaHandler)) {
         cleanupFns.push(() => {
-          if (wa.offEvent) wa.offEvent('safe_area_changed', safeAreaHandler);
+          safeCall('offEvent', 'safe_area_changed', safeAreaHandler);
         });
       }
     } catch {
@@ -168,7 +166,9 @@ export function useSafeAreaInsets() {
     };
 
     // Sadece mobile viewport'larda dinle ve Telegram event'i yoksa
-    if (window.visualViewport && window.visualViewport.height < 900 && !canUse('onEvent')) {
+    // safeCall ile onEvent desteğini kontrol et
+    const hasEventSupport = safeCall('onEvent', 'test', () => {}) !== undefined;
+    if (window.visualViewport && window.visualViewport.height < 900 && !hasEventSupport) {
       window.visualViewport.addEventListener('resize', handleVisualViewportChange);
       cleanupFns.push(() => {
         if (rafId) cancelAnimationFrame(rafId);

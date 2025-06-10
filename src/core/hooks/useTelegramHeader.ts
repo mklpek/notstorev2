@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getTgVersion, safeCall, canUse } from '../utils/telegramHelpers';
+import { getTgVersion, safeCall } from '../utils/telegramHelpers';
 
 export default function useTelegramHeader() {
   const tgVer = getTgVersion();
@@ -15,7 +15,7 @@ export default function useTelegramHeader() {
 
     /* --- fullscreen / expand ------------------------------------------ */
     // requestFullscreen sadece Bot API 7.0+ destekler
-    if (tgVer >= 7.0 && canUse('requestFullscreen')) {
+    if (tgVer >= 7.0) {
       if (!safeCall('requestFullscreen')) {
         // Fallback to expand
         safeCall('expand');
@@ -27,7 +27,7 @@ export default function useTelegramHeader() {
 
     /* --- transparent system bar --------------------------------------- */
     // setHeaderColor sadece Bot API 8.0+ destekler
-    if (tgVer >= 8.0 && canUse('setHeaderColor')) {
+    if (tgVer >= 8.0) {
       safeCall('setHeaderColor', '#00000000');
     }
 
@@ -44,13 +44,12 @@ export default function useTelegramHeader() {
           wa.BackButton.hide();
         }
 
-        if (canUse('onEvent')) {
-          const onBack = () => nav(-1);
-          wa.onEvent('back_button_pressed', onBack);
-
+        // Event listener'ı güvenli şekilde ekle
+        const onBack = () => nav(-1);
+        if (safeCall('onEvent', 'back_button_pressed', onBack)) {
           cleanupFns.push(() => {
             if (wa.BackButton?.hide) wa.BackButton.hide();
-            if (wa.offEvent) wa.offEvent('back_button_pressed', onBack);
+            safeCall('offEvent', 'back_button_pressed', onBack);
           });
         }
       } catch {
@@ -65,13 +64,12 @@ export default function useTelegramHeader() {
           wa.SettingsButton.show();
         }
 
-        if (canUse('onEvent') && canUse('openLink')) {
-          const openMenu = () => wa.openLink('https://t.me/notstore_bot');
-          wa.onEvent('settings_button_pressed', openMenu);
-
+        // Event listener'ı güvenli şekilde ekle
+        const openMenu = () => safeCall('openLink', 'https://t.me/notstore_bot');
+        if (safeCall('onEvent', 'settings_button_pressed', openMenu)) {
           cleanupFns.push(() => {
             if (wa.SettingsButton?.hide) wa.SettingsButton.hide();
-            if (wa.offEvent) wa.offEvent('settings_button_pressed', openMenu);
+            safeCall('offEvent', 'settings_button_pressed', openMenu);
           });
         }
       } catch {
