@@ -1,5 +1,10 @@
 // Custom Hooks
-export { useDebouncedValue as useDebounce } from './useDebounce';
+export { useDebouncedValue } from './useDebounce';
 export { useSkeletonTheme } from './useSkeletonTheme';
 export { default as useTelegramHeader } from './useTelegramHeader';
-export { default as useSafeArea } from './useSafeArea';
+export {
+  default as useSafeArea,
+  SafeAreaProvider,
+  useSafeAreaContext,
+  SafeAreaContext,
+} from './useSafeArea.tsx';
