@@ -33,6 +33,12 @@ function App() {
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
       try {
+        // Telegram WebApp varlık kontrolü
+        if (!window.Telegram?.WebApp) {
+          console.warn('Telegram WebApp API not available. User data will not be loaded.');
+          return;
+        }
+
         const wa = window.Telegram.WebApp;
         // TypeScript null/undefined kontrolü
         if (wa?.initDataUnsafe?.user) {

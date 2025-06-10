@@ -6,6 +6,12 @@ export const useTelegramHeader = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    // Telegram WebApp varlık kontrolü
+    if (!window.Telegram?.WebApp) {
+      console.warn('Telegram WebApp API is not available. Running in browser mode.');
+      return;
+    }
+
     const wa = window.Telegram.WebApp;
     wa.ready();
     void (wa.requestFullscreen?.() || wa.expand()); // void kullanarak ESLint hatasını giderdik
@@ -33,6 +39,11 @@ export const useTelegramHeader = () => {
 
   // Viewport yüksekliğini güncelleme
   useEffect(() => {
+    // Telegram WebApp varlık kontrolü
+    if (!window.Telegram?.WebApp) {
+      return;
+    }
+
     const wa = window.Telegram.WebApp;
     const setVH = () =>
       document.documentElement.style.setProperty('--tg-viewport-height', `${wa.viewportHeight}px`);
