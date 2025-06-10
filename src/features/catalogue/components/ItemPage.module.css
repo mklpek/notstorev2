@@ -15,16 +15,16 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  padding-bottom: 174px;
+  padding-bottom: 174px; /* Footer (58px) + Slider (116px) için boşluk */
 }
 
-/* Fixed Bottom Content */
+/* Fixed Bottom Content - Slider'ı footer üstüne sabitlemek için */
 .fixedBottom {
   position: fixed;
-  bottom: 0;
+  bottom: 58px; /* Footer yüksekliği kadar yukarıda */
   left: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 101; /* Footer'dan (9999) düşük ama diğerlerinden yüksek */
   background-color: #000000;
 }
 
@@ -224,6 +224,7 @@
   width: auto;
   flex: 1;
   min-height: 0;
+  margin-bottom: 0; /* Slider'a yapışık olması için margin kaldır */
 }
 
 /* Big Sticker - Figma: row, stretch, gap 10px, padding 10px, width 358px, fill, border-radius 20px */

@@ -15,13 +15,13 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  padding-bottom: 174px;
+  padding-bottom: 174px; /* Footer (58px) + Slider (116px) için boşluk */
 }
 
 /* Fixed Bottom Content */
 .fixedBottom {
   position: fixed;
-  bottom: 0;
+  bottom: 58px; /* Footer yüksekliği kadar yukarıda */
   left: 0;
   width: 100%;
   z-index: 100;
