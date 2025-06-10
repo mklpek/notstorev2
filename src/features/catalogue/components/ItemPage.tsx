@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../../../layouts/Footer';
 import ShareIcon from '../../../core/ui/Icons/ShareIcon';
@@ -166,9 +167,10 @@ const ItemPage: React.FC = () => {
             ))}
           </div>
         </div>
-
-        <Footer product={product} />
       </div>
+
+      {/* Footer'ı portal olarak document.body'de render et */}
+      {createPortal(<Footer product={product} />, document.body)}
     </div>
   );
 };

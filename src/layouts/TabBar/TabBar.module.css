@@ -6,31 +6,18 @@
   display: flex;
   flex-direction: column;
   position: fixed;
-  /* Transform-tabanlı çakışma önlemesi: TabBar home indicator'ın üstünde biter */
-  bottom: max(env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  /* Sadece içerik için padding */
-  padding-bottom: 8px;
-  min-height: calc(64px + 8px);
+  padding-bottom: max(8px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
+  min-height: calc(64px + env(safe-area-inset-bottom));
 }
 
-/* Modern browser desteği - bottom pozisyonu için */
-@supports (bottom: max(0px)) {
+/* Modern browser desteği */
+@supports (padding: max(0px)) {
   .tabBar {
-    bottom: max(env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
-    padding-bottom: 8px;
-    min-height: calc(64px + 8px);
-  }
-}
-
-/* Fallback için eski yöntem - max() desteklenmeyen tarayıcılar */
-@supports not (bottom: max(0px)) {
-  .tabBar {
-    bottom: 0;
-    padding-bottom: max(8px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
-    min-height: calc(64px + env(safe-area-inset-bottom));
+    padding-block-end: max(8px, env(safe-area-inset-bottom));
   }
 }
 

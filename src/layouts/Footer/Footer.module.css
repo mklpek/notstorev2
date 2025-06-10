@@ -6,28 +6,19 @@
   background-color: #000000;
   display: flex;
   flex-direction: column;
-  position: relative;
-  z-index: 1000;
-  /* iOS/Android home indicator'ı + kendi padding */
-  padding-bottom: calc(8px + env(safe-area-inset-bottom));
-  /* Fallback Telegram var'ı */
-  padding-bottom: calc(8px + var(--tg-safe-area-inset-bottom, 0px));
-  min-height: calc(50px + 8px);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding-bottom: max(8px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
+  min-height: calc(50px + env(safe-area-inset-bottom));
 }
 
-/* Modern browser desteği - standart env() kullanımı */
-@supports (padding: calc(8px + env(safe-area-inset-bottom))) {
+/* Modern browser desteği */
+@supports (padding: max(0px)) {
   .footer {
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
-    min-height: calc(50px + 8px + env(safe-area-inset-bottom));
-  }
-}
-
-/* Fallback için max() yöntemi */
-@supports not (padding: calc(8px + env(safe-area-inset-bottom))) {
-  .footer {
-    padding-bottom: max(8px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
-    min-height: calc(50px + env(safe-area-inset-bottom));
+    padding-block-end: max(8px, env(safe-area-inset-bottom));
   }
 }
 
