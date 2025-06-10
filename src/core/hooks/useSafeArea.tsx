@@ -2,6 +2,10 @@ import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { getTgVersion, safeCall } from '../utils/telegramHelpers';
 
+// iOS fallback sabitleri
+const IOS_BOTTOM_FALLBACK = 34; // iPhone X-15 Home-indicator
+const IOS_TOP_FALLBACK = 44; // Çentik yüksekliği
+
 // Safe Area Context tipi
 interface SafeAreaInsets {
   top: number;
@@ -59,6 +63,24 @@ export function useSafeAreaInsets() {
       });
     };
 
+    // iOS fallback kontrolü
+    const applyIOSFallback = (insets: SafeAreaInsets) => {
+      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      if (!isIOS) return insets;
+
+      const fallbackInsets = { ...insets };
+
+      // env() değeri sıfırsa iOS sabitlerini kullan
+      if (fallbackInsets.bottom === 0) {
+        fallbackInsets.bottom = IOS_BOTTOM_FALLBACK;
+      }
+      if (fallbackInsets.top === 0 && /iPhone/.test(navigator.userAgent)) {
+        fallbackInsets.top = IOS_TOP_FALLBACK;
+      }
+
+      return fallbackInsets;
+    };
+
     // Viewport yüksekliğini güncelleme
     const updateViewportHeight = () => {
       if (wa.viewportHeight) {
@@ -84,7 +106,9 @@ export function useSafeAreaInsets() {
         left: envLeft ? parseInt(envLeft, 10) || 0 : 0,
       };
 
-      updateSafeArea(initialInsets);
+      // iOS fallback uygula
+      const finalInsets = applyIOSFallback(initialInsets);
+      updateSafeArea(finalInsets);
     } catch {
       /* ignored */
     }
