@@ -6,7 +6,6 @@
   background: var(--background-color);
   color: var(--text-color);
   position: relative;
-  padding-top: var(--tg-safe-area-inset-top, 0px);
 }
 
 .content {
@@ -21,8 +20,4 @@
 .contentNoHeader {
   padding-top: 0;
   gap: 0;
-}
-
-.tgSafePad {
-  height: var(--tg-safe-area-inset-top, 0px);
 }

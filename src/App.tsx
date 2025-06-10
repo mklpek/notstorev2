@@ -31,60 +31,63 @@ function App() {
   useEffect(() => {
     // Telegram WebApp SDK'sını başlat
     try {
-      // @twa-dev/sdk WebApp yerine window.Telegram.WebApp kullanıyoruz
       const wa = window.Telegram.WebApp;
 
       // SDK başlatma
       wa.ready();
 
-      try {
-        // requestFullscreen bazı eski sürümlerde desteklenmiyor (v6.0)
-        // Bu nedenle try-catch içinde çağırıyoruz
-        if (typeof wa.requestFullscreen === 'function') {
-          wa.requestFullscreen();
-        } else {
-          wa.expand(); // Fallback olarak expand() kullan
-        }
-      } catch (fullscreenError) {
-        console.warn('Fullscreen API desteklenmiyor, expand() kullanılıyor:', fullscreenError);
-        wa.expand();
-      }
-
-      // Şeffaf header rengi - beyaz ikonlar için koyu gölge
+      // Şeffaf header rengi
       wa.setHeaderColor('#00000000');
 
-      // BackButton ve SettingsButton yönetimi
+      // İsteğe bağlı: Kapanış onayı etkinleştir
+      if (typeof wa.enableClosingConfirmation === 'function') {
+        wa.enableClosingConfirmation();
+      }
+
+      // Viewport değişimi → CSS değişkenini güncelle
+      const vpHandler = ({ height, isStateStable }: ViewportEvent) => {
+        if (isStateStable) {
+          document.documentElement.style.setProperty('--tg-viewport-height', `${height}px`);
+        }
+      };
+
+      wa.onEvent('viewport_changed', vpHandler);
+
+      return () => wa.offEvent('viewport_changed', vpHandler);
+    } catch (error) {
+      console.error('Telegram WebApp API hatası:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      const wa = window.Telegram.WebApp;
+
+      // Route'a göre buton görünürlüğü
       const isProductPage = location.pathname.startsWith('/product/');
 
-      // Ürün sayfasında geri butonunu göster
       if (isProductPage) {
         wa.BackButton.show();
       } else {
         wa.BackButton.hide();
       }
 
-      // Ayarlar butonunu göster
+      // Geri butonu olayı
+      wa.BackButton.onClick(() => navigate(-1));
+
+      // Ayarlar butonu göster ve olayı
       wa.SettingsButton.show();
+      wa.SettingsButton.onClick(() => wa.openLink('https://t.me/notstore_bot'));
 
-      // Event handler'ları tanımlama
-      const backHandler = () => navigate(-1);
-      const settingsHandler = () => wa.openLink('https://t.me/notstore_bot');
-
-      // Event'leri dinleme
-      wa.onEvent('back_button_pressed', backHandler);
-      wa.onEvent('settings_button_pressed', settingsHandler);
-
-      // Cleanup fonksiyonu
+      // Temizleme fonksiyonu
       return () => {
-        wa.BackButton.hide();
-        wa.SettingsButton.hide();
-        wa.offEvent('back_button_pressed', backHandler);
-        wa.offEvent('settings_button_pressed', settingsHandler);
+        wa.BackButton.offClick(() => navigate(-1));
+        wa.SettingsButton.offClick(() => wa.openLink('https://t.me/notstore_bot'));
       };
     } catch (error) {
-      console.error('Telegram WebApp API hatası:', error);
+      console.error('Telegram buton API hatası:', error);
     }
-  }, [navigate, location.pathname]);
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet

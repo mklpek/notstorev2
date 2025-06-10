@@ -14,7 +14,6 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "@tonconnect/ui-react": "^2.1.0",
-    "@twa-dev/sdk": "^8.0.2",
     "blurhash": "^2.0.5",
     "react": "^19.1.0",
     "react-blurhash": "^0.3.0",

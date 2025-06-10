@@ -38,7 +38,7 @@
   --tg-safe-area-inset-right: env(safe-area-inset-right);
   --tg-safe-area-inset-bottom: env(safe-area-inset-bottom);
   --tg-safe-area-inset-left: env(safe-area-inset-left);
-  --tg-viewport-height: 100vh;
+  --tg-viewport-height: var(--tg-viewport-height, 100vh);
   --tg-viewport-stable-height: 100vh;
 
   /* Uygulama renkleri */
@@ -76,7 +76,7 @@
 html,
 body {
   height: 100%;
-  height: var(--tg-viewport-stable-height, 100vh);
+  height: var(--tg-viewport-height);
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-normal);
@@ -157,6 +157,10 @@ a {
 /* Telegram Safe Area Utility */
 .tg-safe-pad-top {
   padding-top: var(--tg-safe-area-inset-top, 0px);
+}
+
+.tg-pad-top {
+  height: var(--tg-safe-area-inset-top, 0px);
 }
 
 .tg-safe-pad-bottom {

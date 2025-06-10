@@ -68,7 +68,7 @@ interface WebAppInitData {
 }
 
 // Event handler için tip tanımı
-type WebAppEventHandler = (...args: unknown[]) => void;
+type WebAppEventHandler = (eventData?: any) => void;
 
 interface TelegramBackButton {
   show: () => void;
@@ -84,6 +84,14 @@ interface TelegramSettingsButton {
   isVisible: boolean;
   onClick: (callback: () => void) => void;
   offClick: (callback: () => void) => void;
+}
+
+// Viewport event için tip tanımı
+interface ViewportEvent {
+  height: number;
+  width?: number;
+  isStateStable: boolean;
+  isExpanded?: boolean;
 }
 
 interface TelegramWebApp {
@@ -106,6 +114,7 @@ interface TelegramWebApp {
   BackButton: TelegramBackButton;
   SettingsButton: TelegramSettingsButton;
   requestFullscreen?: () => void; // Opsiyonel, bazı sürümlerde bulunmayabilir
+  enableClosingConfirmation?: () => void; // v9 API'de eklendi
   // Diğer WebApp metodları
 }
 
