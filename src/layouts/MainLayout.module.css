@@ -1,11 +1,11 @@
 .mainLayout {
-  min-height: 100vh;
   min-height: var(--tg-viewport-height, 100vh);
   display: flex;
   flex-direction: column;
   background: var(--background-color);
   color: var(--text-color);
   position: relative;
+  padding-top: var(--tg-safe-area-inset-top, 0px);
 }
 
 .content {

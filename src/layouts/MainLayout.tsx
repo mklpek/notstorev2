@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -15,10 +15,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   const activeTab: 'store' | 'profile' = pathname.startsWith('/profile') ? 'profile' : 'store';
   const showHeader = activeTab === 'store';
 
-  const handleSearchOpenChange = (isOpen: boolean) => {
-    // Bu değer şu anda kullanılmıyor ancak ileride kullanılabilir
-    console.log('Search open state changed:', isOpen);
-  };
+  // Boş callback - ileride kullanılabilir
+  const handleSearchOpenChange = useCallback(() => {
+    // Search functionality için ileride aktif edilecek
+  }, []);
 
   const handleTabChange = (tab: 'store' | 'profile') => {
     navigate(tab === 'store' ? '/' : '/profile');
@@ -26,9 +26,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
 
   return (
     <div className={styles.mainLayout}>
-      {/* Telegram Safe Area Padding */}
-      <div className="tg-pad-top" />
-
       {showHeader && (
         <Header {...(onCartClick && { onCartClick })} onSearchOpen={handleSearchOpenChange} />
       )}

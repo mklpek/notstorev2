@@ -1,12 +1,12 @@
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import CartModal from './features/cart/CartModal';
 import AppSkeleton from './components/Skeleton/AppSkeleton';
 import ItemPageSkeleton from './components/Skeleton/ItemPageSkeleton';
 import AccountPageSkeleton from './components/Skeleton/AccountPageSkeleton';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { useSkeletonTheme } from './hooks/useSkeletonTheme';
+import { useSkeletonTheme, useTelegramHeader } from './hooks';
 import { TonConnectProvider } from './features/tonConnect';
 import { useDispatch } from 'react-redux';
 import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
@@ -22,82 +22,21 @@ const AccountPage = lazy(() => import('./features/account/AccountPage'));
 function App() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
+
+  // Telegram header'ı yönet
+  useTelegramHeader();
 
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
 
   useEffect(() => {
-    // Telegram WebApp SDK'sını başlat
-    try {
-      const wa = window.Telegram.WebApp;
-
-      // SDK başlatma
-      wa.ready();
-
-      // Şeffaf header rengi
-      wa.setHeaderColor('#00000000');
-
-      // İsteğe bağlı: Kapanış onayı etkinleştir
-      if (typeof wa.enableClosingConfirmation === 'function') {
-        wa.enableClosingConfirmation();
-      }
-
-      // Viewport değişimi → CSS değişkenini güncelle
-      const vpHandler = ({ height, isStateStable }: ViewportEvent) => {
-        if (isStateStable) {
-          document.documentElement.style.setProperty('--tg-viewport-height', `${height}px`);
-        }
-      };
-
-      wa.onEvent('viewport_changed', vpHandler);
-
-      return () => wa.offEvent('viewport_changed', vpHandler);
-    } catch (error) {
-      console.error('Telegram WebApp API hatası:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      const wa = window.Telegram.WebApp;
-
-      // Route'a göre buton görünürlüğü
-      const isProductPage = location.pathname.startsWith('/product/');
-
-      if (isProductPage) {
-        wa.BackButton.show();
-      } else {
-        wa.BackButton.hide();
-      }
-
-      // Geri butonu olayı
-      wa.BackButton.onClick(() => navigate(-1));
-
-      // Ayarlar butonu göster ve olayı
-      wa.SettingsButton.show();
-      wa.SettingsButton.onClick(() => wa.openLink('https://t.me/notstore_bot'));
-
-      // Temizleme fonksiyonu
-      return () => {
-        wa.BackButton.offClick(() => navigate(-1));
-        wa.SettingsButton.offClick(() => wa.openLink('https://t.me/notstore_bot'));
-      };
-    } catch (error) {
-      console.error('Telegram buton API hatası:', error);
-    }
-  }, [location.pathname, navigate]);
-
-  useEffect(() => {
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
       try {
-        // Eğer bu özellik varsa kullan (WebApp.initDataUnsafe yerine)
-        const telegramWebApp = window.Telegram?.WebApp;
-
-        if (telegramWebApp?.initDataUnsafe?.user) {
-          const user = telegramWebApp.initDataUnsafe.user;
+        const wa = window.Telegram.WebApp;
+        // TypeScript null/undefined kontrolü
+        if (wa?.initDataUnsafe?.user) {
+          const user = wa.initDataUnsafe.user;
 
           // TelegramUser tipine uygun veriyi hazırla
           const userDetails: TelegramUser = {
@@ -126,33 +65,6 @@ function App() {
     };
 
     initUser();
-
-    // Telegram tema renklerini uygula
-    try {
-      const telegramWebApp = window.Telegram?.WebApp;
-      if (telegramWebApp?.themeParams) {
-        document.documentElement.style.setProperty(
-          '--tg-theme-bg-color',
-          telegramWebApp.themeParams.bg_color || '#000000'
-        );
-        document.documentElement.style.setProperty(
-          '--tg-theme-text-color',
-          telegramWebApp.themeParams.text_color || '#ffffff'
-        );
-        document.documentElement.style.setProperty(
-          '--tg-theme-hint-color',
-          telegramWebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
-        );
-
-        // Safe area için CSS değişkeni tanımla (iOS için)
-        document.documentElement.style.setProperty(
-          '--tg-safe-area-inset-top',
-          'env(safe-area-inset-top)'
-        );
-      }
-    } catch (error) {
-      console.error('Telegram tema bilgileri alınamadı:', error);
-    }
   }, [dispatch]);
 
   // Fonksiyonları useCallback ile sarmalıyoruz
