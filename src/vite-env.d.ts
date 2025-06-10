@@ -67,28 +67,29 @@ interface WebAppInitData {
   // Diğer initData alanları
 }
 
+// Event handler için tip tanımı
+type WebAppEventHandler = (...args: unknown[]) => void;
+
 interface TelegramBackButton {
   show: () => void;
   hide: () => void;
+  isVisible: boolean;
   onClick: (callback: () => void) => void;
   offClick: (callback: () => void) => void;
-  isVisible: boolean;
 }
 
 interface TelegramSettingsButton {
   show: () => void;
   hide: () => void;
+  isVisible: boolean;
   onClick: (callback: () => void) => void;
   offClick: (callback: () => void) => void;
-  isVisible: boolean;
 }
 
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
   close: () => void;
-  requestFullscreen: () => void;
-  setHeaderColor: (color: string) => void;
   initDataUnsafe: WebAppInitData;
   themeParams: {
     bg_color?: string;
@@ -98,11 +99,13 @@ interface TelegramWebApp {
     button_text_color?: string;
     [key: string]: string | undefined;
   };
+  onEvent: (eventType: string, eventHandler: WebAppEventHandler) => void;
+  offEvent: (eventType: string, eventHandler: WebAppEventHandler) => void;
+  setHeaderColor: (color: string) => void;
+  openLink: (url: string) => void;
   BackButton: TelegramBackButton;
   SettingsButton: TelegramSettingsButton;
-  onEvent: (eventType: string, eventHandler: () => void) => void;
-  offEvent: (eventType: string, eventHandler: () => void) => void;
-  openLink: (url: string) => void;
+  requestFullscreen?: () => void; // Opsiyonel, bazı sürümlerde bulunmayabilir
   // Diğer WebApp metodları
 }
 

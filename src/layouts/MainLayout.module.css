@@ -6,13 +6,7 @@
   background: var(--background-color);
   color: var(--text-color);
   position: relative;
-  padding-top: var(--tg-safe-area-inset-top, 0px); /* Telegram safe area için padding */
-}
-
-.tgSafePad {
-  height: var(--tg-safe-area-inset-top, 0px);
-  width: 100%;
-  display: block;
+  padding-top: var(--tg-safe-area-inset-top, 0px);
 }
 
 .content {
@@ -27,4 +21,8 @@
 .contentNoHeader {
   padding-top: 0;
   gap: 0;
+}
+
+.tgSafePad {
+  height: var(--tg-safe-area-inset-top, 0px);
 }

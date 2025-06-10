@@ -11,6 +11,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const activeTab: 'store' | 'profile' = pathname.startsWith('/profile') ? 'profile' : 'store';
@@ -26,7 +27,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
 
   return (
     <div className={styles.mainLayout}>
-      {/* Görünmez safe-area padding */}
+      {/* Telegram Safe Area Padding */}
       <div className={styles.tgSafePad} />
 
       {showHeader && (
