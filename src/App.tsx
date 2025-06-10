@@ -14,7 +14,6 @@ import { getUserProfilePhoto } from './api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
 import useTelegramHeader from './hooks/useTelegramHeader';
 import useSafeArea from './hooks/useSafeArea';
-import useTelegramSafeArea from './hooks/useTelegramSafeArea';
 
 // Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
@@ -31,9 +30,6 @@ function App() {
 
   // Safe area ve viewport yüksekliği için hook
   useSafeArea();
-
-  // TG ≥ 8.0 için Telegram'ın safe_area_changed eventini dinleyen hook
-  useTelegramSafeArea();
 
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();

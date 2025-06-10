@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getTgVersion } from '../utils/telegramHelpers';
 
 export default function useTelegramHeader() {
-  const tgVer = getTgVersion(); // 6, 7, 8 vs.
+  const tgVer = getTgVersion();
   const nav = useNavigate();
   const { pathname } = useLocation();
 
@@ -14,82 +14,75 @@ export default function useTelegramHeader() {
     wa.ready();
 
     /* --- fullscreen / expand ------------------------------------------ */
-    try {
-      if (tgVer >= 7 && typeof wa.requestFullscreen === 'function') {
-        wa.requestFullscreen(); // 7.0'da eklendi
-      } else {
+    // requestFullscreen (Bot API 7.0+)
+    if (wa.requestFullscreen && typeof wa.requestFullscreen === 'function') {
+      try {
+        wa.requestFullscreen();
+      } catch {
+        // Fallback to expand
         wa.expand();
       }
-    } catch {
-      /* ignored */
+    } else {
+      // Eskiden beri var olan expand() metodunu kullan
+      wa.expand();
     }
 
     /* --- transparent system bar --------------------------------------- */
-    try {
-      if (tgVer >= 6.9 && typeof wa.setHeaderColor === 'function') {
-        wa.setHeaderColor('#00000000'); // Docs ARGB formatı öneriyor
+    // setHeaderColor (Bot API 6.9+)
+    if (wa.setHeaderColor && typeof wa.setHeaderColor === 'function') {
+      try {
+        wa.setHeaderColor('#00000000');
+      } catch {
+        /* ignored */
       }
-    } catch {
-      /* ignored */
     }
 
     /* --- Back & Settings buttons (≥ 7.0) ------------------------------ */
     const isProduct = pathname.startsWith('/product/');
     const cleanupFns: (() => void)[] = [];
 
-    // BackButton
-    try {
-      if (tgVer >= 7 && wa.BackButton) {
+    // BackButton (Bot API 6.9+)
+    if (wa.BackButton && wa.BackButton.show && wa.BackButton.hide) {
+      try {
         if (isProduct) {
           wa.BackButton.show();
         } else {
           wa.BackButton.hide();
         }
-        const onBack = () => nav(-1);
+
         if (typeof wa.onEvent === 'function') {
+          const onBack = () => nav(-1);
           wa.onEvent('back_button_pressed', onBack);
+
+          cleanupFns.push(() => {
+            if (wa.BackButton?.hide) wa.BackButton.hide();
+            if (wa.offEvent) wa.offEvent('back_button_pressed', onBack);
+          });
         }
-        cleanupFns.push(() => {
-          if (wa.BackButton && typeof wa.BackButton.hide === 'function') {
-            wa.BackButton.hide();
-          }
-          if (typeof wa.offEvent === 'function') {
-            wa.offEvent('back_button_pressed', onBack);
-          }
-        });
+      } catch {
+        /* ignored */
       }
-    } catch {
-      /* ignored */
     }
 
-    // SettingsButton
-    try {
-      if (tgVer >= 7 && wa.SettingsButton) {
-        if (typeof wa.SettingsButton.show === 'function') {
-          wa.SettingsButton.show();
-        }
-        const openMenu = () => {
-          if (typeof wa.openLink === 'function') {
-            wa.openLink('https://t.me/notstore_bot');
-          }
-        };
-        if (typeof wa.onEvent === 'function') {
+    // SettingsButton (Bot API 6.9+)
+    if (wa.SettingsButton && wa.SettingsButton.show) {
+      try {
+        wa.SettingsButton.show();
+
+        if (typeof wa.onEvent === 'function' && typeof wa.openLink === 'function') {
+          const openMenu = () => wa.openLink('https://t.me/notstore_bot');
           wa.onEvent('settings_button_pressed', openMenu);
+
+          cleanupFns.push(() => {
+            if (wa.SettingsButton?.hide) wa.SettingsButton.hide();
+            if (wa.offEvent) wa.offEvent('settings_button_pressed', openMenu);
+          });
         }
-        cleanupFns.push(() => {
-          if (wa.SettingsButton && typeof wa.SettingsButton.hide === 'function') {
-            wa.SettingsButton.hide();
-          }
-          if (typeof wa.offEvent === 'function') {
-            wa.offEvent('settings_button_pressed', openMenu);
-          }
-        });
+      } catch {
+        /* ignored */
       }
-    } catch {
-      /* ignored */
     }
 
-    // Tüm temizleme fonksiyonlarını döndür
     return () => {
       cleanupFns.forEach(fn => fn());
     };

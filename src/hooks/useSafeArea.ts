@@ -6,42 +6,61 @@ export default function useSafeArea() {
     const wa = window.Telegram?.WebApp;
     if (!wa) return;
 
-    // Versiyon kontrolü
-    const tgVer = getTgVersion();
+    // Tek bir helper fonksiyon ile CSS değişkenini güncelleyelim
+    const writeInset = (val: number) =>
+      document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${val}px`);
 
-    // İlk değerler
+    // Viewport yüksekliğini ayarla (eski koddan)
     if (wa.viewportHeight) {
       document.documentElement.style.setProperty('--tg-viewport-height', `${wa.viewportHeight}px`);
     }
 
-    // safeAreaInset v8.0+ ile geldi, kontrol et
-    if (tgVer >= 8 && wa.safeAreaInset) {
-      document.documentElement.style.setProperty(
-        '--tg-safe-area-inset-bottom',
-        `${wa.safeAreaInset.bottom ?? 0}px`
+    // ❶ Native env() desteği - iOS/Android tarayıcıları
+    try {
+      const safeAreaBottomValue = getComputedStyle(document.documentElement).getPropertyValue(
+        'env(safe-area-inset-bottom)'
       );
+
+      if (safeAreaBottomValue) {
+        const parsedValue = parseInt(safeAreaBottomValue, 10);
+        if (!isNaN(parsedValue)) {
+          writeInset(parsedValue);
+        }
+      }
+    } catch {
+      /* ignored */
     }
 
-    // viewport_changed olayı dinleyicisi
-    const handler = () => {
+    // ❷ Telegram >= 8.0 dinamik event'i
+    const tgVer = getTgVersion();
+
+    // viewport_changed için handler (eski koddan)
+    const viewportHandler = () => {
       if (wa.viewportHeight) {
         document.documentElement.style.setProperty(
           '--tg-viewport-height',
           `${wa.viewportHeight}px`
         );
       }
+    };
 
-      if (tgVer >= 8 && wa.safeAreaInset) {
-        document.documentElement.style.setProperty(
-          '--tg-safe-area-inset-bottom',
-          `${wa.safeAreaInset.bottom ?? 0}px`
-        );
+    // safe_area_changed için handler
+    const safeAreaHandler = (...args: unknown[]) => {
+      const data = args[0] as { bottom?: number } | undefined;
+      if (data?.bottom !== undefined) {
+        writeInset(data.bottom);
       }
     };
 
     try {
-      if (tgVer >= 7 && typeof wa.onEvent === 'function') {
-        wa.onEvent('viewport_changed', handler);
+      // viewport_changed eventi
+      if (typeof wa.onEvent === 'function') {
+        wa.onEvent('viewport_changed', viewportHandler);
+      }
+
+      // safe_area_changed eventi (TG >= 8.0)
+      if (tgVer >= 8 && typeof wa.onEvent === 'function') {
+        wa.onEvent('safe_area_changed', safeAreaHandler);
       }
     } catch {
       /* ignored */
@@ -49,8 +68,12 @@ export default function useSafeArea() {
 
     return () => {
       try {
-        if (tgVer >= 7 && typeof wa.offEvent === 'function') {
-          wa.offEvent('viewport_changed', handler);
+        if (typeof wa.offEvent === 'function') {
+          wa.offEvent('viewport_changed', viewportHandler);
+          // Sadece 8.0+ versiyonlarda çalışır
+          if (tgVer >= 8) {
+            wa.offEvent('safe_area_changed', safeAreaHandler);
+          }
         }
       } catch {
         /* ignored */
