@@ -6,15 +6,16 @@ export const useTelegramHeader = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Telegram WebApp varlık kontrolü
-    if (!window.Telegram?.WebApp) {
-      console.warn('Telegram WebApp API is not available. Running in browser mode.');
-      return;
-    }
-
     const wa = window.Telegram.WebApp;
     wa.ready();
-    void (wa.requestFullscreen?.() || wa.expand()); // void kullanarak ESLint hatasını giderdik
+
+    // Fallback mantığını açık if ile yazıyoruz (no-unused-expressions hatası için)
+    if (typeof wa.requestFullscreen === 'function') {
+      wa.requestFullscreen();
+    } else {
+      wa.expand();
+    }
+
     wa.setHeaderColor('#00000000'); // şeffaf header
 
     // Route bazlı buton mantığı
@@ -39,11 +40,6 @@ export const useTelegramHeader = () => {
 
   // Viewport yüksekliğini güncelleme
   useEffect(() => {
-    // Telegram WebApp varlık kontrolü
-    if (!window.Telegram?.WebApp) {
-      return;
-    }
-
     const wa = window.Telegram.WebApp;
     const setVH = () =>
       document.documentElement.style.setProperty('--tg-viewport-height', `${wa.viewportHeight}px`);

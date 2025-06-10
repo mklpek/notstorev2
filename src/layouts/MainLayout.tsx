@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -15,20 +15,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   const activeTab: 'store' | 'profile' = pathname.startsWith('/profile') ? 'profile' : 'store';
   const showHeader = activeTab === 'store';
 
-  // Boş callback - ileride kullanılabilir
-  const handleSearchOpenChange = useCallback(() => {
-    // Search functionality için ileride aktif edilecek
-  }, []);
-
   const handleTabChange = (tab: 'store' | 'profile') => {
     navigate(tab === 'store' ? '/' : '/profile');
   };
 
   return (
     <div className={styles.mainLayout}>
-      {showHeader && (
-        <Header {...(onCartClick && { onCartClick })} onSearchOpen={handleSearchOpenChange} />
-      )}
+      {showHeader && <Header {...(onCartClick && { onCartClick })} />}
       <main
         className={`
         ${styles.content} 
