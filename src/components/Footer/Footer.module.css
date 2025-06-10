@@ -8,6 +8,7 @@
   flex-direction: column;
   position: relative;
   z-index: 1000;
+  padding-bottom: var(--tg-safe-area-inset-bottom);
 }
 
 /* Body Container */

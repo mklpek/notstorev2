@@ -15,8 +15,5 @@ export function getTgVersion(): number {
 /**
  * Belirli bir Telegram WebApp özelliğinin mevcut olup olmadığını kontrol eder
  */
-export function canUse(feature: keyof TelegramWebApp, min = 0) {
-  const v = getTgVersion();
-  const wa = window.Telegram?.WebApp as unknown;
-  return v >= min && typeof (wa as Record<string, unknown>)?.[feature] !== 'undefined';
-}
+export const canUse = (method: keyof TelegramWebApp, min = 7) =>
+  Number(window.Telegram?.WebApp?.version ?? '6.0') >= min;

@@ -13,6 +13,7 @@ import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
 import { getUserProfilePhoto } from './api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
 import useTelegramHeader from './hooks/useTelegramHeader';
+import useSafeArea from './hooks/useSafeArea';
 
 // Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
@@ -26,6 +27,9 @@ function App() {
 
   // Telegram header hook'unu kullan - tüm kontroller bu hook içerisinde
   useTelegramHeader();
+
+  // Safe area ve viewport yüksekliği için hook
+  useSafeArea();
 
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
