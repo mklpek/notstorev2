@@ -13,7 +13,6 @@ import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
 import { getUserProfilePhoto } from './core/api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
 import useTelegramHeader from './core/hooks/useTelegramHeader';
-import { SafeAreaProvider } from './core/hooks/useSafeArea.tsx';
 
 // Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
@@ -108,50 +107,48 @@ function App() {
 
   return (
     <TonConnectProvider>
-      <SafeAreaProvider>
-        <SkeletonTheme
-          baseColor={skeletonTheme.baseColor}
-          highlightColor={skeletonTheme.highlightColor}
-          enableAnimation={skeletonTheme.enableAnimation}
-          duration={skeletonTheme.animationDuration}
-        >
-          <Routes>
-            {/* Tam-ekran ürün detayı - özel ItemPageSkeleton kullanır */}
+      <SkeletonTheme
+        baseColor={skeletonTheme.baseColor}
+        highlightColor={skeletonTheme.highlightColor}
+        enableAnimation={skeletonTheme.enableAnimation}
+        duration={skeletonTheme.animationDuration}
+      >
+        <Routes>
+          {/* Tam-ekran ürün detayı - özel ItemPageSkeleton kullanır */}
+          <Route
+            path="product/:productId"
+            element={
+              <Suspense fallback={<ItemPageSkeleton />}>
+                <ItemPage />
+              </Suspense>
+            }
+          />
+
+          {/* TabBar + Header barındıran layout - AppSkeleton kullanır */}
+          <Route
+            element={
+              <Suspense fallback={<AppSkeleton />}>
+                <MainLayout onCartClick={handleCartClick} />
+              </Suspense>
+            }
+          >
+            <Route index element={<ProductGrid />} />
             <Route
-              path="product/:productId"
+              path="profile"
               element={
-                <Suspense fallback={<ItemPageSkeleton />}>
-                  <ItemPage />
+                <Suspense
+                  fallback={<AccountPageSkeleton showHistory={true} historyItemCount={6} />}
+                >
+                  <AccountPage />
                 </Suspense>
               }
             />
+          </Route>
+        </Routes>
 
-            {/* TabBar + Header barındıran layout - AppSkeleton kullanır */}
-            <Route
-              element={
-                <Suspense fallback={<AppSkeleton />}>
-                  <MainLayout onCartClick={handleCartClick} />
-                </Suspense>
-              }
-            >
-              <Route index element={<ProductGrid />} />
-              <Route
-                path="profile"
-                element={
-                  <Suspense
-                    fallback={<AccountPageSkeleton showHistory={true} historyItemCount={6} />}
-                  >
-                    <AccountPage />
-                  </Suspense>
-                }
-              />
-            </Route>
-          </Routes>
-
-          {/* Modal component - route tabanlı olmayan eski versiyona dönüş */}
-          <CartModal isOpen={isCartModalOpen} onClose={handleCartModalClose} />
-        </SkeletonTheme>
-      </SafeAreaProvider>
+        {/* Modal component - route tabanlı olmayan eski versiyona dönüş */}
+        <CartModal isOpen={isCartModalOpen} onClose={handleCartModalClose} />
+      </SkeletonTheme>
     </TonConnectProvider>
   );
 }

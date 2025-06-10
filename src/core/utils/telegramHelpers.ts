@@ -40,11 +40,12 @@ export function canUse(method: keyof TelegramWebApp): boolean {
 /**
  * Telegram WebApp metodunu güvenli şekilde çağırır
  */
-export function safeCall<T extends keyof TelegramWebApp>(method: T, ...args: any[]): boolean {
+export function safeCall<T extends keyof TelegramWebApp>(method: T, ...args: unknown[]): boolean {
   try {
     const wa = window.Telegram?.WebApp;
     if (!wa || typeof wa[method] !== 'function') return false;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (wa[method] as any)(...args);
     return true;
   } catch {

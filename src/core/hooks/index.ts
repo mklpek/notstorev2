@@ -3,8 +3,8 @@ export { useDebouncedValue } from './useDebounce';
 export { useSkeletonTheme } from './useSkeletonTheme';
 export { default as useTelegramHeader } from './useTelegramHeader';
 export {
-  default as useSafeArea,
+  default as useSafeAreaInsets,
   SafeAreaProvider,
   useSafeAreaContext,
   SafeAreaContext,
-} from './useSafeArea.tsx';
+} from './useSafeArea';

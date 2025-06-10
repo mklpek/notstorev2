@@ -21,19 +21,8 @@ export const SafeAreaContext = createContext<SafeAreaInsets>({
 // Safe Area Context hook'u
 export const useSafeAreaContext = () => useContext(SafeAreaContext);
 
-// SafeAreaProvider bileşeni
-interface SafeAreaProviderProps {
-  children: ReactNode;
-}
-
-export function SafeAreaProvider({ children }: SafeAreaProviderProps) {
-  const safeAreaInsets = useSafeArea();
-
-  return <SafeAreaContext.Provider value={safeAreaInsets}>{children}</SafeAreaContext.Provider>;
-}
-
-// Birleşik Safe Area Hook
-export default function useSafeArea() {
+// Birleşik Safe Area Hook - önce export ediyoruz
+export function useSafeAreaInsets() {
   const [safeAreaInsets, setSafeAreaInsets] = useState<SafeAreaInsets>({
     top: 0,
     right: 0,
@@ -44,6 +33,9 @@ export default function useSafeArea() {
   useEffect(() => {
     const wa = window.Telegram?.WebApp;
     if (!wa) return;
+
+    // Desktop/tablet'te erken çık
+    if (window.visualViewport && window.visualViewport.height > 900) return;
 
     const tgVer = getTgVersion();
 
@@ -159,20 +151,27 @@ export default function useSafeArea() {
       /* ignored */
     }
 
-    // ❺ Fallback: window.visualViewport API (modern browsers)
+    // ❺ Fallback: window.visualViewport API (throttled) - sadece mobile'da
+    let rafId: number;
     const handleVisualViewportChange = () => {
-      if (window.visualViewport) {
-        const vvHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-        const bottomInset = Math.max(0, windowHeight - vvHeight);
+      if (rafId) cancelAnimationFrame(rafId);
 
-        updateSafeArea({ bottom: bottomInset });
-      }
+      rafId = requestAnimationFrame(() => {
+        if (window.visualViewport) {
+          const vvHeight = window.visualViewport.height;
+          const windowHeight = window.innerHeight;
+          const bottomInset = Math.max(0, windowHeight - vvHeight);
+
+          updateSafeArea({ bottom: bottomInset });
+        }
+      });
     };
 
-    if (window.visualViewport && !canUse('onEvent')) {
+    // Sadece mobile viewport'larda dinle ve Telegram event'i yoksa
+    if (window.visualViewport && window.visualViewport.height < 900 && !canUse('onEvent')) {
       window.visualViewport.addEventListener('resize', handleVisualViewportChange);
       cleanupFns.push(() => {
+        if (rafId) cancelAnimationFrame(rafId);
         window.visualViewport?.removeEventListener('resize', handleVisualViewportChange);
       });
     }
@@ -184,3 +183,17 @@ export default function useSafeArea() {
 
   return safeAreaInsets;
 }
+
+// SafeAreaProvider bileşeni
+interface SafeAreaProviderProps {
+  children: ReactNode;
+}
+
+export function SafeAreaProvider({ children }: SafeAreaProviderProps) {
+  const safeAreaInsets = useSafeAreaInsets();
+
+  return <SafeAreaContext.Provider value={safeAreaInsets}>{children}</SafeAreaContext.Provider>;
+}
+
+// Default export
+export { useSafeAreaInsets as default };

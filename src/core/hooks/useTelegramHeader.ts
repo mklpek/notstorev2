@@ -26,17 +26,17 @@ export default function useTelegramHeader() {
     }
 
     /* --- transparent system bar --------------------------------------- */
-    // setHeaderColor sadece Bot API 6.9+ destekler
-    if (tgVer >= 6.9 && canUse('setHeaderColor')) {
+    // setHeaderColor sadece Bot API 8.0+ destekler
+    if (tgVer >= 8.0 && canUse('setHeaderColor')) {
       safeCall('setHeaderColor', '#00000000');
     }
 
-    /* --- Back & Settings buttons (≥ 6.9) ------------------------------ */
+    /* --- Back & Settings buttons (≥ 8.0) ------------------------------ */
     const isProduct = pathname.startsWith('/product/');
     const cleanupFns: (() => void)[] = [];
 
-    // BackButton sadece Bot API 6.9+ destekler
-    if (tgVer >= 6.9 && wa.BackButton) {
+    // BackButton sadece Bot API 8.0+ destekler
+    if (tgVer >= 8.0 && wa.BackButton) {
       try {
         if (isProduct && wa.BackButton.show) {
           wa.BackButton.show();
@@ -58,8 +58,8 @@ export default function useTelegramHeader() {
       }
     }
 
-    // SettingsButton sadece Bot API 6.9+ destekler
-    if (tgVer >= 6.9 && wa.SettingsButton) {
+    // SettingsButton sadece Bot API 8.0+ destekler
+    if (tgVer >= 8.0 && wa.SettingsButton) {
       try {
         if (wa.SettingsButton.show) {
           wa.SettingsButton.show();

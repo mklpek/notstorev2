@@ -10,8 +10,15 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
-  height: calc(64px + var(--tg-safe-area-inset-bottom, 0));
+  padding-bottom: max(8px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
+  min-height: calc(64px + env(safe-area-inset-bottom));
+}
+
+/* Modern browser desteği */
+@supports (padding: max(0px)) {
+  .tabBar {
+    padding-block-end: max(8px, env(safe-area-inset-bottom));
+  }
 }
 
 /* Body Container */
