@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Footer from '../../../components/Footer';
-import ShareIcon from '../../../components/Icons/ShareIcon';
-import { useGetCatalogueQuery, catalogSelectors } from '../../../api/notApi';
+import Footer from '../../../layouts/Footer';
+import ShareIcon from '../../../core/ui/Icons/ShareIcon';
+import { useGetCatalogueQuery, catalogSelectors } from '../../../core/api/notApi';
 import styles from './ItemPage.module.css';
-import ItemPageSkeleton from '../../../components/Skeleton/ItemPageSkeleton';
-import ProgressiveImage from '../../../components/ProgressiveImage';
+import ItemPageSkeleton from '../../../core/ui/Skeleton/ItemPageSkeleton';
+import ProgressiveImage from '../../../core/ui/ProgressiveImage';
 
 const ItemPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();

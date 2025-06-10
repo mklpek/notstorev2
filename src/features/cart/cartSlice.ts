@@ -5,7 +5,7 @@ import {
   type EntityState,
 } from '@reduxjs/toolkit';
 import type { CartItem } from './types';
-import type { RootState } from '../../app/store';
+import type { RootState } from '../../core/store';
 
 // EntityAdapter oluştur ve export et - selectId parametresiz
 export const cartAdapter = createEntityAdapter<CartItem>();

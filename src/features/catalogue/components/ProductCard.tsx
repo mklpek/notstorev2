@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import type { Item } from '../../../api/notApi';
-import { useAppSelector } from '../../../app/hooks';
+import { useNavigate } from 'react-router-dom';
+import type { Item } from '../../../core/api/notApi';
+import { useAppSelector } from '../../../core/store/hooks';
 import { selectIsInCart } from '../../cart/selectors';
 import ImageGallery from './ImageGallery';
-import CartTagIcon from '../../../components/Icons/CartTagIcon';
+import CartTagIcon from '../../../core/ui/Icons/CartTagIcon';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {

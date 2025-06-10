@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '../../core/store/hooks';
 import { selectCartCount } from '../../features/cart/selectors';
-import SearchIcon from '../Icons/SearchIcon';
-import BasketIcon from '../Icons/BasketIcon';
-import DeleteIcon from '../Icons/DeleteIcon';
+import SearchIcon from '../../core/ui/Icons/SearchIcon';
+import BasketIcon from '../../core/ui/Icons/BasketIcon';
+import DeleteIcon from '../../core/ui/Icons/DeleteIcon';
 import styles from './Header.module.css';
 
 interface HeaderProps {

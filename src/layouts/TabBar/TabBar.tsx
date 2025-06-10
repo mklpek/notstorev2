@@ -1,8 +1,8 @@
 import React from 'react';
-import StoreIcon from '../Icons/StoreIcon';
+import StoreIcon from '../../core/ui/Icons/StoreIcon';
 import styles from './TabBar.module.css';
 import { useSelector } from 'react-redux';
-import type { RootState } from '../../app/store';
+import type { RootState } from '../../core/store';
 
 interface TabBarProps {
   activeTab?: 'store' | 'profile';

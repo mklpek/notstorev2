@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createEntityAdapter } from '@reduxjs/toolkit';
-import type { RootState } from '../../app/store';
+import type { RootState } from '../../core/store';
 
 /** -----------  Ortak Tip Tanımlamaları  ----------- */
 export interface Item {

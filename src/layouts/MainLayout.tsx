@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import TabBar from '../components/TabBar';
+import Header from './Header';
+import TabBar from './TabBar';
 import styles from './MainLayout.module.css';
 
 interface MainLayoutProps {

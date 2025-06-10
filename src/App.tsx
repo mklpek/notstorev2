@@ -1,24 +1,24 @@
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import CartModal from './features/cart/CartModal';
-import AppSkeleton from './components/Skeleton/AppSkeleton';
-import ItemPageSkeleton from './components/Skeleton/ItemPageSkeleton';
-import AccountPageSkeleton from './components/Skeleton/AccountPageSkeleton';
+import AppSkeleton from './core/ui/Skeleton/AppSkeleton';
+import ItemPageSkeleton from './core/ui/Skeleton/ItemPageSkeleton';
+import AccountPageSkeleton from './core/ui/Skeleton/AccountPageSkeleton';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { useSkeletonTheme } from './hooks/useSkeletonTheme';
+import { useSkeletonTheme } from './core/hooks/useSkeletonTheme';
 import { TonConnectProvider } from './features/tonConnect';
 import { useDispatch } from 'react-redux';
 import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
-import { getUserProfilePhoto } from './api/telegramApi';
+import { getUserProfilePhoto } from './core/api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
-import useTelegramHeader from './hooks/useTelegramHeader';
-import useSafeArea from './hooks/useSafeArea';
+import useTelegramHeader from './core/hooks/useTelegramHeader';
+import useSafeArea from './core/hooks/useSafeArea';
 
 // Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
-const ProductGrid = lazy(() => import('./features/products/ProductGrid'));
-const ItemPage = lazy(() => import('./features/products/components/ItemPage'));
+const ProductGrid = lazy(() => import('./features/catalogue/ProductGrid'));
+const ItemPage = lazy(() => import('./features/catalogue/components/ItemPage'));
 const AccountPage = lazy(() => import('./features/account/AccountPage'));
 
 function App() {

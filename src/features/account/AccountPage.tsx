@@ -6,12 +6,12 @@ import {
   selectVisibleHistoryItems,
   selectRemainingHistoryCount,
 } from './api';
-import { useGetCatalogueQuery, catalogSelectors } from '../products/api';
+import { useGetCatalogueQuery, catalogSelectors } from '../catalogue/api';
 import type { Purchase } from './api';
-import { AccountPageSkeleton } from '../../components/Skeleton';
-import { ApiErrorMessage } from '../../components';
+import { AccountPageSkeleton } from '../../core/ui/Skeleton';
+import { ApiErrorMessage } from '../../core/ui';
 import { useSelector } from 'react-redux';
-import type { RootState } from '../../app/store';
+import type { RootState } from '../../core/store';
 
 const AccountPage: React.FC = () => {
   // Redux'tan Telegram kullanıcı bilgilerini al

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../core/store/hooks';
 import { addItem, changeQty, removeItem } from '../../features/cart/cartSlice';
 import { selectCartItemById } from '../../features/cart/selectors';
-import PlusIcon from '../Icons/PlusIcon';
-import MinusIcon from '../Icons/MinusIcon';
+import PlusIcon from '../../core/ui/Icons/PlusIcon';
+import MinusIcon from '../../core/ui/Icons/MinusIcon';
 import styles from './Footer.module.css';
-import type { Item } from '../../features/products/api';
+import type { Item } from '../../features/catalogue/api';
 import { useTonConnect } from '../../features/tonConnect';
 import { SuccessModal } from '../../features/tonConnect';
 import { createBuyNowTransaction, ensureWalletConnection } from '../../features/tonConnect/buyNow';

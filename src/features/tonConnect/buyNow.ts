@@ -1,6 +1,6 @@
 import type { SendTransactionRequest } from '@tonconnect/ui';
-import type { TonConnectUI } from '@tonconnect/ui';
-import type { Item } from '../products/api';
+import { TonConnectUI } from '@tonconnect/ui-react';
+import type { Item } from '../catalogue/api';
 import type { CartItem } from '../cart/types';
 
 /**

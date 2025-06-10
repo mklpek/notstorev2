@@ -28,7 +28,11 @@
 - **Optimized Asset Management**: Statik görseller public/, dinamik ikonlar src/assets/
 - **CSS Modules Architecture**: Tek global theme + modüler bileşen stilleri
 - **Clean Project Structure**: Tutarlı isimlendirme ve optimize edilmiş klasör yapısı
-- **Telegram WebApp SDK**: Tam Telegram entegrasyonu
+- **Telegram WebApp 2.0 Integration**: Bot API 8+ paradigması ile modern entegrasyon (✅ Tamamlandı)
+- **Safe Area Support**: iOS/Android home indicator ve gesture bar desteği (✅ Tamamlandı)
+- **Version-Aware API Calls**: Telegram sürüm kontrolü ile güvenli API kullanımı (✅ Tamamlandı)
+- **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
+- **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
 - **Responsive Tasarım**: 390px mobil odaklı responsive yapı
 - **Modüler Mimari**: Temiz ve sürdürülebilir kod yapısı
 - **TypeScript**: Tip güvenliği ve geliştirici deneyimi
@@ -135,6 +139,8 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 - **@vercel/node 5.2.1** - Vercel Edge Functions için tip desteği (✅ Aktif)
 - **CSS Modules** - Modüler stil yönetimi
 - **Telegram WebApp SDK 7.10.1** - Telegram entegrasyonu
+- **Telegram WebApp 2.0 API** - Bot API 8+ ile modern entegrasyon (✅ Tamamlandı)
+- **Safe Area CSS Variables** - iOS/Android home indicator desteği (✅ Tamamlandı)
 - **ESLint 9.25.0** - Code linting
 - **Prettier 3.2.5** - Code formatting
 - **Husky 9.0.11** - Git hooks
@@ -295,14 +301,17 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │       └── themeSlice.ts      # Theme slice
 │   ├── hooks/                     # Custom React hooks (✅ Aktif)
 │   │   ├── useDebounce.ts         # Debounce hook
-│   │   └── useSkeletonTheme.ts    # Skeleton theme hook - ✅ Aktif
+│   │   ├── useSkeletonTheme.ts    # Skeleton theme hook - ✅ Aktif
+│   │   ├── useTelegramHeader.ts   # Telegram header ve buton yönetimi (✅ Tamamlandı)
+│   │   └── useSafeArea.ts         # Safe area ve viewport yönetimi (✅ Tamamlandı)
 │   ├── layouts/                   # Layout components
 │   │   ├── MainLayout.module.css  # Main layout styles
 │   │   └── MainLayout.tsx         # Main layout component
 │   ├── styles/                    # Global styles
 │   │   └── theme.css              # Global theme/reset dosyası
 │   ├── utils/                     # Utility functions
-│   │   └── lqip.ts                # Low Quality Image Placeholder utilities
+│   │   ├── lqip.ts                # Low Quality Image Placeholder utilities
+│   │   └── telegramHelpers.ts     # Telegram WebApp yardımcı fonksiyonları (✅ Tamamlandı)
 │   ├── App.tsx                    # Main App component (5.0KB, 144 satır) - ✅ Aktif
 │   ├── main.tsx                   # Application entry point (696B, 22 satır)
 │   ├── types.d.ts                 # Global type definitions (176B, 10 satır)
@@ -333,7 +342,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 **Kategoriler:**
 
-- **Kaynak Kod:** 108 dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
+- **Kaynak Kod:** 110 dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
 - **API Endpoints:** 1 dosya (Vercel Edge Functions) - ✅ Aktif
 - **Assets:** 13 dosya (SVG/PNG icons - src/assets/) - ✅ GÜNCEL
 - **Public Images:** 2 dosya (PNG görselleri - public/images/) - ✅ Optimize Edildi
@@ -346,8 +355,8 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 **Kod Satırları:**
 
-- **TypeScript/TSX/CSS:** ~7,171 satır - ✅ GÜNCEL
-- **Toplam:** ~7,171 satır kod
+- **TypeScript/TSX/CSS:** ~7,400 satır - ✅ GÜNCEL
+- **Toplam:** ~7,400 satır kod
 
 **Asset Boyutları:**
 
@@ -417,6 +426,8 @@ interface RootState {
 - **Suspense**: Loading fallback ile AppSkeleton ve ItemPageSkeleton (✅ Aktif)
 - **SkeletonTheme**: React Loading Skeleton tema konfigürasyonu (✅ Aktif)
 - **useSkeletonTheme**: Skeleton tema hook entegrasyonu (✅ Aktif)
+- **useTelegramHeader**: Telegram header ve buton yönetimi (✅ Tamamlandı)
+- **useSafeArea**: Safe area ve viewport yönetimi (✅ Tamamlandı)
 
 #### **MainLayout.tsx**
 
@@ -592,6 +603,24 @@ interface RootState {
 - Memoized tema değerleri
 - Performans optimizasyonu
 
+#### **useTelegramHeader.ts** (2.1KB, 78 satır) - ✅ Tamamlandı
+
+- Telegram WebApp 2.0 API entegrasyonu
+- Sürüm kontrolü ile güvenli API çağrıları
+- Şeffaf header ve tam ekran modu
+- BackButton ve SettingsButton yönetimi
+- Route-aware buton kontrolü
+- Eski Telegram sürümleri ile uyumluluk
+
+#### **useSafeArea.ts** (1.8KB, 67 satır) - ✅ Tamamlandı
+
+- iOS/Android safe area desteği
+- Home indicator ve gesture bar uyumluluğu
+- Dinamik viewport yüksekliği takibi
+- CSS değişkenleri ile entegrasyon
+- Telegram safe_area_changed event dinleme
+- Native env() değerleri ile birleştirme
+
 ## 🎯 CSS Mimarisi
 
 ### ✅ Global CSS Konsolidasyonu
@@ -600,6 +629,9 @@ interface RootState {
 
 - ✅ Tek kaynak CSS reset
 - ✅ Telegram WebApp tema değişkenleri
+- ✅ Safe area CSS değişkenleri (iOS/Android home indicator desteği)
+- ✅ Dinamik viewport yüksekliği değişkenleri
+- ✅ Safe area yardımcı sınıfları (.tg-safe-pad-_, .tg-safe-height-_)
 - ✅ Typography sistemi (SF Pro font)
 - ✅ Spacing sistemi (4px-20px)
 - ✅ Color tokens
@@ -614,6 +646,7 @@ interface RootState {
 - ✅ Class name collision önleme
 - ✅ TypeScript entegrasyonu
 - ✅ Stil izolasyonu
+- ✅ Safe area entegrasyonu (TabBar ve Footer için)
 
 ### 📁 CSS Dosya Dağılımı - ✅ GÜNCEL
 
@@ -822,6 +855,14 @@ interface RootState {
 - **API Proxy System**: GitHub raw içeriği için proxy endpoint'leri (✅ Aktif)
 - **DOM Utilities**: setBlur ve diğer DOM manipulation helpers (✅ Aktif)
 - **Context Separation**: React Fast Refresh uyumluluğu için context ayrımı (✅ Aktif)
+- **Telegram WebApp 2.0 Integration**: Bot API 8+ paradigması ile modern entegrasyon (✅ Tamamlandı)
+- **Safe Area Support**: iOS/Android home indicator ve gesture bar desteği (✅ Tamamlandı)
+- **Version-Aware API Calls**: Telegram sürüm kontrolü ile güvenli API kullanımı (✅ Tamamlandı)
+- **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
+- **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
+- **useTelegramHeader Hook**: Telegram header ve buton yönetimi (✅ Tamamlandı)
+- **useSafeArea Hook**: Safe area ve viewport yönetimi (✅ Tamamlandı)
+- **Telegram Helpers**: Sürüm tespiti ve özellik kontrolü yardımcı fonksiyonları (✅ Tamamlandı)
 
 ### ⚠️ Kritik Eksiklikler
 
@@ -901,6 +942,14 @@ interface RootState {
 - **Progressive Image Loading**: ProgressiveImage bileşeni ile optimize görsel yükleme (✅ Aktif)
 - **Sharp Integration**: Görsel işleme ve optimizasyon (✅ Aktif)
 - **LQIP Plugin**: Low Quality Image Placeholder entegrasyonu (✅ Aktif)
+- **Telegram WebApp 2.0 Integration**: Bot API 8+ paradigması ile modern entegrasyon (✅ Tamamlandı)
+- **Safe Area Support**: iOS/Android home indicator ve gesture bar desteği (✅ Tamamlandı)
+- **Version-Aware API Calls**: Telegram sürüm kontrolü ile güvenli API kullanımı (✅ Tamamlandı)
+- **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
+- **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
+- **useTelegramHeader Hook**: Telegram header ve buton yönetimi (✅ Tamamlandı)
+- **useSafeArea Hook**: Safe area ve viewport yönetimi (✅ Tamamlandı)
+- **Telegram Helpers**: Sürüm tespiti ve özellik kontrolü yardımcı fonksiyonları (✅ Tamamlandı)
 
 ### ⚠️ Kritik Sorunlar:
 
@@ -917,10 +966,10 @@ interface RootState {
 
 ### 📈 Kod Metrikleri - ✅ GÜNCEL:
 
-- **Toplam Satır:** ~7,171 satır - ✅ GÜNCEL
+- **Toplam Satır:** ~7,400 satır - ✅ GÜNCEL
 - **Component Sayısı:** 60+ bileşen - ✅ GÜNCEL
 - **Feature Modülü:** 6 modül (1 geliştirme aşamasında) - ✅ GÜNCEL
-- **Custom Hook:** 2 aktif hook (useDebounce, useSkeletonTheme)
+- **Custom Hook:** 4 aktif hook (useDebounce, useSkeletonTheme, useTelegramHeader, useSafeArea) - ✅ GÜNCEL
 - **Test Coverage:** Başlangıç seviyesi (1 test dosyası)
 - **Bundle Size:** Optimize edilmiş (lazy loading ile)
 - **Font Integration:** SF Pro Rounded font ailesi (✅ Aktif)
@@ -929,6 +978,9 @@ interface RootState {
 - **Image Optimization:** BlurHash, Progressive Loading, Sharp entegrasyonu (✅ Aktif)
 - **Touch Gestures:** React Swipeable ile swipe desteği (✅ Aktif)
 - **Performance Monitoring:** Intersection Observer ile görünürlük kontrolü (✅ Aktif)
+- **Telegram WebApp 2.0:** Bot API 8+ ile modern entegrasyon (✅ Tamamlandı)
+- **Safe Area Support:** iOS/Android home indicator desteği (✅ Tamamlandı)
+- **Version Compatibility:** Telegram v6.0-8.0+ arası uyumluluk (✅ Tamamlandı)
 
 ## 🚨 Acil Yapılması Gerekenler
 
@@ -968,7 +1020,7 @@ Husky pre-commit hook'larını geçmek için tüm TypeScript strict mode kuralla
 - **@typescript-eslint/no-explicit-any**: Tip güvenliği için `any` yerine spesifik tipler
 - **react-refresh/only-export-components**: Fast Refresh uyumluluğu için context ayrımı
 
-### 🌐 API Proxy System
+### 🎯 API Proxy System
 
 GitHub raw içeriği için Vercel Edge Functions:
 

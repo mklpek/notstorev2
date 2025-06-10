@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../../app/store';
+import type { RootState } from '../../core/store';
 
 // Tema ile ilgili durumları tanımlama
 export type ThemeMode = 'light' | 'dark' | 'system';

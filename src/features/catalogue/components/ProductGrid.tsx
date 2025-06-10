@@ -1,6 +1,6 @@
 import React from 'react';
-import { useGetCatalogueQuery, selectProductsByQuery } from '../../../api/notApi';
-import type { Item } from '../../../api/notApi';
+import { useGetCatalogueQuery, selectProductsByQuery } from '../../../core/api/notApi';
+import type { Item } from '../../../core/api/notApi';
 import ProductCard from './ProductCard';
 import styles from './ProductGrid.module.css';
 

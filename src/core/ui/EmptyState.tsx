@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './EmptyState.module.css';
-import hatchingChick from '../assets/hatching_chick.svg';
+import hatchingChick from '../../assets/hatching_chick.svg';
 
 interface EmptyStateProps {
   type: 'history' | 'cart' | 'search';

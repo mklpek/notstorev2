@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getTgVersion } from '../utils/telegramHelpers';
+import { getTgVersion, safeCall, canUse } from '../utils/telegramHelpers';
 
 export default function useTelegramHeader() {
   const tgVer = getTgVersion();
@@ -14,43 +14,37 @@ export default function useTelegramHeader() {
     wa.ready();
 
     /* --- fullscreen / expand ------------------------------------------ */
-    // requestFullscreen (Bot API 7.0+)
-    if (wa.requestFullscreen && typeof wa.requestFullscreen === 'function') {
-      try {
-        wa.requestFullscreen();
-      } catch {
+    // requestFullscreen sadece Bot API 7.0+ destekler
+    if (tgVer >= 7.0 && canUse('requestFullscreen')) {
+      if (!safeCall('requestFullscreen')) {
         // Fallback to expand
-        wa.expand();
+        safeCall('expand');
       }
     } else {
       // Eskiden beri var olan expand() metodunu kullan
-      wa.expand();
+      safeCall('expand');
     }
 
     /* --- transparent system bar --------------------------------------- */
-    // setHeaderColor (Bot API 6.9+)
-    if (wa.setHeaderColor && typeof wa.setHeaderColor === 'function') {
-      try {
-        wa.setHeaderColor('#00000000');
-      } catch {
-        /* ignored */
-      }
+    // setHeaderColor sadece Bot API 6.9+ destekler
+    if (tgVer >= 6.9 && canUse('setHeaderColor')) {
+      safeCall('setHeaderColor', '#00000000');
     }
 
-    /* --- Back & Settings buttons (≥ 7.0) ------------------------------ */
+    /* --- Back & Settings buttons (≥ 6.9) ------------------------------ */
     const isProduct = pathname.startsWith('/product/');
     const cleanupFns: (() => void)[] = [];
 
-    // BackButton (Bot API 6.9+)
-    if (wa.BackButton && wa.BackButton.show && wa.BackButton.hide) {
+    // BackButton sadece Bot API 6.9+ destekler
+    if (tgVer >= 6.9 && wa.BackButton) {
       try {
-        if (isProduct) {
+        if (isProduct && wa.BackButton.show) {
           wa.BackButton.show();
-        } else {
+        } else if (wa.BackButton.hide) {
           wa.BackButton.hide();
         }
 
-        if (typeof wa.onEvent === 'function') {
+        if (canUse('onEvent')) {
           const onBack = () => nav(-1);
           wa.onEvent('back_button_pressed', onBack);
 
@@ -64,12 +58,14 @@ export default function useTelegramHeader() {
       }
     }
 
-    // SettingsButton (Bot API 6.9+)
-    if (wa.SettingsButton && wa.SettingsButton.show) {
+    // SettingsButton sadece Bot API 6.9+ destekler
+    if (tgVer >= 6.9 && wa.SettingsButton) {
       try {
-        wa.SettingsButton.show();
+        if (wa.SettingsButton.show) {
+          wa.SettingsButton.show();
+        }
 
-        if (typeof wa.onEvent === 'function' && typeof wa.openLink === 'function') {
+        if (canUse('onEvent') && canUse('openLink')) {
           const openMenu = () => wa.openLink('https://t.me/notstore_bot');
           wa.onEvent('settings_button_pressed', openMenu);
 

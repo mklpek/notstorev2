@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProductCard from './components/ProductCard';
-import { useGetCatalogueQuery, catalogSelectors } from '../../api/notApi';
-import type { Item } from '../../api/notApi';
+import { useGetCatalogueQuery, catalogSelectors } from '../../core/api/notApi';
+import type { Item } from '../../core/api/notApi';
 import styles from './ProductGrid.module.css';
-import { useDebouncedValue } from '../../hooks/useDebounce';
+import { useDebouncedValue } from '../../core/hooks/useDebounce';
 import NoResultsFound from './components/NoResultsFound';
-import ProductCardSkeleton from '../../components/Skeleton/ProductCardSkeleton';
-import { ApiErrorMessage } from '../../components';
+import ProductCardSkeleton from '../../core/ui/Skeleton/ProductCardSkeleton';
+import { ApiErrorMessage } from '../../core/ui';
 
 // 'count' parametresini değişken hale getiriyoruz
 const SKELETON_COUNT = 6;

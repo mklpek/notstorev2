@@ -1,12 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { productsApi } from '../features/products/api';
-import { accountApi } from '../features/account/api';
-import cartReducer from '../features/cart/cartSlice';
-import themeReducer from '../features/theme/themeSlice';
-import userReducer from '../features/account/userSlice';
-// import historyReducer from '../features/history/historySlice'; // Yorum satırı yapıldı
+import { productsApi } from '../../features/catalogue/api';
+import { accountApi } from '../../features/account/api';
+import cartReducer from '../../features/cart/cartSlice';
+import themeReducer from '../../features/theme/themeSlice';
+import userReducer from '../../features/account/userSlice';
+// import historyReducer from '../../features/history/historySlice'; // Yorum satırı yapıldı
 
 // Cart state'ini local storage'da kalıcı tutmak için persist konfigürasyonu
 // Whitelist kullanarak sadece istediğimiz alanları persist ediyoruz
@@ -60,5 +60,5 @@ export const store = configureStore({
 export const persistor = persistStore(store);
 
 /* Single-store typing helpers */
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;

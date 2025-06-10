@@ -1,7 +1,7 @@
 /**
  * @deprecated - Bu dosya feature-bazlı API kullanımına geçiş için
  * yeniden dışa aktarma sağlar. Doğrudan kullanmayın.
- * Bunun yerine, features/products/api.ts veya features/account/api.ts kullanın.
+ * Bunun yerine, features/catalogue/api.ts veya features/account/api.ts kullanın.
  */
 
 // Her modülden seçici export yaparak çakışmaları önlüyoruz
@@ -14,7 +14,7 @@ export {
   selectCatalogue,
   selectProductsByQuery,
   useGetCatalogueQuery,
-} from '../features/products/api';
+} from '../../features/catalogue/api';
 
 // Type exports
 export type {
@@ -24,7 +24,7 @@ export type {
   ApiErrorResponse,
   CatalogState,
   UseGetCatalogueQueryResult,
-} from '../features/products/api';
+} from '../../features/catalogue/api';
 
 // Value exports
 export {
@@ -39,7 +39,7 @@ export {
   useGetHistoryQuery,
   useGetEmptyHistoryQuery,
   addPurchaseToHistory,
-} from '../features/account/api';
+} from '../../features/account/api';
 
 // Type exports
 export type {
@@ -47,11 +47,11 @@ export type {
   HistoryState,
   UseGetHistoryQueryResult,
   UseGetEmptyHistoryQueryResult,
-} from '../features/account/api';
+} from '../../features/account/api';
 
 // API birleştirme - store.ts'de kullanılır
-import { productsApi } from '../features/products/api';
-import { accountApi } from '../features/account/api';
+import { productsApi } from '../../features/catalogue/api';
+import { accountApi } from '../../features/account/api';
 
 // notApi adı altında dışa aktarıyoruz (uyumluluk için)
 export const notApi = {

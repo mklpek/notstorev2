@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { cartAdapter } from './cartSlice';
-import type { RootState } from '../../app/store';
+import type { RootState } from '../../core/store';
 import type { CartItem } from './types';
 
 // Adapter selectors - Tek kaynak burasıdır

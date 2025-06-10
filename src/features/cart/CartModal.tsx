@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../core/store/hooks';
 import { removeItem, changeQty, clearCart } from './cartSlice';
 import { selectCartItems, selectCartTotal } from './selectors';
-import { useGetCatalogueQuery, addPurchaseToHistory, catalogSelectors } from '../../api/notApi';
-import Modal from '../../components/Modal';
-import ProgressiveImage from '../../components/ProgressiveImage';
+import {
+  useGetCatalogueQuery,
+  addPurchaseToHistory,
+  catalogSelectors,
+} from '../../core/api/notApi';
+import Modal from '../../core/ui/Modal';
+import ProgressiveImage from '../../core/ui/ProgressiveImage';
 import styles from './CartModal.module.css';
 import { useTonConnect } from '../../features/tonConnect';
 import { createCartTransaction, ensureWalletConnection } from '../../features/tonConnect/buyNow';

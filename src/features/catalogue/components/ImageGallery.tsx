@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './ImageGallery.module.css';
-import ProgressiveImage from '../../../components/ProgressiveImage';
+import ProgressiveImage from '../../../core/ui/ProgressiveImage';
 
 interface ImageGalleryProps {
   images: string[];
