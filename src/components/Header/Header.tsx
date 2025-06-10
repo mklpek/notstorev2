@@ -9,9 +9,10 @@ import styles from './Header.module.css';
 
 interface HeaderProps {
   onCartClick?: () => void;
+  onSearchOpen?: (isOpen: boolean) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onCartClick }) => {
+const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
   // URL search params kullanımı - arama parametresini URL'den almak için
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
@@ -29,6 +30,13 @@ const Header: React.FC<HeaderProps> = ({ onCartClick }) => {
       inputRef.current.focus();
     }
   }, [isSearchOpen]);
+
+  useEffect(() => {
+    // Search durumunu parent bileşene bildir
+    if (onSearchOpen) {
+      onSearchOpen(isSearchOpen);
+    }
+  }, [isSearchOpen, onSearchOpen]);
 
   const handleSearchClick = () => {
     // Arama butonuna tıklandığında search parametresini URL'e ekle

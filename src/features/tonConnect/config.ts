@@ -9,6 +9,9 @@ export const CHAIN = {
 // App manifest URL - kendi manifestimizi kullanıyoruz
 export const MANIFEST_URL = '/tonconnect-manifest.json';
 
+// Wallets listesi için kendi proxy API'mizi kullan
+export const WALLETS_LIST_URL = '/api/wallets';
+
 // Optional TON Connect UI configuration
 export const TON_CONNECT_UI_CONFIG = {
   language: 'en',

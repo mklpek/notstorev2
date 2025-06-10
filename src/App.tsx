@@ -1,12 +1,14 @@
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route } from 'react-router-dom';
+// Telegram WebApp SDK'yı CDN üzerinden yüklüyoruz
+import WebApp from './telegram-webapp-script';
 import CartModal from './features/cart/CartModal';
 import AppSkeleton from './components/Skeleton/AppSkeleton';
 import ItemPageSkeleton from './components/Skeleton/ItemPageSkeleton';
 import AccountPageSkeleton from './components/Skeleton/AccountPageSkeleton';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { useSkeletonTheme, useTelegramHeader } from './hooks';
+import { useSkeletonTheme } from './hooks/useSkeletonTheme';
 import { TonConnectProvider } from './features/tonConnect';
 import { useDispatch } from 'react-redux';
 import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
@@ -23,20 +25,20 @@ function App() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const dispatch = useDispatch();
 
-  // Telegram header'ı yönet
-  useTelegramHeader();
-
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
 
   useEffect(() => {
+    // Telegram WebApp SDK'sını başlat
+    WebApp.ready();
+    WebApp.expand();
+
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
       try {
-        const wa = window.Telegram.WebApp;
         // TypeScript null/undefined kontrolü
-        if (wa?.initDataUnsafe?.user) {
-          const user = wa.initDataUnsafe.user;
+        if (WebApp?.initDataUnsafe?.user) {
+          const user = WebApp.initDataUnsafe.user;
 
           // TelegramUser tipine uygun veriyi hazırla
           const userDetails: TelegramUser = {
@@ -65,6 +67,20 @@ function App() {
     };
 
     initUser();
+
+    // Telegram tema renklerini uygula
+    document.documentElement.style.setProperty(
+      '--tg-theme-bg-color',
+      WebApp.themeParams.bg_color || '#000000'
+    );
+    document.documentElement.style.setProperty(
+      '--tg-theme-text-color',
+      WebApp.themeParams.text_color || '#ffffff'
+    );
+    document.documentElement.style.setProperty(
+      '--tg-theme-hint-color',
+      WebApp.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
+    );
   }, [dispatch]);
 
   // Fonksiyonları useCallback ile sarmalıyoruz

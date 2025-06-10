@@ -7,8 +7,7 @@
   font-family: 'SF Pro Rounded';
   src:
     url('/fonts/SF Pro Rounded.woff2') format('woff2'),
-    url('/fonts/SF Pro Rounded.woff') format('woff'),
-    url('/fonts/SF Pro Rounded.ttf') format('truetype');
+    url('/fonts/SF Pro Rounded.woff') format('woff');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -32,12 +31,6 @@
   --tg-theme-link-color: #2481cc;
   --tg-theme-button-color: #2481cc;
   --tg-theme-button-text-color: #ffffff;
-
-  /* Telegram safe-area ve viewport değişkenleri */
-  --tg-safe-area-inset-top: env(safe-area-inset-top);
-  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom);
-  --tg-viewport-height: 100vh; /* JS'le güncelleyeceğiz */
-  --tg-viewport-stable-height: 100vh;
 
   /* Uygulama renkleri */
   --primary-color: #646cff;

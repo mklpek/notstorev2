@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import path from 'path';
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -33,6 +34,39 @@ export default defineConfig(({ mode }) => {
     ],
     // Font dosyalarının asset olarak işlenmesi için
     assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.otf'],
+    // Server konfigürasyonu - CORS ve sıkışma
+    server: {
+      port: 5173,
+      strictPort: false,
+      cors: true,
+      hmr: {
+        overlay: true,
+      },
+      fs: {
+        strict: false, // Kök dizin dışındaki dosyalara erişim
+      },
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'), // @ ile src dizinine erişim
+      },
+    },
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-router-dom',
+        '@reduxjs/toolkit',
+        'react-redux',
+        'redux-persist',
+        'react-loading-skeleton',
+      ],
+      exclude: [], // @twa-dev/sdk artık hariç tutmuyoruz
+      esbuildOptions: {
+        // CommonJS modüllerini düzgün şekilde işlemek için
+        plugins: [NodeModulesPolyfillPlugin()],
+      },
+    },
     build: {
       // Üretim için optimizasyonlar
       minify: isProduction ? 'terser' : false,

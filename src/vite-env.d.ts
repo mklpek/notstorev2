@@ -1,5 +1,4 @@
 /// <reference types="vite/client" />
-/// <reference types="telegram-web-app" />
 
 declare module '*.svg' {
   const content: string;
@@ -68,22 +67,6 @@ interface WebAppInitData {
   // Diğer initData alanları
 }
 
-interface BackButton {
-  isVisible: boolean;
-  show: () => void;
-  hide: () => void;
-  onClick: (callback: () => void) => void;
-  offClick: (callback: () => void) => void;
-}
-
-interface SettingsButton {
-  isVisible: boolean;
-  show: () => void;
-  hide: () => void;
-  onClick: (callback: () => void) => void;
-  offClick: (callback: () => void) => void;
-}
-
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
@@ -97,21 +80,7 @@ interface TelegramWebApp {
     button_text_color?: string;
     [key: string]: string | undefined;
   };
-
-  // Bot API 8.0+ özellikler
-  requestFullscreen?: () => void;
-  setHeaderColor: (color: string) => void;
-  viewportHeight: number;
-  viewportStableHeight: number;
-  BackButton: BackButton;
-  SettingsButton: SettingsButton;
-
-  // Düzeltilmiş ESLint uyumlu tip tanımları
-  onEvent: (event: string, handler: (...args: unknown[]) => void) => void;
-  offEvent: (event: string, handler: (...args: unknown[]) => void) => void;
-
-  // Web App URL açma
-  openLink: (url: string) => void;
+  // Diğer WebApp metodları
 }
 
 interface Window {
