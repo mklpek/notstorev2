@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
 import type { Item } from '../../../core/api/notApi';
 import { useAppSelector } from '../../../core/store/hooks';
 import { selectIsInCart } from '../../cart/selectors';
@@ -13,6 +15,10 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   // Ürünün sepette olup olmadığını kontrol et
   const isInCart = useAppSelector(selectIsInCart(product.id));
@@ -27,18 +33,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
   const displayTitle = `${product.category} ${product.name}`;
 
   return (
-    <div className={styles.productCard} onClick={handleCardClick}>
+    <div ref={ref} className={styles.productCard} onClick={handleCardClick}>
       <div className={styles.imageContainer}>
-        <ImageGallery
-          images={product.images}
-          currentIndex={currentImageIndex}
-          onIndexChange={setCurrentImageIndex}
-        />
-        {/* Tag elementi - sadece ürün sepetteyse görünür */}
-        {isInCart && (
-          <div className={styles.cartTag}>
-            <CartTagIcon />
-          </div>
+        {inView && (
+          <>
+            <ImageGallery
+              images={product.images}
+              currentIndex={currentImageIndex}
+              onIndexChange={setCurrentImageIndex}
+            />
+            {/* Tag elementi - sadece ürün sepetteyse görünür */}
+            {isInCart && (
+              <div className={styles.cartTag}>
+                <CartTagIcon />
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className={styles.productInfo}>
