@@ -115,12 +115,6 @@
   top: 1px;
   left: 1px;
   object-fit: cover;
-  transition: filter 0.25s ease;
-}
-
-.profileImage:not([src^='http']):not([src*='blob:']) {
-  filter: blur(3px);
-  background: #222;
 }
 
 /* Premium göstergesi */

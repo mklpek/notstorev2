@@ -39,12 +39,6 @@
   height: 120px;
   object-fit: cover;
   border-radius: 120px;
-  transition: filter 0.25s ease;
-}
-
-.avatarImage:not([src^='http']):not([src*='blob:']) {
-  filter: blur(10px);
-  background: #222;
 }
 
 /* Info Section */
