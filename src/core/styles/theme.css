@@ -73,7 +73,25 @@
   --container-max-width: 390px;
 }
 
+/* ==========================================================================
+   UNIVERSAL CONTAINER CLASS - Responsive design için tek kaynak
+   ========================================================================== */
+
+.tg-container {
+  width: 100%; /* fluid down to 0 */
+  max-width: var(--container-max-width); /* 390px cap */
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box; /* include padding in total width */
+}
+
 /* Base HTML Elements */
+html,
+body,
+#root {
+  overflow-x: hidden !important; /* Yatay kaydırmayı tamamen engelle */
+}
+
 html,
 body {
   height: 100%;
@@ -85,7 +103,6 @@ body {
   background-color: var(--background-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   max-width: var(--container-max-width); /* iOS Telegram'da yatay scroll kaçmasını engeller */
   margin: 0 auto;
   /* Telegram safe area inset paddingleri */
@@ -199,13 +216,6 @@ a {
 
 .tg-viewport-height {
   height: var(--tg-viewport-height);
-}
-
-/* Responsive */
-@media (max-width: 390px) {
-  #root {
-    max-width: 100%;
-  }
 }
 
 /* Animations */

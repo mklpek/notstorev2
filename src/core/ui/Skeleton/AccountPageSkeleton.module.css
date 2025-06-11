@@ -1,12 +1,15 @@
 /* Main Account Page Skeleton Container */
 .accountPageSkeleton {
-  width: 390px;
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 32px;
   padding: 40px 0px 0px;
-  margin: 0 auto;
   min-height: 100vh;
 }
 
@@ -166,10 +169,4 @@
   animation-timing-function: ease-in-out;
 }
 
-/* Responsive adjustments */
-@media (max-width: 390px) {
-  .accountPageSkeleton {
-    width: 100%;
-    padding: 40px 16px 0px;
-  }
-}
+/* Media query artık gerekli değil - universal .tg-container pattern kullanıyoruz */

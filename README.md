@@ -177,11 +177,63 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   ├── tonconnect-manifest.json   # TON Connect manifest dosyası (293B, 8 satır) - ✅ Aktif
 │   └── vite.svg                   # Vite logo (1.5KB)
 ├── src/                           # Source code
-│   ├── app/                       # Redux store configuration (✅ Aktif)
-│   │   ├── store.ts               # Redux store setup
-│   │   └── hooks.ts               # Typed Redux hooks
-│   ├── api/                       # RTK Query API layer (✅ Aktif)
-│   │   └── notApi.ts              # API endpoints & types
+│   ├── core/                      # Core application modules (✅ Aktif)
+│   │   ├── store/                 # Redux store configuration (✅ Aktif)
+│   │   │   ├── store.ts           # Redux store setup (2.4KB, 65 satır)
+│   │   │   ├── hooks.ts           # Typed Redux hooks (371B, 8 satır)
+│   │   │   └── index.ts           # Store exports (197B, 7 satır)
+│   │   ├── api/                   # RTK Query API layer (✅ Aktif)
+│   │   │   └── notApi.ts          # API endpoints & types
+│   │   ├── ui/                    # Reusable UI components (✅ Aktif)
+│   │   │   ├── Icons/             # Icon components (6 dosya)
+│   │   │   │   ├── BasketIcon.tsx # Basket icon component
+│   │   │   │   ├── CartTagIcon.tsx # Cart tag icon component
+│   │   │   │   ├── DeleteIcon.tsx # Delete icon component
+│   │   │   │   ├── SearchIcon.tsx # Search icon component
+│   │   │   │   ├── ShareIcon.tsx  # Share icon component
+│   │   │   │   └── StoreIcon.tsx  # Store icon component
+│   │   │   ├── Skeleton/          # Loading skeleton components (✅ Aktif)
+│   │   │   │   ├── AppSkeleton.tsx # App skeleton component (893B, 32 satır)
+│   │   │   │   ├── AppSkeleton.module.css # App skeleton styles (2.2KB, 127 satır) - ✅ Aktif
+│   │   │   │   ├── ItemPageSkeleton.tsx # Item page skeleton component (3.0KB, 90 satır) - ✅ Aktif
+│   │   │   │   ├── ItemPageSkeleton.module.css # Item page skeleton styles (4.7KB, 261 satır) - ✅ Aktif
+│   │   │   │   ├── ProductCardSkeleton.tsx # Product card skeleton (1.2KB, 38 satır) - ✅ Aktif
+│   │   │   │   ├── ProductCardSkeleton.module.css # Product card skeleton styles (572B, 38 satır) - ✅ Aktif
+│   │   │   │   ├── TabBarSkeleton.tsx # TabBar skeleton component (1.2KB, 39 satır) - ✅ Aktif
+│   │   │   │   ├── HeaderSkeleton.tsx # Header skeleton component (607B, 23 satır) - ✅ Aktif
+│   │   │   │   ├── AccountPageSkeleton.tsx # Account page skeleton component (2.7KB, 82 satır) - ✅ Aktif
+│   │   │   │   ├── AccountPageSkeleton.module.css # Account page skeleton styles (3.2KB, 176 satır) - ✅ Aktif
+│   │   │   │   ├── SkeletonElements.tsx # Reusable skeleton elements (1.6KB, 60 satır) - ✅ Aktif
+│   │   │   │   └── index.ts       # Skeleton exports (500B, 11 satır) - ✅ Aktif
+│   │   │   ├── ProgressiveImage/  # Progressive image loading (✅ Aktif)
+│   │   │   │   ├── ProgressiveImage.module.css # Progressive image styles
+│   │   │   │   ├── ProgressiveImage.tsx # Progressive image component
+│   │   │   │   └── index.ts       # Progressive image export
+│   │   │   ├── Modal/             # Modal system (✅ Aktif)
+│   │   │   │   ├── Modal.module.css # Modal styles
+│   │   │   │   ├── Modal.tsx      # Modal component
+│   │   │   │   └── index.ts       # Modal export
+│   │   │   ├── Button/            # Button component
+│   │   │   │   ├── Button.module.css # Button styles
+│   │   │   │   └── Button.tsx     # Button component
+│   │   │   ├── ApiErrorMessage.tsx # API hata mesajı bileşeni (1.9KB, 67 satır) - ✅ Aktif
+│   │   │   ├── ApiErrorMessage.module.css # API hata mesajı stilleri (1.7KB, 109 satır) - ✅ Aktif
+│   │   │   ├── EmptyState.tsx     # Boş durum bileşeni (2.0KB, 68 satır) - ✅ Aktif
+│   │   │   ├── EmptyState.module.css # Boş durum stilleri (1.7KB, 110 satır) - ✅ Aktif
+│   │   │   ├── Icon.tsx           # Icon component (620B, 26 satır)
+│   │   │   ├── Form.module.css    # Form styles (744B, 50 satır)
+│   │   │   ├── Form.tsx           # Form component (3.7KB, 139 satır)
+│   │   │   └── index.ts           # Component exports (1.0KB, 32 satır) - ✅ Aktif
+│   │   ├── hooks/                 # Custom React hooks (✅ Aktif)
+│   │   │   ├── useDebounce.ts     # Debounce hook (589B, 24 satır)
+│   │   │   ├── useSkeletonTheme.ts # Skeleton theme hook (711B, 24 satır) - ✅ Aktif
+│   │   │   ├── useTelegramHeader.ts # Telegram header ve buton yönetimi (2.5KB, 85 satır) - ✅ Tamamlandı
+│   │   │   ├── useSafeArea.tsx    # Safe area ve viewport yönetimi (6.1KB, 200 satır) - ✅ Tamamlandı
+│   │   │   ├── useSafeAreaExample.tsx # Safe area örnek kullanımı (897B, 31 satır)
+│   │   │   └── index.ts           # Hooks exports (316B, 11 satır) - ✅ Aktif
+│   │   ├── styles/                # Global styles (✅ Aktif)
+│   │   │   └── theme.css          # Global theme/reset dosyası (6.5KB, 281 satır)
+│   │   └── utils/                 # Core utility functions
 │   ├── assets/                    # Import edilen assets (684KB)
 │   │   ├── icons/                 # Figma SVG icons ve görseller (13 dosya) - ✅ Aktif
 │   │   │   ├── basket-icon.svg    # Sepet ikonu (1.7KB)
@@ -199,58 +251,6 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   └── store-icon.svg     # Mağaza ikonu (1.5KB)
 │   │   ├── hatching_chick.svg     # Hatching chick icon (13KB)
 │   │   └── react.svg              # React logo (4.0KB)
-│   ├── components/                # Reusable UI components
-│   │   ├── Icons/                 # Icon components (6 dosya)
-│   │   │   ├── BasketIcon.tsx     # Basket icon component
-│   │   │   ├── CartTagIcon.tsx    # Cart tag icon component
-│   │   │   ├── DeleteIcon.tsx     # Delete icon component
-│   │   │   ├── SearchIcon.tsx     # Search icon component
-│   │   │   ├── ShareIcon.tsx      # Share icon component
-│   │   │   └── StoreIcon.tsx      # Store icon component
-│   │   ├── Skeleton/              # Loading skeleton components (✅ Aktif)
-│   │   │   ├── AppSkeleton.tsx    # App skeleton component (893B, 32 satır)
-│   │   │   ├── AppSkeleton.module.css # App skeleton styles (2.2KB, 127 satır) - ✅ Aktif
-│   │   │   ├── ItemPageSkeleton.tsx # Item page skeleton component (3.0KB, 90 satır) - ✅ Aktif
-│   │   │   ├── ItemPageSkeleton.module.css # Item page skeleton styles (4.7KB, 261 satır) - ✅ Aktif
-│   │   │   ├── ProductCardSkeleton.tsx # Product card skeleton (1.2KB, 38 satır) - ✅ Aktif
-│   │   │   ├── ProductCardSkeleton.module.css # Product card skeleton styles (572B, 38 satır) - ✅ Aktif
-│   │   │   ├── TabBarSkeleton.tsx # TabBar skeleton component (1.2KB, 39 satır) - ✅ Aktif
-│   │   │   ├── HeaderSkeleton.tsx # Header skeleton component (607B, 23 satır) - ✅ Aktif
-│   │   │   ├── AccountPageSkeleton.tsx # Account page skeleton component (2.7KB, 82 satır) - ✅ Aktif
-│   │   │   ├── AccountPageSkeleton.module.css # Account page skeleton styles (3.2KB, 176 satır) - ✅ Aktif
-│   │   │   ├── SkeletonElements.tsx # Reusable skeleton elements (1.6KB, 60 satır) - ✅ Aktif
-│   │   │   └── index.ts           # Skeleton exports (500B, 11 satır) - ✅ Aktif
-│   │   ├── ProgressiveImage/      # Progressive image loading (✅ Aktif)
-│   │   │   ├── ProgressiveImage.module.css # Progressive image styles
-│   │   │   ├── ProgressiveImage.tsx # Progressive image component
-│   │   │   └── index.ts           # Progressive image export
-│   │   ├── Modal/                 # Modal system (✅ Aktif)
-│   │   │   ├── Modal.module.css   # Modal styles
-│   │   │   ├── Modal.tsx          # Modal component
-│   │   │   └── index.ts           # Modal export
-│   │   ├── TabBar/                # Navigation TabBar
-│   │   │   ├── TabBar.module.css  # TabBar styles
-│   │   │   ├── TabBar.tsx         # TabBar component
-│   │   │   └── index.ts           # TabBar export
-│   │   ├── Header/                # Header component
-│   │   │   ├── Header.module.css  # Header styles
-│   │   │   ├── Header.tsx         # Header component
-│   │   │   └── index.ts           # Header export
-│   │   ├── Footer/                # Footer component
-│   │   │   ├── Footer.module.css  # Footer styles
-│   │   │   ├── Footer.tsx         # Footer component
-│   │   │   └── index.ts           # Footer export
-│   │   ├── Button/                # Button component
-│   │   │   ├── Button.module.css  # Button styles
-│   │   │   └── Button.tsx         # Button component
-│   │   ├── ApiErrorMessage.tsx    # API hata mesajı bileşeni (1.9KB, 67 satır) - ✅ Aktif
-│   │   ├── ApiErrorMessage.module.css # API hata mesajı stilleri (1.7KB, 109 satır) - ✅ Aktif
-│   │   ├── EmptyState.tsx         # Boş durum bileşeni (2.0KB, 68 satır) - ✅ Aktif
-│   │   ├── EmptyState.module.css  # Boş durum stilleri (1.7KB, 110 satır) - ✅ Aktif
-│   │   ├── Icon.tsx               # Icon component (620B, 26 satır)
-│   │   ├── Form.module.css        # Form styles (744B, 50 satır)
-│   │   ├── Form.tsx               # Form component (3.7KB, 139 satır)
-│   │   └── index.ts               # Component exports (898B, 23 satır) - ✅ Aktif
 │   ├── features/                  # Feature-based modules
 │   │   ├── account/               # Account/Profile feature
 │   │   │   ├── AccountPage.module.css  # Account page styles
@@ -263,24 +263,26 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── cartPersist.ts     # Persist configuration - ✅ Aktif
 │   │   │   ├── selectors.ts       # Cart selectors
 │   │   │   └── types.ts           # Cart TypeScript types
-│   │   ├── products/              # Product management (✅ Aktif)
+│   │   ├── catalogue/             # Product management (✅ Aktif) - GÜNCELLEME: products → catalogue
 │   │   │   ├── components/        # Product components
-│   │   │   │   ├── ImageGallery.module.css  # Image gallery styles
-│   │   │   │   ├── ImageGallery.tsx         # Image gallery component
-│   │   │   │   ├── ItemPage.module.css      # Item page styles
-│   │   │   │   ├── ItemPage.tsx             # Item page component
-│   │   │   │   ├── NoResultsFound.module.css # No results styles
-│   │   │   │   ├── NoResultsFound.tsx       # No results component
-│   │   │   │   ├── ProductCard.module.css   # Product card styles
-│   │   │   │   ├── ProductCard.tsx          # Product card component
-│   │   │   │   ├── ProductGrid.module.css   # Product grid styles
-│   │   │   │   └── ProductGrid.tsx          # Product grid component
+│   │   │   │   ├── ImageGallery.module.css  # Image gallery styles (1.4KB, 88 satır)
+│   │   │   │   ├── ImageGallery.tsx         # Image gallery component (2.1KB, 68 satır)
+│   │   │   │   ├── ItemPage.module.css      # Item page styles (6.5KB, 343 satır)
+│   │   │   │   ├── ItemPage.tsx             # Item page component (6.0KB, 179 satır)
+│   │   │   │   ├── NoResultsFound.module.css # No results styles (1.0KB, 65 satır)
+│   │   │   │   ├── NoResultsFound.tsx       # No results component (839B, 22 satır)
+│   │   │   │   ├── ProductCard.module.css   # Product card styles (1.9KB, 100 satır)
+│   │   │   │   ├── ProductCard.tsx          # Product card component (2.1KB, 66 satır)
+│   │   │   │   ├── ProductGrid.module.css   # Product grid styles (516B, 30 satır)
+│   │   │   │   ├── ProductGrid.tsx          # Product grid component (3.3KB, 99 satır)
+│   │   │   │   └── index.ts                 # Components exports (306B, 7 satır)
 │   │   │   ├── __tests__/         # Test files
-│   │   │   │   └── productsSlice.test.ts # Products slice tests
-│   │   │   ├── ProductGrid.module.css       # Main product grid styles
-│   │   │   ├── ProductGrid.tsx              # Main product grid component
-│   │   │   ├── api.ts                       # Products API functions
-│   │   │   └── types.ts                     # TypeScript types
+│   │   │   │   └── catalogueSlice.test.ts # Catalogue slice tests
+│   │   │   ├── ProductGrid.module.css       # Main product grid styles (1.1KB, 54 satır)
+│   │   │   ├── ProductGrid.tsx              # Main product grid component (3.3KB, 99 satır)
+│   │   │   ├── api.ts                       # Products API functions (3.5KB, 111 satır)
+│   │   │   ├── types.ts                     # TypeScript types (125B, 5 satır)
+│   │   │   └── index.ts                     # Catalogue exports (169B, 6 satır)
 │   │   ├── search/                # Search feature (✅ Aktif)
 │   │   │   ├── SearchBar.tsx      # Search bar component
 │   │   │   └── index.ts           # Search export
@@ -297,42 +299,49 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── utils/                 # TON Connect utilities (✅ Aktif)
 │   │   │   │   └── dom.ts             # DOM manipulation helpers - ✅ Aktif
 │   │   │   └── index.ts               # TON Connect exports (313B, 6 satır) - ✅ Aktif
+│   │   ├── checkout/              # Checkout feature (✅ Yeni eklendi)
 │   │   └── theme/                 # Theme feature (boş - gelecek geliştirme)
 │   │       └── themeSlice.ts      # Theme slice
-│   ├── hooks/                     # Custom React hooks (✅ Aktif)
-│   │   ├── useDebounce.ts         # Debounce hook
-│   │   ├── useSkeletonTheme.ts    # Skeleton theme hook - ✅ Aktif
-│   │   ├── useTelegramHeader.ts   # Telegram header ve buton yönetimi (✅ Tamamlandı)
-│   │   └── useSafeArea.ts         # Safe area ve viewport yönetimi (✅ Tamamlandı)
-│   ├── layouts/                   # Layout components
-│   │   ├── MainLayout.module.css  # Main layout styles
-│   │   └── MainLayout.tsx         # Main layout component
-│   ├── styles/                    # Global styles
-│   │   └── theme.css              # Global theme/reset dosyası
+│   ├── layouts/                   # Layout components (✅ Aktif)
+│   │   ├── Header/                # Header component
+│   │   │   ├── Header.module.css  # Header styles
+│   │   │   ├── Header.tsx         # Header component
+│   │   │   └── index.ts           # Header export
+│   │   ├── Footer/                # Footer component
+│   │   │   ├── Footer.module.css  # Footer styles
+│   │   │   ├── Footer.tsx         # Footer component
+│   │   │   └── index.ts           # Footer export
+│   │   ├── TabBar/                # Navigation TabBar
+│   │   │   ├── TabBar.module.css  # TabBar styles
+│   │   │   ├── TabBar.tsx         # TabBar component
+│   │   │   └── index.ts           # TabBar export
+│   │   ├── MainLayout.module.css  # Main layout styles (453B, 23 satır)
+│   │   ├── MainLayout.tsx         # Main layout component (1.3KB, 46 satır)
+│   │   └── index.ts               # Layout exports (159B, 5 satır)
 │   ├── utils/                     # Utility functions
 │   │   ├── lqip.ts                # Low Quality Image Placeholder utilities
 │   │   └── telegramHelpers.ts     # Telegram WebApp yardımcı fonksiyonları (✅ Tamamlandı)
-│   ├── App.tsx                    # Main App component (5.0KB, 144 satır) - ✅ Aktif
-│   ├── main.tsx                   # Application entry point (696B, 22 satır)
+│   ├── App.tsx                    # Main App component (5.3KB, 157 satır) - ✅ Aktif
+│   ├── main.tsx                   # Application entry point (830B, 25 satır)
 │   ├── types.d.ts                 # Global type definitions (176B, 10 satır)
-│   ├── vite-env.d.ts              # Vite type definitions (1.7KB, 91 satır)
+│   ├── vite-env.d.ts              # Vite type definitions (2.6KB, 118 satır)
 │   ├── app.d.ts                   # App type definitions (boş dosya) - ✅ Aktif
 │   ├── telegram-webapp-script.ts  # Telegram WebApp script (boş dosya) - ✅ Aktif
 │   └── index.html                 # HTML entry point (1.1KB, 28 satır) - ✅ Aktif
 ├── .gitattributes                 # Git attributes (66B, 3 satır)
 ├── .gitignore                     # Git ignore rules (327B, 31 satır)
 ├── .prettierrc                    # Prettier configuration (179B, 11 satır)
-├── README.md                      # Project documentation (42KB, 980 satır) - ✅ Aktif
+├── README.md                      # Project documentation (47KB, 1062 satır) - ✅ Aktif
 ├── commitlint.config.js           # Commit lint configuration (65B, 2 satır)
 ├── eslint.config.js               # ESLint configuration (1.0KB, 34 satır)
-├── index.html                     # HTML entry point (825B, 30 satır)
+├── index.html                     # HTML entry point (968B, 32 satır)
 ├── package-lock.json              # NPM lock file (442KB, 12846 satır) - ✅ Aktif
 ├── package.json                   # NPM package configuration (2.2KB, 78 satır) - ✅ Aktif
 ├── tsconfig.app.json              # TypeScript app config (744B, 30 satır)
 ├── tsconfig.json                  # TypeScript main config (107B, 5 satır)
 ├── tsconfig.node.json             # TypeScript node config (630B, 26 satır)
 ├── vite.config.ts                 # Vite configuration (2.3KB, 73 satır)
-├── vercel.json                    # Vercel deployment configuration (894B, 33 satır) - ✅ Aktif
+├── vercel.json                    # Vercel deployment configuration (934B, 33 satır) - ✅ Aktif
 └── .DS_Store                      # macOS system file (8.0KB, 3 satır) - ✅ Aktif
 ```
 
@@ -350,7 +359,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 - **TON Connect Manifest:** 1 dosya (tonconnect-manifest.json) - ✅ Aktif
 - **Konfigürasyon:** 15+ dosya (JSON/JS/TS)
 - **Git/Husky:** 20+ dosya (.husky/ klasörü dahil)
-- **Scripts:** Build ve deployment scriptleri
+- **Scripts:** Build ve deployment scriptleri (boş klasör)
 - **Vercel:** Deployment cache ve konfigürasyon dosyaları - ✅ Aktif
 
 **Kod Satırları:**
@@ -413,7 +422,7 @@ interface RootState {
 
 ### 🧩 Ana Bileşenler
 
-#### **App.tsx** (5.0KB, 144 satır) - ✅ Aktif
+#### **App.tsx** (5.3KB, 157 satır) - ✅ Aktif
 
 - React Router DOM entegrasyonu
 - Telegram WebApp SDK başlatma
@@ -488,7 +497,7 @@ interface RootState {
 - Aktif tab vurgulama
 - Click event handling
 
-#### **ItemPage.tsx** (4.1KB, 125 satır) - ✅ GÜNCEL
+#### **ItemPage.tsx** (6.0KB, 179 satır) - ✅ GÜNCEL
 
 - Tam ekran ürün detay sayfası
 - Ürün bilgileri (başlık, açıklama, etiketler)
@@ -497,7 +506,7 @@ interface RootState {
 - ShareIcon ile paylaşım
 - Footer entegrasyonu
 
-#### **ProductGrid.tsx** (2.1KB, 63 satır) - ✅ GÜNCEL
+#### **ProductGrid.tsx** (3.3KB, 99 satır) - ✅ GÜNCEL
 
 - RTK Query ile veri çekme
 - Loading/error state handling
@@ -505,14 +514,14 @@ interface RootState {
 - ProductCard bileşenleri
 - Ürün tıklama event'i
 
-#### **ProductCard.tsx** (1.8KB, 55 satır) - ✅ GÜNCEL
+#### **ProductCard.tsx** (2.1KB, 66 satır) - ✅ GÜNCEL
 
 - API Item tipini kullanma
 - ImageGallery entegrasyonu
 - Ürün bilgileri gösterimi
 - Click handling
 
-#### **ImageGallery.tsx** (1.8KB, 65 satır)
+#### **ImageGallery.tsx** (2.1KB, 68 satır)
 
 - Çoklu resim galerisi
 - Pagination dots
@@ -589,21 +598,21 @@ interface RootState {
 
 ### 🪝 Custom Hooks
 
-#### **useDebounce.ts** (589B, 23 satır) - ✅ AKTİF
+#### **useDebounce.ts** (589B, 24 satır) - ✅ AKTİF
 
 - Debounce functionality
 - Search performans optimizasyonu
 - Generic tip desteği
 - Configurable delay
 
-#### **useSkeletonTheme.ts** (689B, 20 satır) - ✅ Aktif
+#### **useSkeletonTheme.ts** (711B, 24 satır) - ✅ Aktif
 
 - Skeleton tema değerlerini yönetme
 - Telegram tema entegrasyonu
 - Memoized tema değerleri
 - Performans optimizasyonu
 
-#### **useTelegramHeader.ts** (2.1KB, 78 satır) - ✅ Tamamlandı
+#### **useTelegramHeader.ts** (2.5KB, 85 satır) - ✅ Tamamlandı
 
 - Telegram WebApp 2.0 API entegrasyonu
 - Sürüm kontrolü ile güvenli API çağrıları
@@ -612,7 +621,7 @@ interface RootState {
 - Route-aware buton kontrolü
 - Eski Telegram sürümleri ile uyumluluk
 
-#### **useSafeArea.ts** (1.8KB, 67 satır) - ✅ Tamamlandı
+#### **useSafeArea.tsx** (6.1KB, 200 satır) - ✅ Tamamlandı
 
 - iOS/Android safe area desteği
 - Home indicator ve gesture bar uyumluluğu
@@ -856,7 +865,7 @@ interface RootState {
 - **DOM Utilities**: setBlur ve diğer DOM manipulation helpers (✅ Aktif)
 - **Context Separation**: React Fast Refresh uyumluluğu için context ayrımı (✅ Aktif)
 - **Telegram WebApp 2.0 Integration**: Bot API 8+ paradigması ile modern entegrasyon (✅ Tamamlandı)
-- **Safe Area Support**: iOS/Android home indicator ve gesture bar desteği (✅ Tamamlandı)
+- **Safe Area Support**: iOS/Android home indicator desteği (✅ Tamamlandı)
 - **Version-Aware API Calls**: Telegram sürüm kontrolü ile güvenli API kullanımı (✅ Tamamlandı)
 - **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
 - **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
@@ -866,8 +875,8 @@ interface RootState {
 
 ### ⚠️ Kritik Eksiklikler
 
-- **History Feature**: Geliştirme aşamasında (✅ API entegrasyonu tamamlandı)
-- **Theme Feature**: Temel slice mevcut, UI geliştirme gerekli
+- **History UI Slice**: Geliştirme aşamasında (API entegrasyonu tamamlandı)
+- **Theme Slice**: Temel slice mevcut, UI geliştirme gerekli
 - **Utils**: Temel LQIP utilities mevcut
 
 ### 🔄 History Feature - Geliştirme Aşamasında
@@ -937,19 +946,11 @@ interface RootState {
 - **DOM Utilities**: setBlur ve diğer DOM manipulation helpers (✅ Aktif)
 - **Context Separation**: React Fast Refresh uyumluluğu için context ayrımı (✅ Aktif)
 - **BlurHash Integration**: Görsel yükleme için blur placeholder sistemi (✅ Aktif)
-- **React Swipeable**: Touch gesture desteği ve swipe functionality (✅ Aktif)
-- **Intersection Observer**: Performans optimizasyonu için görünürlük kontrolü (✅ Aktif)
-- **Progressive Image Loading**: ProgressiveImage bileşeni ile optimize görsel yükleme (✅ Aktif)
-- **Sharp Integration**: Görsel işleme ve optimizasyon (✅ Aktif)
-- **LQIP Plugin**: Low Quality Image Placeholder entegrasyonu (✅ Aktif)
-- **Telegram WebApp 2.0 Integration**: Bot API 8+ paradigması ile modern entegrasyon (✅ Tamamlandı)
-- **Safe Area Support**: iOS/Android home indicator ve gesture bar desteği (✅ Tamamlandı)
-- **Version-Aware API Calls**: Telegram sürüm kontrolü ile güvenli API kullanımı (✅ Tamamlandı)
-- **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
-- **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
-- **useTelegramHeader Hook**: Telegram header ve buton yönetimi (✅ Tamamlandı)
-- **useSafeArea Hook**: Safe area ve viewport yönetimi (✅ Tamamlandı)
-- **Telegram Helpers**: Sürüm tespiti ve özellik kontrolü yardımcı fonksiyonları (✅ Tamamlandı)
+- **React Swipeable**: Touch gesture desteği (✅ Aktif)
+- **Performance Monitoring:** Intersection Observer ile görünürlük kontrolü (✅ Aktif)
+- **Telegram WebApp 2.0:** Bot API 8+ ile modern entegrasyon (✅ Tamamlandı)
+- **Safe Area Support:** iOS/Android home indicator desteği (✅ Tamamlandı)
+- **Version Compatibility:** Telegram v6.0-8.0+ arası uyumluluk (✅ Tamamlandı)
 
 ### ⚠️ Kritik Sorunlar:
 
@@ -968,8 +969,8 @@ interface RootState {
 
 - **Toplam Satır:** ~7,400 satır - ✅ GÜNCEL
 - **Component Sayısı:** 60+ bileşen - ✅ GÜNCEL
-- **Feature Modülü:** 6 modül (1 geliştirme aşamasında) - ✅ GÜNCEL
-- **Custom Hook:** 4 aktif hook (useDebounce, useSkeletonTheme, useTelegramHeader, useSafeArea) - ✅ GÜNCEL
+- **Feature Modülü:** 7 modül (1 geliştirme aşamasında) - ✅ GÜNCEL
+- **Custom Hook:** 5 aktif hook (useDebounce, useSkeletonTheme, useTelegramHeader, useSafeArea, useSafeAreaExample) - ✅ GÜNCEL
 - **Test Coverage:** Başlangıç seviyesi (1 test dosyası)
 - **Bundle Size:** Optimize edilmiş (lazy loading ile)
 - **Font Integration:** SF Pro Rounded font ailesi (✅ Aktif)

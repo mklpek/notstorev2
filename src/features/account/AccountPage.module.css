@@ -1,12 +1,15 @@
 /* Main Account Page Container */
 .accountPage {
-  width: 390px;
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 32px;
   padding: 40px 0px 0px;
-  margin: 0 auto;
   min-height: 100vh; /* height: 100vh yerine min-height kullan */
 }
 
