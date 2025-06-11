@@ -64,6 +64,9 @@ function App() {
 
         const user = wa.initDataUnsafe.user;
 
+        // Debug: photo_url'nin gelip gelmediğini kontrol et
+        console.log('photo_url →', user.photo_url);
+
         // TelegramUser tipine uygun veriyi hazırla
         const userDetails: TelegramUser = {
           id: user.id,
@@ -75,10 +78,12 @@ function App() {
         if (user.username) userDetails.username = user.username;
         if (user.language_code) userDetails.language_code = user.language_code;
         if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
-        if (user.photo_url) userDetails.photo_url = user.photo_url;
-
-        // Fotoğraf URL'ini ayarla (orijinal URL varsa kullan, yoksa boş string)
-        userDetails.photoUrl = user.photo_url || '';
+        if (user.photo_url) {
+          userDetails.photo_url = user.photo_url;
+          // Direkt photoUrl'e ekle ve cache'le
+          userDetails.photoUrl = user.photo_url;
+          localStorage.setItem(`avatar:${user.id}`, user.photo_url);
+        }
 
         // Kullanıcı bilgilerini Redux'a kaydet
         dispatch(setTelegramUser(userDetails));
@@ -88,17 +93,27 @@ function App() {
           // Önce localStorage'da daha önce kaydedilmiş bir URL var mı kontrol et
           const cachedPhotoUrl = localStorage.getItem(`avatar:${user.id}`);
 
-          if (cachedPhotoUrl) {
+          if (cachedPhotoUrl && cachedPhotoUrl !== 'none') {
             // Cache'den yükle
             dispatch(setUserPhotoUrl(cachedPhotoUrl));
-          } else {
-            // API'den getir
-            const photoUrl = await getUserProfilePhoto(user.id);
-            if (photoUrl) {
-              // Redux'a kaydet
-              dispatch(setUserPhotoUrl(photoUrl));
-              // localStorage'a cache'le
-              localStorage.setItem(`avatar:${user.id}`, photoUrl);
+          } else if (cachedPhotoUrl !== 'none') {
+            // 'none' değilse API'ye sor
+            try {
+              // API'den getir
+              const photoUrl = await getUserProfilePhoto(user.id);
+              if (photoUrl) {
+                // Redux'a kaydet
+                dispatch(setUserPhotoUrl(photoUrl));
+                // localStorage'a cache'le
+                localStorage.setItem(`avatar:${user.id}`, photoUrl);
+              } else {
+                // Profil fotoğrafı yoksa 'none' olarak işaretle, gereksiz API çağrılarını önle
+                localStorage.setItem(`avatar:${user.id}`, 'none');
+              }
+            } catch (error) {
+              console.error('Profil fotoğrafı alınırken hata:', error);
+              // Hata durumunda 'none' olarak işaretle
+              localStorage.setItem(`avatar:${user.id}`, 'none');
             }
           }
         }

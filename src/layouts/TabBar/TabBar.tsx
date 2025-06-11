@@ -42,7 +42,11 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => 
           <div className={styles.iconContainer}>
             <div className={styles.profileContainer}>
               <img
-                src={user?.photoUrl || '/images/profile-avatar.png'}
+                src={
+                  user?.photoUrl !== 'none'
+                    ? user?.photoUrl || '/images/profile-avatar.png'
+                    : '/images/profile-avatar.png'
+                }
                 alt="Profile"
                 className={styles.profileImage}
                 referrerPolicy="no-referrer"
