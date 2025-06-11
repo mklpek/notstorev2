@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { FixedSizeGrid as Grid } from 'react-window';
 import ProductCard from './components/ProductCard';
 import { useGetCatalogueQuery, catalogSelectors } from '../../core/api/notApi';
 import type { Item } from '../../core/api/notApi';
@@ -9,62 +10,119 @@ import NoResultsFound from './components/NoResultsFound';
 import ProductCardSkeleton from '../../core/ui/Skeleton/ProductCardSkeleton';
 import { ApiErrorMessage } from '../../core/ui';
 
-// 'count' parametresini değişken hale getiriyoruz
-const SKELETON_COUNT = 6;
+// Grid konfigürasyonu - ItemPage'den esinlenen optimizasyonlar
+const GRID_CONFIG = {
+  columnCount: 2,
+  columnWidth: 176, // 160px card + 16px gap
+  rowHeight: 236, // card height + gap
+  containerWidth: 360, // max-width container
+  skeletonCount: 6,
+  overscanRowCount: 2, // Performans için 2 satır önceden render et
+} as const;
+
+// Virtualized grid cell bileşeni
+interface GridCellProps {
+  columnIndex: number;
+  rowIndex: number;
+  style: React.CSSProperties;
+  data: {
+    products: Item[];
+    onProductClick: (productId: number) => void;
+  };
+}
+
+const GridCell: React.FC<GridCellProps> = ({ columnIndex, rowIndex, style, data }) => {
+  const { products, onProductClick } = data;
+  const productIndex = rowIndex * GRID_CONFIG.columnCount + columnIndex;
+  const product = products[productIndex];
+
+  // Ürün yoksa boş cell render et
+  if (!product) {
+    return <div style={style} />;
+  }
+
+  return (
+    <div style={style} className={styles.gridCell}>
+      <ProductCard product={product} onProductClick={onProductClick} />
+    </div>
+  );
+};
 
 const ProductGrid: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rawQuery = searchParams.get('q') || '';
+  const gridRef = useRef<Grid>(null);
+  const [containerHeight, setContainerHeight] = useState(600); // Default height
 
-  // Debounce ederek, kullanıcı her tuşa bastığında değil,
-  // 300ms duraklamadan sonra arama yapmasını sağlıyoruz
+  // Debounce ederek performans optimizasyonu
   const debouncedQuery = useDebouncedValue(rawQuery.trim(), 300);
 
-  // RTK Query kullanımı - refetch fonksiyonunu doğrudan alıyoruz
+  // RTK Query kullanımı
   const { isLoading, error, data, refetch } = useGetCatalogueQuery();
 
-  // Filtrelenmiş ürünleri hesapla
+  // Container yüksekliğini dinamik olarak hesapla
+  useEffect(() => {
+    const updateHeight = () => {
+      // Viewport height - header - tabbar - padding
+      const availableHeight = window.innerHeight - 120; // Approximate header + tabbar
+      setContainerHeight(Math.max(400, availableHeight));
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  // Filtrelenmiş ürünleri hesapla - memoized
   const filteredProducts = useMemo(() => {
     if (!data) return [];
 
-    // Tüm ürünleri adapter selektörü ile al
     const allProducts = catalogSelectors.selectAll(data);
 
-    // Arama yoksa tüm ürünleri döndür
     if (!debouncedQuery) {
       return allProducts;
     }
 
-    // Arama terimine göre filtrele
     return allProducts.filter((p: Item) =>
       `${p.category} ${p.name}`.toLowerCase().includes(debouncedQuery.toLowerCase())
     );
   }, [data, debouncedQuery]);
 
-  // handleProductClick fonksiyonunu useMemo ile optimize ediyoruz
-  // navigate fonksiyonu değişmediği sürece yeniden oluşturulmayacak
-  const handleProductClick = useMemo(() => {
-    return (productId: number) => {
+  // Product click handler - useCallback ile optimize edildi
+  const handleProductClick = useCallback(
+    (productId: number) => {
       navigate(`/product/${productId}`);
-    };
-  }, [navigate]);
-
-  // Skeleton render etme için memoize edilmiş bir değer kullanıyoruz
-  // isLoading değişmediği sürece bu kısım yeniden render edilmeyecek
-  const loadingContent = useMemo(
-    () => (
-      <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
-        <ProductCardSkeleton count={SKELETON_COUNT} />
-      </div>
-    ),
-    []
+    },
+    [navigate]
   );
 
+  // Grid data - memoized
+  const gridData = useMemo(
+    () => ({
+      products: filteredProducts,
+      onProductClick: handleProductClick,
+    }),
+    [filteredProducts, handleProductClick]
+  );
+
+  // Row count hesaplama
+  const rowCount = Math.ceil(filteredProducts.length / GRID_CONFIG.columnCount);
+
+  // Loading state - skeleton grid
   if (isLoading) {
-    return loadingContent;
+    return (
+      <div
+        className={`${styles.productGrid} tg-container`}
+        aria-busy="true"
+        aria-label="Ürünler yükleniyor"
+      >
+        <ProductCardSkeleton count={GRID_CONFIG.skeletonCount} />
+      </div>
+    );
   }
 
+  // Error state
   if (error) {
     return (
       <ApiErrorMessage
@@ -75,22 +133,31 @@ const ProductGrid: React.FC = () => {
     );
   }
 
-  // Ürün bulunamadı durumu - sadece arama yapıldığında ve sonuç bulunamadığında NoResultsFound göster
+  // No results state
   if (!filteredProducts || filteredProducts.length === 0) {
-    // Sadece arama sorgusu varsa NoResultsFound göster
     if (rawQuery.trim()) {
       return <NoResultsFound />;
     }
-    // Arama sorgusu yoksa hiçbir şey gösterme (boş grid döndür)
-    return <div className={styles.productGrid}></div>;
+    return <div className={`${styles.productGrid} tg-container`}></div>;
   }
 
-  // Normal liste görünümünü kullanın
+  // Virtualized grid render
   return (
-    <div className={styles.productGrid}>
-      {filteredProducts.map((product: Item) => (
-        <ProductCard key={product.id} product={product} onProductClick={handleProductClick} />
-      ))}
+    <div className={`${styles.productGrid} tg-container`}>
+      <Grid
+        ref={gridRef}
+        className={styles.virtualGrid}
+        columnCount={GRID_CONFIG.columnCount}
+        columnWidth={GRID_CONFIG.columnWidth}
+        height={containerHeight}
+        rowCount={rowCount}
+        rowHeight={GRID_CONFIG.rowHeight}
+        width={GRID_CONFIG.containerWidth}
+        itemData={gridData}
+        overscanRowCount={GRID_CONFIG.overscanRowCount}
+      >
+        {GridCell}
+      </Grid>
     </div>
   );
 };
