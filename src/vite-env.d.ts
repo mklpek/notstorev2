@@ -80,36 +80,6 @@ interface TelegramWebAppButton {
   hideProgress?: () => void;
 }
 
-// Popup button tipi
-interface PopupButton {
-  id: string;
-  type: 'default' | 'ok' | 'close' | 'cancel' | 'destructive';
-  text: string;
-}
-
-// Popup parametreleri
-interface PopupParams {
-  title?: string;
-  message: string;
-  buttons?: PopupButton[];
-}
-
-// Story paylaşım parametreleri
-interface StoryShareParams {
-  text?: string;
-  widget_link?: {
-    url: string;
-    name?: string;
-  };
-}
-
-// HapticFeedback tipi
-interface TelegramHapticFeedback {
-  impactOccurred?: (style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft') => void;
-  notificationOccurred?: (type: 'error' | 'success' | 'warning') => void;
-  selectionChanged?: () => void;
-}
-
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
@@ -126,11 +96,9 @@ interface TelegramWebApp {
   // Yeni metodlar - opsiyonel çünkü eski versiyonlarda olmayabilir
   requestFullscreen?: () => void;
   setHeaderColor?: (color: string) => void;
-  openLink?: (url: string) => void;
+  openLink?: (url: string, options?: { tryInstantView?: boolean }) => void;
   openTelegramLink?: (url: string) => void;
-  showPopup?: (params: PopupParams, callback?: (buttonId: string) => void) => void;
-  shareToStory?: (mediaUrl: string, params?: StoryShareParams) => void;
-  HapticFeedback?: TelegramHapticFeedback;
+  shareMessage?: (messageId: string, options?: { choose_chat?: boolean }) => void;
   BackButton?: TelegramWebAppButton;
   SettingsButton?: TelegramWebAppButton;
   onEvent?: (eventType: string, handler: (...args: unknown[]) => void) => void;

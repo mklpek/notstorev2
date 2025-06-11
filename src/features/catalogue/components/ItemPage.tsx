@@ -4,10 +4,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../../../layouts/Footer';
 import ShareIcon from '../../../core/ui/Icons/ShareIcon';
 import { useGetCatalogueQuery, catalogSelectors } from '../../../core/api/notApi';
-import { shareProduct } from '../../../utils/telegramHelpers';
 import styles from './ItemPage.module.css';
 import ItemPageSkeleton from '../../../core/ui/Skeleton/ItemPageSkeleton';
 import ProgressiveImage from '../../../core/ui/ProgressiveImage';
+import { shareProduct } from '../../../utils/telegramHelpers';
 
 const ItemPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -42,18 +42,6 @@ const ItemPage: React.FC = () => {
   // Slider image'e tıklama
   const handleImageClick = (index: number) => {
     setActiveImageIndex(index);
-  };
-
-  // Paylaş butonuna tıklama
-  const handleShareClick = () => {
-    console.log('🎯 Paylaş butonu tıklandı');
-    if (product && productId) {
-      const displayTitle = `${product.category} ${product.name}`;
-      console.log('📦 Ürün bilgileri:', { displayTitle, productId, product });
-      shareProduct(displayTitle, productId);
-    } else {
-      console.warn('⚠️ Ürün bilgileri eksik:', { product: !!product, productId });
-    }
   };
 
   // Yükleme durumunda ItemPageSkeleton göster
@@ -102,7 +90,7 @@ const ItemPage: React.FC = () => {
                 </div>
               </div>
               <div className={styles.buttons}>
-                <button className={styles.shareButton} onClick={handleShareClick}>
+                <button className={styles.shareButton} onClick={() => shareProduct(product)}>
                   <ShareIcon className={styles.shareIcon} />
                 </button>
               </div>
