@@ -25,13 +25,8 @@
   <body>
     <!-- Telegram Web App resmi script yükleyicisi -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Telegram algılama script'i -->
-    <script>
-      if (window.Telegram && window.Telegram.WebApp) {
-        /* Sadece Telegram içindeyken .tg sınıfını ekler - CSP hash gerekmez */
-        document.documentElement.classList.add('tg');
-      }
-    </script>
+    <!-- Telegram bootstrap dosyası - CSP uyumlu -->
+    <script src="/src/telegram-bootstrap.js" defer></script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

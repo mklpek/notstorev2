@@ -201,7 +201,8 @@ a {
 }
 
 .tg-viewport-height {
-  height: var(--tg-viewport-height);
+  height: 100dvh; /* Modern Safari/Chrome fallback */
+  height: calc(var(--tg-viewport-height, 100vh)); /* Telegram override */
 }
 
 /* Responsive */

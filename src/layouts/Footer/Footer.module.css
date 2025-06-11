@@ -11,7 +11,7 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  padding-bottom: var(--tg-safe-area-inset-bottom, 0px);
+  padding-bottom: max(0px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0px));
   min-height: calc(50px + var(--tg-safe-area-inset-bottom, 0px));
 }
 
@@ -20,6 +20,19 @@
   .footer {
     padding-block-end: max(0px, env(safe-area-inset-bottom));
   }
+}
+
+/* Footer home indicator alanı için arka plan efekti */
+.footer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--tg-safe-area-inset-bottom, 0);
+  background: #000000;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Body Container */
