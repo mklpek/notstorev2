@@ -5,10 +5,6 @@ interface SafeFrameProps {
   children: ReactNode;
 }
 
-/**
- * SafeFrame - Telegram Mini App için safe area wrapper
- * Localhost'ta hiçbir etki yapmaz, sadece Telegram içinde safe area padding'i uygular
- */
 export default function SafeFrame({ children }: SafeFrameProps) {
   return (
     <div

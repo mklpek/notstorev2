@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './core/styles/theme.css';
@@ -12,18 +12,16 @@ import 'virtual:svg-icons-register'; // SVG sprite eklentisi için
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <SafeAreaProvider>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <BrowserRouter>
-            <Suspense fallback={null}>
-              <SafeFrame>
-                <App />
-              </SafeFrame>
-            </Suspense>
-          </BrowserRouter>
-        </PersistGate>
-      </Provider>
-    </SafeAreaProvider>
+    <SafeFrame>
+      <SafeAreaProvider>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </PersistGate>
+        </Provider>
+      </SafeAreaProvider>
+    </SafeFrame>
   </React.StrictMode>
 );

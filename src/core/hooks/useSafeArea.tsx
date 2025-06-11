@@ -48,6 +48,12 @@ export function useSafeAreaInsets() {
         `${insets.bottom}px`
       );
       document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
+
+      // SafeFrame wrapper'ını da güncelle - sadece Telegram'da mevcut
+      const safeFrame = document.getElementById('safe-frame');
+      if (safeFrame) {
+        safeFrame.style.setProperty('padding-bottom', `max(0px, ${insets.bottom}px)`);
+      }
     };
 
     // Safe area değerlerini güncelleme fonksiyonu
@@ -55,13 +61,6 @@ export function useSafeAreaInsets() {
       setSafeAreaInsets(prev => {
         const updated = { ...prev, ...newInsets };
         updateCSSVariables(updated);
-
-        // SafeFrame'e dinamik padding uygula (sadece bottom için)
-        const safeFrame = document.getElementById('safe-frame');
-        if (safeFrame && updated.bottom !== undefined) {
-          safeFrame.style.setProperty('padding-bottom', `max(0px, ${updated.bottom}px)`);
-        }
-
         return updated;
       });
     };
