@@ -1,6 +1,5 @@
-import React, { useMemo, useCallback, useRef, useEffect, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { FixedSizeGrid as Grid } from 'react-window';
 import ProductCard from './components/ProductCard';
 import { useGetCatalogueQuery, catalogSelectors } from '../../core/api/notApi';
 import type { Item } from '../../core/api/notApi';
@@ -9,87 +8,91 @@ import { useDebouncedValue } from '../../core/hooks/useDebounce';
 import NoResultsFound from './components/NoResultsFound';
 import ProductCardSkeleton from '../../core/ui/Skeleton/ProductCardSkeleton';
 import { ApiErrorMessage } from '../../core/ui';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
-// Grid konfigürasyonu - ItemPage'den esinlenen optimizasyonlar
-const GRID_CONFIG = {
-  columnCount: 2,
-  columnWidth: 176, // 160px card + 16px gap
-  rowHeight: 236, // card height + gap
-  containerWidth: 360, // max-width container
-  skeletonCount: 6,
-  overscanRowCount: 2, // Performans için 2 satır önceden render et
-} as const;
+// Virtualization için basit bir alternatif yaklaşım
+// React-window type hatalarını çözmek için şimdilik normal liste kullanıyoruz
+// Temel virtualization prensiplerini uygulayacağız
+const ITEMS_PER_PAGE = 6;
 
-// Virtualized grid cell bileşeni
-interface GridCellProps {
-  columnIndex: number;
-  rowIndex: number;
-  style: React.CSSProperties;
-  data: {
-    products: Item[];
-    onProductClick: (productId: number) => void;
-  };
-}
+// 'count' parametresini değişken hale getiriyoruz
+const SKELETON_COUNT = 6;
 
-const GridCell: React.FC<GridCellProps> = ({ columnIndex, rowIndex, style, data }) => {
-  const { products, onProductClick } = data;
-  const productIndex = rowIndex * GRID_CONFIG.columnCount + columnIndex;
-  const product = products[productIndex];
-
-  // Ürün yoksa boş cell render et
-  if (!product) {
-    return <div style={style} />;
-  }
-
-  return (
-    <div style={style} className={styles.gridCell}>
-      <ProductCard product={product} onProductClick={onProductClick} />
-    </div>
-  );
-};
+// 2 sütun için sabit değerler
+const COLUMN_COUNT = 2;
+const COLUMN_WIDTH = 176; // 160px + 16px gap
+const ROW_HEIGHT = 236; // Ürün kartı + gap
+const GRID_GAP = 12; // Grid boşluğu
 
 const ProductGrid: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rawQuery = searchParams.get('q') || '';
-  const gridRef = useRef<Grid>(null);
-  const [containerHeight, setContainerHeight] = useState(600); // Default height
+  const [page, setPage] = useState(0);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
-  // Debounce ederek performans optimizasyonu
-  const debouncedQuery = useDebouncedValue(rawQuery.trim(), 300);
-
-  // RTK Query kullanımı
-  const { isLoading, error, data, refetch } = useGetCatalogueQuery();
-
-  // Container yüksekliğini dinamik olarak hesapla
+  // Ekran boyutunu takip et
   useEffect(() => {
-    const updateHeight = () => {
-      // Viewport height - header - tabbar - padding
-      const availableHeight = window.innerHeight - 120; // Approximate header + tabbar
-      setContainerHeight(Math.max(400, availableHeight));
+    const handleResize = () => {
+      setWindowSize({
+        width: Math.min(window.innerWidth, 390), // 390px max-width
+        height: window.innerHeight,
+      });
     };
 
-    updateHeight();
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Filtrelenmiş ürünleri hesapla - memoized
+  // Scroll olayını takip et - temel bir lazy loading yaklaşımı
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      // Sayfa sonuna yaklaşıldıysa bir sonraki sayfayı yükle
+      if (scrollTop + clientHeight >= scrollHeight - 200) {
+        setPage(prevPage => prevPage + 1);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Debounce ederek, kullanıcı her tuşa bastığında değil,
+  // 300ms duraklamadan sonra arama yapmasını sağlıyoruz
+  const debouncedQuery = useDebouncedValue(rawQuery.trim(), 300);
+
+  // RTK Query kullanımı - refetch fonksiyonunu doğrudan alıyoruz
+  const { isLoading, error, data, refetch } = useGetCatalogueQuery();
+
+  // Filtrelenmiş ürünleri hesapla
   const filteredProducts = useMemo(() => {
     if (!data) return [];
 
+    // Tüm ürünleri adapter selektörü ile al
     const allProducts = catalogSelectors.selectAll(data);
 
+    // Arama yoksa tüm ürünleri döndür
     if (!debouncedQuery) {
       return allProducts;
     }
 
+    // Arama terimine göre filtrele
     return allProducts.filter((p: Item) =>
       `${p.category} ${p.name}`.toLowerCase().includes(debouncedQuery.toLowerCase())
     );
   }, [data, debouncedQuery]);
 
-  // Product click handler - useCallback ile optimize edildi
+  // Sayfalanmış ürünler - Virtualization yerine temel bir sayfalama yaklaşımı
+  const paginatedProducts = useMemo(() => {
+    const endIndex = Math.min((page + 1) * ITEMS_PER_PAGE, filteredProducts.length);
+    return filteredProducts.slice(0, endIndex);
+  }, [filteredProducts, page]);
+
+  // handleProductClick fonksiyonunu useCallback ile optimize ediyoruz
   const handleProductClick = useCallback(
     (productId: number) => {
       navigate(`/product/${productId}`);
@@ -97,19 +100,7 @@ const ProductGrid: React.FC = () => {
     [navigate]
   );
 
-  // Grid data - memoized
-  const gridData = useMemo(
-    () => ({
-      products: filteredProducts,
-      onProductClick: handleProductClick,
-    }),
-    [filteredProducts, handleProductClick]
-  );
-
-  // Row count hesaplama
-  const rowCount = Math.ceil(filteredProducts.length / GRID_CONFIG.columnCount);
-
-  // Loading state - skeleton grid
+  // Loading state için ProductCardSkeleton kullan
   if (isLoading) {
     return (
       <div
@@ -117,12 +108,11 @@ const ProductGrid: React.FC = () => {
         aria-busy="true"
         aria-label="Ürünler yükleniyor"
       >
-        <ProductCardSkeleton count={GRID_CONFIG.skeletonCount} />
+        <ProductCardSkeleton count={SKELETON_COUNT} />
       </div>
     );
   }
 
-  // Error state
   if (error) {
     return (
       <ApiErrorMessage
@@ -133,31 +123,32 @@ const ProductGrid: React.FC = () => {
     );
   }
 
-  // No results state
+  // Ürün bulunamadı durumu - sadece arama yapıldığında ve sonuç bulunamadığında NoResultsFound göster
   if (!filteredProducts || filteredProducts.length === 0) {
+    // Sadece arama sorgusu varsa NoResultsFound göster
     if (rawQuery.trim()) {
       return <NoResultsFound />;
     }
+    // Arama sorgusu yoksa hiçbir şey gösterme (boş grid döndür)
     return <div className={`${styles.productGrid} tg-container`}></div>;
   }
 
-  // Virtualized grid render
+  // Optimize edilmiş liste görünümü - sadece görünür ürünleri yükle
   return (
     <div className={`${styles.productGrid} tg-container`}>
-      <Grid
-        ref={gridRef}
-        className={styles.virtualGrid}
-        columnCount={GRID_CONFIG.columnCount}
-        columnWidth={GRID_CONFIG.columnWidth}
-        height={containerHeight}
-        rowCount={rowCount}
-        rowHeight={GRID_CONFIG.rowHeight}
-        width={GRID_CONFIG.containerWidth}
-        itemData={gridData}
-        overscanRowCount={GRID_CONFIG.overscanRowCount}
-      >
-        {GridCell}
-      </Grid>
+      {paginatedProducts.map((product, index) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onProductClick={handleProductClick}
+          skipInView={index < 4} // İlk 4 ürün için eager loading
+          loading={index < 4 ? 'eager' : 'lazy'} // İlk 4 ürün için eager loading
+        />
+      ))}
+      {/* Yükleme göstergesi - Eğer daha fazla ürün varsa */}
+      {paginatedProducts.length < filteredProducts.length && (
+        <div className={styles.loading}>Daha fazla yükleniyor...</div>
+      )}
     </div>
   );
 };

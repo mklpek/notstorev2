@@ -1,25 +1,34 @@
 .productGrid {
-  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  column-gap: 12px;
+  row-gap: 28px;
   padding: 0px 16px;
-  position: relative;
-  /* min-height kaldırıldı - react-window height'ı yönetiyor */
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  min-height: 400px; /* Minimum yükseklik */
+  position: relative; /* Positioning context */
+  box-sizing: border-box;
+  overflow-x: hidden; /* Yatay kaydırmayı engelle */
 }
 
-/* Virtualized grid container */
 .virtualGrid {
   width: 100% !important; /* React-window inline stillerini override et */
   outline: none !important; /* Focus outline'ı kaldır */
   overflow-x: hidden !important; /* Yatay scroll'u gizle */
-  margin: 0 auto; /* Merkeze hizala */
 }
 
-/* Grid cell wrapper - her ProductCard için */
-.gridCell {
-  padding: 4px; /* Card'lar arası boşluk */
-  box-sizing: border-box;
+/* AutoSizer için içerik konteyneri */
+.autoSizerContainer {
+  width: 100%;
+  height: 100%;
+  flex: 1;
 }
 
-/* Legacy fallback stili - virtualisation olmadan */
+/* Legacy fallback stili */
 .legacyGrid {
   display: flex;
   flex-wrap: wrap;
@@ -28,7 +37,6 @@
   width: 100%;
 }
 
-/* Loading, error, empty states */
 .loading,
 .error,
 .empty {
@@ -40,6 +48,7 @@
   color: var(--tg-theme-hint-color, #999);
   width: 100%;
   text-align: center;
+  padding: 20px 0;
 }
 
 .error {
