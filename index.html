@@ -26,13 +26,6 @@
     <!-- Telegram Web App resmi script yükleyicisi -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- Safe Area Bootstrap: Sadece Telegram içindeyken .tg class ekle -->
-    <script>
-      if (window.Telegram && window.Telegram.WebApp) {
-        document.documentElement.classList.add('tg');
-      }
-    </script>
-    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

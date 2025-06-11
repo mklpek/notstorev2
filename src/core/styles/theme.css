@@ -171,15 +171,9 @@ a {
 
 .tg-viewport-height {
   height: var(--tg-viewport-height);
-  padding-right: var(--tg-safe-area-inset-right);
-}
-.tg-safe-pad-bottom {
-  padding-bottom: var(--tg-safe-area-inset-bottom);
-}
-.tg-safe-pad-left {
-  padding-left: var(--tg-safe-area-inset-left);
 }
 
+/* Safe area yardımcı sınıfları - sadece gerekli olanlar */
 .tg-safe-height-top {
   height: var(--tg-safe-area-inset-top);
 }
