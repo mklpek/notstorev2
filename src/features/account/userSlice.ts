@@ -16,11 +16,13 @@ export interface TelegramUser {
 interface UserState {
   user: TelegramUser | null;
   isAuthenticated: boolean;
+  isPhotoLoaded: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   isAuthenticated: false,
+  isPhotoLoaded: false,
 };
 
 const userSlice = createSlice({
@@ -34,11 +36,13 @@ const userSlice = createSlice({
     setUserPhotoUrl: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.photoUrl = action.payload;
+        state.isPhotoLoaded = true;
       }
     },
     clearUser: state => {
       state.user = null;
       state.isAuthenticated = false;
+      state.isPhotoLoaded = false;
     },
   },
 });

@@ -51,8 +51,8 @@ export async function getUserProfilePhoto(userId: number): Promise<string | null
     const fileData = await fileResponse.json();
     const filePath = fileData.result.file_path;
 
-    // Dosya URL'ini oluştur
-    return `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`;
+    // Dosya URL'ini oluştur ve width parametresi ekle
+    return `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}?width=128`;
   } catch (error) {
     console.error('Telegram API hatası:', error);
     return null;
