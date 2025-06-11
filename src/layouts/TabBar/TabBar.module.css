@@ -10,7 +10,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
+  /* ✅ SAFE AREA: Home indicator üstünde kal */
+  padding-block-end: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
 }
 
 /* Modern browser desteği */
@@ -138,14 +139,13 @@
 }
 
 /* ✅ Home indicator arka plan efekti - sadece Telegram'da */
-.tg .tabBar::after {
+.tabBar::after {
   content: '';
   position: absolute;
-  bottom: 0;
   left: 0;
   right: 0;
+  bottom: 0;
   height: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
   background: #000000;
-  z-index: -1;
   pointer-events: none; /* gesture bar çalışsın */
 }

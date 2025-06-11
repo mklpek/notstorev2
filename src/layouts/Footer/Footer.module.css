@@ -11,18 +11,11 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  /* ✅ SAFE AREA: Sadece gerçek safe area değeri varsa padding uygula */
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
+  /* ✅ SAFE AREA: Home indicator üstünde kal */
+  padding-block-end: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
   min-height: calc(
     50px + max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px))
   );
-}
-
-/* Modern browser desteği */
-@supports (padding: max(0px)) {
-  .footer {
-    padding-block-end: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
-  }
 }
 
 /* Body Container */

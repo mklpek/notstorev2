@@ -91,14 +91,15 @@ body {
 }
 
 /* ✅ SAFE AREA: Sadece Telegram içindeyken uygula */
-.tg {
-  /* Telegram'ın şeffaf header'ının altından başla */
+html.tg,
+body.tg {
+  /* ÜST: status-bar + Telegram header altından başla */
   padding-top: max(env(safe-area-inset-top, 0px), var(--tg-safe-area-inset-top, 0px));
 
-  /* Home indicator'ın üstünde kal */
+  /* ALT: iOS home-indicator / Android gesture bar üstünde kal */
   padding-bottom: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
 
-  /* Yan taraflar için de güvenlik */
+  /* Yanlar (çentikli modeller için) */
   padding-left: max(env(safe-area-inset-left, 0px), var(--tg-safe-area-inset-left, 0px));
 
   padding-right: max(env(safe-area-inset-right, 0px), var(--tg-safe-area-inset-right, 0px));
@@ -168,28 +169,8 @@ a {
   padding: var(--spacing-lg);
 }
 
-/* Safe area ile ilgili yardımcı sınıflar */
-.tg-safe-pad-top {
-  padding-top: var(--tg-safe-area-inset-top, 0);
-}
-
-.tg-safe-pad-bottom {
-  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
-}
-
-.tg-safe-pad-left {
-  padding-left: var(--tg-safe-area-inset-left, 0);
-}
-
-.tg-safe-pad-right {
-  padding-right: var(--tg-safe-area-inset-right, 0);
-}
-
-/* Safe area yardımcı sınıfları */
-.tg-safe-pad-top {
-  padding-top: var(--tg-safe-area-inset-top);
-}
-.tg-safe-pad-right {
+.tg-viewport-height {
+  height: var(--tg-viewport-height);
   padding-right: var(--tg-safe-area-inset-right);
 }
 .tg-safe-pad-bottom {
@@ -204,10 +185,6 @@ a {
 }
 .tg-safe-height-bot {
   height: var(--tg-safe-area-inset-bottom);
-}
-
-.tg-viewport-height {
-  height: var(--tg-viewport-height);
 }
 
 /* Responsive */
