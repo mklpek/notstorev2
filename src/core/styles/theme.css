@@ -33,6 +33,12 @@
   --tg-theme-button-color: #2481cc;
   --tg-theme-button-text-color: #ffffff;
 
+  /* Safe area insets - env() ile iOS notch desteği */
+  --tg-safe-area-inset-top: env(safe-area-inset-top);
+  --tg-safe-area-inset-right: env(safe-area-inset-right);
+  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --tg-safe-area-inset-left: env(safe-area-inset-left);
+
   /* Dinamik viewport yüksekliği */
   --tg-viewport-height: 100vh; /* başlangıç değeri */
 
@@ -67,20 +73,6 @@
   --container-max-width: 390px;
 }
 
-/* Telegram özel sınıfı - sadece Telegram içindeyken aktif olur */
-.tg {
-  /* Safe area insets - env() ile iOS notch desteği */
-  --tg-safe-area-inset-top: env(safe-area-inset-top, 0px);
-  --tg-safe-area-inset-right: env(safe-area-inset-right, 0px);
-  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
-  --tg-safe-area-inset-left: env(safe-area-inset-left, 0px);
-
-  /* Tüm React ağacını bir kerede konumlandır */
-  padding-block-start: max(var(--tg-safe-area-inset-top), 0px);
-  padding-block-end: max(var(--tg-safe-area-inset-bottom), 0px);
-  padding-inline: max(var(--tg-safe-area-inset-left), 0px) max(var(--tg-safe-area-inset-right), 0px);
-}
-
 /* Base HTML Elements */
 html,
 body {
@@ -96,6 +88,11 @@ body {
   overflow-x: hidden;
   max-width: var(--container-max-width); /* iOS Telegram'da yatay scroll kaçmasını engeller */
   margin: 0 auto;
+  /* Telegram safe area inset paddingleri */
+  padding-top: var(--tg-safe-area-inset-top, 0);
+  padding-left: var(--tg-safe-area-inset-left, 0);
+  padding-right: var(--tg-safe-area-inset-right, 0);
+  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
 }
 
 #root {
@@ -201,8 +198,7 @@ a {
 }
 
 .tg-viewport-height {
-  height: 100dvh; /* Modern Safari/Chrome fallback */
-  height: calc(var(--tg-viewport-height, 100vh)); /* Telegram override */
+  height: var(--tg-viewport-height);
 }
 
 /* Responsive */
@@ -250,31 +246,35 @@ div[class*="tonconnect"][class*="backdrop"],
 div[class*="tc-"][class*="backdrop"],
 /* Shadow DOM içindeki elementler için */
 :host(.tc-modal),
-:host(.tc-modal-backdrop) {
-  /* Backdrop blur */
+:host(.tonconnect-modal) {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
-  background-color: rgba(0, 0, 0, 0.7) !important;
+  z-index: 1000 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-end !important;
 }
 
-/* TON Connect UI modal container */
+/* TON Connect modal container için ek stiller */
 tc-modal > *,
 .tc-modal > *,
 .tonconnect-modal > *,
-.tonconnect-ui-modal > *,
-[data-tc-modal] > *,
-[data-tonconnect-modal] > *,
-div[class*='modal']:not([class*='backdrop']) > *,
-div[class*='tonconnect']:not([class*='backdrop']) > *,
-div[class*='tc-']:not([class*='backdrop']) > * {
-  background-color: var(--background-color) !important;
-  border-radius: var(--border-radius) !important;
-  color: var(--text-color) !important;
+.tonconnect-ui-modal > * {
+  position: relative !important;
+  z-index: 1001 !important;
 }
 
-/* body > div fixa sabit elemente uygula */
-body > div[style*='position: fixed'][style*='z-index'] {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  background-color: rgba(0, 0, 0, 0.7);
+/* Genel modal backdrop override - en güçlü selektör */
+body > div[style*='position: fixed'][style*='z-index'],
+#root ~ div[style*='position: fixed'][style*='z-index'],
+div[style*='position: fixed'][style*='top: 0'][style*='left: 0'] {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
 }

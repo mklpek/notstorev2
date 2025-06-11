@@ -31,9 +31,6 @@ export function useSafeAreaInsets() {
   });
 
   useEffect(() => {
-    // .tg sınıfı yoksa hiçbir şey yapma (localhost / web önizleme)
-    if (!document.documentElement.classList.contains('tg')) return;
-
     const wa = window.Telegram?.WebApp;
     if (!wa) return;
 
@@ -94,36 +91,11 @@ export function useSafeAreaInsets() {
 
     // ❷ Telegram WebApp safeAreaInset özelliği (varsa)
     if (wa.safeAreaInset) {
-      const sa = wa.safeAreaInset;
-      // Telegram değerlerini CSS değişkenlerine kopyala ve env() ile de senkronize et
-      ['top', 'right', 'bottom', 'left'].forEach(side => {
-        // TypeScript için doğru tip erişimi
-        const sideKey = side as keyof typeof sa;
-        const value = sa[sideKey] || 0;
-        const px = `${value}px`;
-
-        // Telegram safe area değerlerini CSS değişkenlerine kopyala
-        document.documentElement.style.setProperty(`--tg-safe-area-inset-${side}`, px);
-
-        // env() değerleriyle karşılaştırarak, her zaman en büyük değeri kullan
-        if (side === 'left' || side === 'right') {
-          document.documentElement.style.setProperty(
-            `padding-inline-${side === 'left' ? 'start' : 'end'}`,
-            `max(${px}, env(safe-area-inset-${side}, 0px))`
-          );
-        } else {
-          document.documentElement.style.setProperty(
-            `padding-block-${side === 'top' ? 'start' : 'end'}`,
-            `max(${px}, env(safe-area-inset-${side}, 0px))`
-          );
-        }
-      });
-
       updateSafeArea({
-        top: sa.top || 0,
-        right: sa.right || 0,
-        bottom: sa.bottom || 0,
-        left: sa.left || 0,
+        top: wa.safeAreaInset.top || 0,
+        right: wa.safeAreaInset.right || 0,
+        bottom: wa.safeAreaInset.bottom || 0,
+        left: wa.safeAreaInset.left || 0,
       });
     }
 

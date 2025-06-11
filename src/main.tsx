@@ -1,4 +1,3 @@
-import './bootstrapTG'; // .tg sınıfını sadece Telegram içinde ekler
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
