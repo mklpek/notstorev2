@@ -30,67 +30,69 @@ function App() {
   // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
 
+  // Telegram tema renklerini uygula
+  useEffect(() => {
+    try {
+      const wa = window.Telegram?.WebApp;
+      if (!wa) return;
+
+      // Tema renklerini CSS değişkenlerine ayarla
+      document.documentElement.style.setProperty(
+        '--tg-theme-bg-color',
+        wa.themeParams.bg_color || '#000000'
+      );
+      document.documentElement.style.setProperty(
+        '--tg-theme-text-color',
+        wa.themeParams.text_color || '#ffffff'
+      );
+      document.documentElement.style.setProperty(
+        '--tg-theme-hint-color',
+        wa.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
+      );
+    } catch {
+      /* ignored */
+    }
+  }, []);
+
   // Kullanıcı bilgilerini yükle
   useEffect(() => {
-    const initializeTelegram = async () => {
-      if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-        const wa = window.Telegram.WebApp;
+    // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
+    const initUser = async () => {
+      try {
+        const wa = window.Telegram?.WebApp;
+        if (!wa) return;
 
-        // Telegram WebApp'i başlat
-        wa.ready();
+        // TypeScript null/undefined kontrolü
+        if (wa?.initDataUnsafe?.user) {
+          const user = wa.initDataUnsafe.user;
 
-        // Telegram kullanıcı bilgilerini al
-        const user = wa.initDataUnsafe?.user as TelegramUser | undefined;
+          // TelegramUser tipine uygun veriyi hazırla
+          const userDetails: TelegramUser = {
+            id: user.id,
+            first_name: user.first_name,
+          };
 
-        if (user) {
-          // Redux'a kullanıcı bilgilerini kaydet
-          dispatch(setTelegramUser(user));
+          // Opsiyonel alanları kontrol ederek ekle
+          if (user.last_name) userDetails.last_name = user.last_name;
+          if (user.username) userDetails.username = user.username;
+          if (user.language_code) userDetails.language_code = user.language_code;
+          if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
 
-          // 2.1 Try the cheap path first - photo_url from initDataUnsafe
-          if (user.photo_url) {
-            dispatch(setUserPhotoUrl(user.photo_url));
-          } else {
-            // 2.2 Fallback - Bot API ile profil fotoğrafı çek
-            try {
-              const photoUrl = await getUserProfilePhoto(user.id);
-              if (photoUrl) {
-                dispatch(setUserPhotoUrl(photoUrl));
-              }
-            } catch (error) {
-              console.error('Profil fotoğrafı alınamadı:', error);
-            }
+          // Önce temel kullanıcı bilgilerini Redux'a kaydet
+          dispatch(setTelegramUser(userDetails));
+
+          // Ardından profil fotoğrafını API'den al ve güncelle
+          const photoUrl = await getUserProfilePhoto(user.id);
+          if (photoUrl) {
+            dispatch(setUserPhotoUrl(photoUrl));
           }
         }
-
-        // Telegram tema renklerini uygula
-        if (wa.themeParams) {
-          const root = document.documentElement;
-          if (wa.themeParams.bg_color) {
-            root.style.setProperty('--tg-theme-bg-color', wa.themeParams.bg_color);
-          }
-          if (wa.themeParams.text_color) {
-            root.style.setProperty('--tg-theme-text-color', wa.themeParams.text_color);
-          }
-          if (wa.themeParams.hint_color) {
-            root.style.setProperty('--tg-theme-hint-color', wa.themeParams.hint_color);
-          }
-          if (wa.themeParams.link_color) {
-            root.style.setProperty('--tg-theme-link-color', wa.themeParams.link_color);
-          }
-          if (wa.themeParams.button_color) {
-            root.style.setProperty('--tg-theme-button-color', wa.themeParams.button_color);
-          }
-          if (wa.themeParams.button_text_color) {
-            root.style.setProperty(
-              '--tg-theme-button-text-color',
-              wa.themeParams.button_text_color
-            );
-          }
-        }
+      } catch {
+        /* ignored – a warning is already printed above */
       }
     };
 
-    initializeTelegram();
+    initUser();
   }, [dispatch]);
 
   // Fonksiyonları useCallback ile sarmalıyoruz

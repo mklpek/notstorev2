@@ -1,7 +1,0 @@
-/* core/styles/fix-centering.css — NEW file */
-.centeredWrapper {
-  width: 100%; /* stretch to any phone */
-  display: flex; /* let children define their own width */
-  justify-content: center; /* centre the 390 px canvas */
-  overflow-x: hidden; /* hides accidental 1-2 px shifts on mobile */
-}

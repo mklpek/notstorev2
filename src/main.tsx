@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './core/styles/theme.css';
+import './core/styles/layout-helpers.css';
 import { Provider } from 'react-redux';
 import { store, persistor } from './core/store/store.ts';
 import { BrowserRouter } from 'react-router-dom';

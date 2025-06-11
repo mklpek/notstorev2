@@ -152,103 +152,101 @@ const AccountPage: React.FC = () => {
     : 'User';
 
   return (
-    <div className="centeredWrapper">
-      <div className={styles.accountPage}>
-        {/* Account Header */}
-        <div className={styles.accountHeader}>
-          <div className={styles.avatar}>
-            <img
-              src={user?.photoUrl || '/images/profile-avatar.png'}
-              alt={fullName}
-              className={styles.avatarImage}
-            />
-          </div>
-          <div className={styles.info}>
-            <h1 className={styles.name}>{fullName}</h1>
-          </div>
+    <div className={`appContainer ${styles.accountPage}`}>
+      {/* Account Header */}
+      <div className={styles.accountHeader}>
+        <div className={styles.avatar}>
+          <img
+            src={user?.photoUrl || '/images/profile-avatar.png'}
+            alt={fullName}
+            className={styles.avatarImage}
+          />
         </div>
+        <div className={styles.info}>
+          <h1 className={styles.name}>{fullName}</h1>
+        </div>
+      </div>
 
-        {/* İki farklı durum: History var/yok */}
-        {visibleHistory && visibleHistory.length > 0 ? (
-          // History varsa - Figma'daki yeni tasarım
-          <div className={styles.historyContainer}>
-            {/* History Header */}
-            <div className={styles.historyHeader}>
-              <div className={styles.historyTitle}>History</div>
-            </div>
+      {/* İki farklı durum: History var/yok */}
+      {visibleHistory && visibleHistory.length > 0 ? (
+        // History varsa - Figma'daki yeni tasarım
+        <div className={styles.historyContainer}>
+          {/* History Header */}
+          <div className={styles.historyHeader}>
+            <div className={styles.historyTitle}>History</div>
+          </div>
 
-            {/* History Items */}
-            <div className={styles.historyItems}>
-              {visibleHistory.map((purchase: Purchase, index: number) => {
-                const productInfo = getProductInfo(purchase.id);
-                // Benzersiz key oluştur - timestamp + product id + index kombinasyonu
-                const uniqueKey = `${purchase.timestamp}-${purchase.id}-${index}`;
+          {/* History Items */}
+          <div className={styles.historyItems}>
+            {visibleHistory.map((purchase: Purchase, index: number) => {
+              const productInfo = getProductInfo(purchase.id);
+              // Benzersiz key oluştur - timestamp + product id + index kombinasyonu
+              const uniqueKey = `${purchase.timestamp}-${purchase.id}-${index}`;
 
-                return (
-                  <div key={uniqueKey} className={styles.historyLine}>
-                    <img
-                      className={styles.historyAva}
-                      src={productInfo.image}
-                      alt={productInfo.name}
-                      loading="lazy"
-                    />
-                    <div className={styles.historyInfo}>
-                      <div className={styles.productInfo}>
-                        <span className={styles.productCategory}>{productInfo.category}</span>
-                        <div className={styles.productNameContainer}>
-                          <span className={styles.productName}>{productInfo.name}</span>
-                        </div>
+              return (
+                <div key={uniqueKey} className={styles.historyLine}>
+                  <img
+                    className={styles.historyAva}
+                    src={productInfo.image}
+                    alt={productInfo.name}
+                    loading="lazy"
+                  />
+                  <div className={styles.historyInfo}>
+                    <div className={styles.productInfo}>
+                      <span className={styles.productCategory}>{productInfo.category}</span>
+                      <div className={styles.productNameContainer}>
+                        <span className={styles.productName}>{productInfo.name}</span>
                       </div>
-                      <div className={styles.purchaseInfo}>
-                        <span className={styles.purchaseDate}>
-                          {dateFormatter.format(purchase.timestamp)}
+                    </div>
+                    <div className={styles.purchaseInfo}>
+                      <span className={styles.purchaseDate}>
+                        {dateFormatter.format(purchase.timestamp)}
+                      </span>
+                      <div className={styles.priceContainer}>
+                        <span className={styles.price}>
+                          {purchase.total} {purchase.currency}
                         </span>
-                        <div className={styles.priceContainer}>
-                          <span className={styles.price}>
-                            {purchase.total} {purchase.currency}
-                          </span>
-                        </div>
                       </div>
                     </div>
                   </div>
-                );
-              })}
-
-              {/* Yüklenecek daha veri varsa "Yükleniyor" sentinel */}
-              {remainingItems > 0 && (
-                <div ref={sentinelRef} className={styles.loadingMore}>
-                  Loading more items...
                 </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          // History yoksa - Collections
-          <div className={styles.collectionsContainer}>
-            <div className={styles.collectionsHeader}>
-              <div className={styles.collectionsTitle}>Collections</div>
-            </div>
+              );
+            })}
 
-            <div className={styles.collections}>
-              <div className={styles.collection}>
-                <div className={styles.emojiPlaceholder}>🔥</div>
-                <span className={styles.collectionLabel}>Favorite</span>
-                <span className={styles.collectionCount}>0</span>
+            {/* Yüklenecek daha veri varsa "Yükleniyor" sentinel */}
+            {remainingItems > 0 && (
+              <div ref={sentinelRef} className={styles.loadingMore}>
+                Loading more items...
               </div>
-              <div className={styles.collection}>
-                <div className={styles.emojiPlaceholder}>⌚️</div>
-                <span className={styles.collectionLabel}>Watch later</span>
-                <span className={styles.collectionCount}>0</span>
-              </div>
-              <div className={styles.collection}>
-                <div className={styles.emojiPlaceholder}>💎</div>
-                <span className={styles.collectionLabel}>Premium</span>
-                <span className={styles.collectionCount}>0</span>
-              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        // History yoksa - Collections
+        <div className={styles.collectionsContainer}>
+          <div className={styles.collectionsHeader}>
+            <div className={styles.collectionsTitle}>Collections</div>
+          </div>
+
+          <div className={styles.collections}>
+            <div className={styles.collection}>
+              <div className={styles.emojiPlaceholder}>🔥</div>
+              <span className={styles.collectionLabel}>Favorite</span>
+              <span className={styles.collectionCount}>0</span>
+            </div>
+            <div className={styles.collection}>
+              <div className={styles.emojiPlaceholder}>⌚️</div>
+              <span className={styles.collectionLabel}>Watch later</span>
+              <span className={styles.collectionCount}>0</span>
+            </div>
+            <div className={styles.collection}>
+              <div className={styles.emojiPlaceholder}>💎</div>
+              <span className={styles.collectionLabel}>Premium</span>
+              <span className={styles.collectionCount}>0</span>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

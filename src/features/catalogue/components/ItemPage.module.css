@@ -9,7 +9,8 @@
 
 /* Body Container - Figma: 390x652px */
 .body {
-  width: 390px;
+  width: 100%;
+  max-width: 390px;
   height: 100%;
   box-sizing: border-box;
   display: flex;

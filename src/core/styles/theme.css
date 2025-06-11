@@ -2,9 +2,6 @@
    GLOBAL THEME & RESET - Tek kaynak CSS dosyası
    ========================================================================== */
 
-/* Import fix-centering utilities */
-@import './fix-centering.css';
-
 /* Local Fonts */
 @font-face {
   font-family: 'SF Pro Rounded';
