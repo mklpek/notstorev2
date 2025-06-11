@@ -45,6 +45,8 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => 
                 src={user?.photoUrl || '/images/profile-avatar.png'}
                 alt="Profile"
                 className={styles.profileImage}
+                referrerPolicy="no-referrer"
+                crossOrigin="anonymous"
               />
               {user?.is_premium && (
                 <div className={styles.premiumIndicator} title="Premium User">

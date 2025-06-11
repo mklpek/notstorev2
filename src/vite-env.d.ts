@@ -58,6 +58,7 @@ interface WebAppUser {
   username?: string;
   language_code?: string;
   is_premium?: boolean;
+  photo_url?: string; // Telegram WebApp 6.9+ sürümlerinde destekleniyor
 }
 
 interface WebAppInitData {

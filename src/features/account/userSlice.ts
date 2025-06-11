@@ -8,7 +8,8 @@ export interface TelegramUser {
   username?: string;
   language_code?: string;
   is_premium?: boolean;
-  photoUrl?: string;
+  photo_url?: string; // Telegram'dan gelen orijinal alan
+  photoUrl?: string; // Mevcut kodun kullandığı camelCase versiyon
 }
 
 // TelegramUser | null olarak değil doğrudan TelegramUser olarak tanımlıyoruz
@@ -16,13 +17,11 @@ export interface TelegramUser {
 interface UserState {
   user: TelegramUser | null;
   isAuthenticated: boolean;
-  isPhotoLoaded: boolean;
 }
 
 const initialState: UserState = {
   user: null,
   isAuthenticated: false,
-  isPhotoLoaded: false,
 };
 
 const userSlice = createSlice({
@@ -36,13 +35,11 @@ const userSlice = createSlice({
     setUserPhotoUrl: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.photoUrl = action.payload;
-        state.isPhotoLoaded = true;
       }
     },
     clearUser: state => {
       state.user = null;
       state.isAuthenticated = false;
-      state.isPhotoLoaded = false;
     },
   },
 });

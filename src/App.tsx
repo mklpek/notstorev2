@@ -59,36 +59,51 @@ function App() {
     // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
       try {
-        const wa = window.Telegram?.WebApp;
-        if (!wa) return;
+        const { WebApp: wa } = window.Telegram || { WebApp: undefined };
+        if (!wa?.initDataUnsafe?.user) return;
 
-        // TypeScript null/undefined kontrolü
-        if (wa?.initDataUnsafe?.user) {
-          const user = wa.initDataUnsafe.user;
+        const user = wa.initDataUnsafe.user;
 
-          // TelegramUser tipine uygun veriyi hazırla
-          const userDetails: TelegramUser = {
-            id: user.id,
-            first_name: user.first_name,
-          };
+        // TelegramUser tipine uygun veriyi hazırla
+        const userDetails: TelegramUser = {
+          id: user.id,
+          first_name: user.first_name,
+        };
 
-          // Opsiyonel alanları kontrol ederek ekle
-          if (user.last_name) userDetails.last_name = user.last_name;
-          if (user.username) userDetails.username = user.username;
-          if (user.language_code) userDetails.language_code = user.language_code;
-          if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
+        // Opsiyonel alanları kontrol ederek ekle
+        if (user.last_name) userDetails.last_name = user.last_name;
+        if (user.username) userDetails.username = user.username;
+        if (user.language_code) userDetails.language_code = user.language_code;
+        if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
+        if (user.photo_url) userDetails.photo_url = user.photo_url;
 
-          // Önce temel kullanıcı bilgilerini Redux'a kaydet
-          dispatch(setTelegramUser(userDetails));
+        // Fotoğraf URL'ini ayarla (orijinal URL varsa kullan, yoksa boş string)
+        userDetails.photoUrl = user.photo_url || '';
 
-          // Ardından profil fotoğrafını API'den al ve güncelle
-          const photoUrl = await getUserProfilePhoto(user.id);
-          if (photoUrl) {
-            dispatch(setUserPhotoUrl(photoUrl));
+        // Kullanıcı bilgilerini Redux'a kaydet
+        dispatch(setTelegramUser(userDetails));
+
+        // Sadece photo_url yoksa API'den profil fotoğrafını getir
+        if (!user.photo_url) {
+          // Önce localStorage'da daha önce kaydedilmiş bir URL var mı kontrol et
+          const cachedPhotoUrl = localStorage.getItem(`avatar:${user.id}`);
+
+          if (cachedPhotoUrl) {
+            // Cache'den yükle
+            dispatch(setUserPhotoUrl(cachedPhotoUrl));
+          } else {
+            // API'den getir
+            const photoUrl = await getUserProfilePhoto(user.id);
+            if (photoUrl) {
+              // Redux'a kaydet
+              dispatch(setUserPhotoUrl(photoUrl));
+              // localStorage'a cache'le
+              localStorage.setItem(`avatar:${user.id}`, photoUrl);
+            }
           }
         }
-      } catch {
-        /* ignored – a warning is already printed above */
+      } catch (error) {
+        console.error('Kullanıcı bilgisi yüklenirken hata:', error);
       }
     };
 
