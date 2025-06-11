@@ -11,17 +11,12 @@
   transition:
     height 0.2s ease-out,
     padding 0.2s ease-out;
-  position: sticky;
-  top: var(--tg-content-safe-area-top, 0px);
-  z-index: 50;
-  padding-top: calc(var(--tg-content-safe-area-top, 0px) + 12px);
 }
 
 .header.searchOpen {
   height: 60px;
   backdrop-filter: blur(16px);
   padding: 12px 16px;
-  padding-top: calc(var(--tg-content-safe-area-top, 0px) + 12px);
 }
 
 .headerLeft {
@@ -137,31 +132,39 @@
 } */
 
 .clearButton {
-  border: none;
-  background: transparent;
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  padding: 0;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  border: none;
   cursor: pointer;
+  padding: 0;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
 }
 
-.clearButton svg {
-  width: 18px;
-  height: 18px;
-  opacity: 0.6;
+.clearButton:hover {
+  opacity: 0.7;
 }
 
 .cancelButton {
+  font-family:
+    'SF Pro Rounded',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.33;
+  letter-spacing: -0.2px;
+  color: var(--tg-theme-text-color, #ffffff);
   background: transparent;
   border: none;
-  color: var(--tg-theme-link-color, #2481cc);
-  font-size: 17px;
-  padding: 0 4px;
-  white-space: nowrap;
+  padding: 2px 0;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 /* @keyframes blink {
@@ -176,18 +179,23 @@
 /* Cart Count Styles - Figma tasarımına uygun */
 .cartCountContainer {
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  background-color: var(--tg-theme-button-color, #2481cc);
+  align-items: center;
+  width: 23px;
+  height: 23px;
+  background-color: #ffffff;
   border-radius: 50%;
+  position: relative;
 }
 
 .cartCount {
-  font-size: 10px;
-  font-weight: 600;
-  color: #ffffff;
+  font-family: var(--font-family-rounded);
+  font-weight: 590;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--tg-theme-bg-color, #000000);
+  text-align: center;
+  user-select: none;
 }
 
 /* Erişilebilirlik için animasyon kontrolü */

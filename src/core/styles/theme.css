@@ -39,9 +39,6 @@
   --tg-safe-area-inset-bottom: env(safe-area-inset-bottom);
   --tg-safe-area-inset-left: env(safe-area-inset-left);
 
-  /* Content safe area - Telegram header butonlarını içeren alan (Bot API 8.0+) */
-  --tg-content-safe-area-top: var(--tg-safe-area-inset-top, 0px);
-
   /* Dinamik viewport yüksekliği */
   --tg-viewport-height: 100vh; /* başlangıç değeri */
 
@@ -194,19 +191,6 @@ a {
 
 .tg-safe-pad-right {
   padding-right: var(--tg-safe-area-inset-right, 0);
-}
-
-/* Content Safe Area yardımcı sınıfları */
-.tg-content-pad-top {
-  padding-top: var(--tg-content-safe-area-top, 0);
-}
-
-.tg-content-top {
-  top: var(--tg-content-safe-area-top, 0);
-}
-
-.tg-content-height-top {
-  height: var(--tg-content-safe-area-top, 0);
 }
 
 /* Safe area yardımcı sınıfları */

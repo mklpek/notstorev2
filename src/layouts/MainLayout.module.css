@@ -1,5 +1,6 @@
 .mainLayout {
   min-height: 100vh;
+  padding-top: var(--tg-safe-area-inset-top);
   display: flex;
   flex-direction: column;
   background: var(--background-color);
