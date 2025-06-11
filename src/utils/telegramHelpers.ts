@@ -23,84 +23,123 @@ export function canUse(method: keyof TelegramWebApp): boolean {
  * Ürün paylaşma fonksiyonu - Telegram içi paylaşma
  */
 export function shareProduct(productName: string, productId: string): void {
+  console.log('🔄 shareProduct çağrıldı:', { productName, productId });
+
   try {
     const wa = window.Telegram?.WebApp;
-    if (!wa) return;
+    console.log('📱 Telegram WebApp durumu:', {
+      telegramExists: !!window.Telegram,
+      webAppExists: !!wa,
+      version: wa?.version || 'bilinmiyor',
+    });
+
+    if (!wa) {
+      console.warn('⚠️ Telegram WebApp bulunamadı - browser ortamında çalışıyor olabilir');
+      // Browser ortamında test için alert göster
+      alert(
+        `Paylaşım: ${productName}\nID: ${productId}\n\nTelegram ortamında çalışırken gerçek paylaşım açılacak.`
+      );
+      return;
+    }
+
+    // Haptic feedback ver (kullanıcı deneyimi için)
+    try {
+      wa.HapticFeedback?.impactOccurred?.('medium');
+    } catch (e) {
+      console.log('Haptic feedback desteklenmiyor');
+    }
 
     // Paylaşım URL'ini oluştur
     const shareUrl = `https://t.me/notstore_bot/app?startapp=product_${productId}`;
     const shareText = `${productName} ürününü incele! 🛍️`;
 
-    // showPopup metodunu kontrol et (Telegram WebApp 6.1+)
-    if (canUse('showPopup')) {
-      wa.showPopup?.(
-        {
-          title: 'Ürünü Paylaş',
-          message: 'Bu ürünü nasıl paylaşmak istiyorsun?',
-          buttons: [
-            {
-              id: 'share_link',
-              type: 'default',
-              text: 'Bağlantı Paylaş',
-            },
-            {
-              id: 'share_story',
-              type: 'default',
-              text: 'Hikayede Paylaş',
-            },
-            {
-              id: 'cancel',
-              type: 'cancel',
-              text: 'İptal',
-            },
-          ],
-        },
-        (buttonId: string) => {
-          if (buttonId === 'share_link') {
-            // Bağlantı paylaşımı
-            if (canUse('openTelegramLink')) {
-              wa.openTelegramLink?.(
-                `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`
-              );
-            } else if (canUse('openLink')) {
-              wa.openLink?.(
-                `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`
-              );
-            }
-          } else if (buttonId === 'share_story') {
-            // Hikaye paylaşımı (Telegram 7.0+)
-            if (canUse('shareToStory')) {
-              wa.shareToStory?.(shareUrl, {
-                text: shareText,
-                widget_link: {
-                  url: shareUrl,
-                  name: productName,
-                },
-              });
-            } else {
-              // Fallback: normal paylaşım
-              if (canUse('openTelegramLink')) {
-                wa.openTelegramLink?.(
-                  `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`
-                );
-              }
-            }
-          }
-        }
-      );
+    console.log('🔗 Paylaşım bilgileri:', { shareUrl, shareText });
+
+    // Basit ve güvenilir yöntem: direkt paylaşım linki
+    const fullShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+
+    console.log('🔗 Tam paylaşım URL:', fullShareUrl);
+
+    // Telegram versiyonuna göre en uygun metodu seç
+    if (wa.openTelegramLink) {
+      console.log('📱 openTelegramLink kullanılıyor');
+      wa.openTelegramLink(fullShareUrl);
+    } else if (wa.openLink) {
+      console.log('🌐 openLink kullanılıyor');
+      wa.openLink(fullShareUrl);
     } else {
-      // Fallback: direkt paylaşım linki aç
-      if (canUse('openTelegramLink')) {
-        wa.openTelegramLink?.(
-          `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`
-        );
-      } else if (canUse('openLink')) {
-        wa.openLink?.(
-          `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`
-        );
-      }
+      console.log('🌐 window.open kullanılıyor (fallback)');
+      window.open(fullShareUrl, '_blank');
     }
+
+    // Başarı mesajı (opsiyonel)
+    setTimeout(() => {
+      try {
+        wa.HapticFeedback?.notificationOccurred?.('success');
+      } catch (e) {
+        console.log('Success haptic desteklenmiyor');
+      }
+    }, 100);
   } catch (error) {
-    console.error('Paylaşım hatası:', error);
+    console.error('❌ Paylaşım hatası:', error);
+
+    // Hata haptic feedback
+    try {
+      window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.('error');
+    } catch (e) {
+      console.log('Error haptic desteklenmiyor');
+    }
+
+    // Hata durumunda kullanıcıya bilgi ver
+    alert(`Paylaşım hatası: ${error instanceof Error ? error.message : 'Bilinmeyen hata'}`);
+  }
+}
+
+/**
+ * Paylaşım linkini açma fonksiyonu
+ */
+function openShareLink(shareUrl: string, shareText: string): void {
+  const wa = window.Telegram?.WebApp;
+  if (!wa) return;
+
+  const fullShareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+
+  // openTelegramLink öncelikli (Telegram 6.1+)
+  if (wa.openTelegramLink) {
+    console.log('📱 openTelegramLink kullanılıyor');
+    wa.openTelegramLink(fullShareUrl);
+  }
+  // openLink fallback (Telegram 6.0+)
+  else if (wa.openLink) {
+    console.log('🌐 openLink kullanılıyor');
+    wa.openLink(fullShareUrl);
+  }
+  // Son çare: window.open
+  else {
+    console.log('🌐 window.open kullanılıyor');
+    window.open(fullShareUrl, '_blank');
+  }
+}
+
+/**
+ * Story paylaşımı veya fallback
+ */
+function shareToStoryOrFallback(shareUrl: string, shareText: string, productName: string): void {
+  const wa = window.Telegram?.WebApp;
+  if (!wa) return;
+
+  // shareToStory desteği (Telegram 7.0+)
+  if (wa.shareToStory) {
+    console.log('📱 shareToStory kullanılıyor');
+    wa.shareToStory(shareUrl, {
+      text: shareText,
+      widget_link: {
+        url: shareUrl,
+        name: productName,
+      },
+    });
+  } else {
+    console.log('📱 shareToStory desteklenmiyor, normal paylaşım kullanılıyor');
+    openShareLink(shareUrl, shareText);
   }
 }

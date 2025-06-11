@@ -46,9 +46,13 @@ const ItemPage: React.FC = () => {
 
   // Paylaş butonuna tıklama
   const handleShareClick = () => {
+    console.log('🎯 Paylaş butonu tıklandı');
     if (product && productId) {
       const displayTitle = `${product.category} ${product.name}`;
+      console.log('📦 Ürün bilgileri:', { displayTitle, productId, product });
       shareProduct(displayTitle, productId);
+    } else {
+      console.warn('⚠️ Ürün bilgileri eksik:', { product: !!product, productId });
     }
   };
 

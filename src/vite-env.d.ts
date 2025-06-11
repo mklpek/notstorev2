@@ -103,6 +103,13 @@ interface StoryShareParams {
   };
 }
 
+// HapticFeedback tipi
+interface TelegramHapticFeedback {
+  impactOccurred?: (style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft') => void;
+  notificationOccurred?: (type: 'error' | 'success' | 'warning') => void;
+  selectionChanged?: () => void;
+}
+
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
@@ -123,6 +130,7 @@ interface TelegramWebApp {
   openTelegramLink?: (url: string) => void;
   showPopup?: (params: PopupParams, callback?: (buttonId: string) => void) => void;
   shareToStory?: (mediaUrl: string, params?: StoryShareParams) => void;
+  HapticFeedback?: TelegramHapticFeedback;
   BackButton?: TelegramWebAppButton;
   SettingsButton?: TelegramWebAppButton;
   onEvent?: (eventType: string, handler: (...args: unknown[]) => void) => void;
