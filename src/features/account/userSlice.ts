@@ -8,8 +8,8 @@ export interface TelegramUser {
   username?: string;
   language_code?: string;
   is_premium?: boolean;
-  photo_url?: string; // Telegram'dan gelen orijinal alan
-  photoUrl?: string; // Mevcut kodun kullandığı camelCase versiyon
+  photo_url?: string;
+  photoUrl?: string;
 }
 
 // TelegramUser | null olarak değil doğrudan TelegramUser olarak tanımlıyoruz
