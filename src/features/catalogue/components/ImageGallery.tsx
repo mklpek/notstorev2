@@ -56,7 +56,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onInd
             <ProgressiveImage
               src={image}
               alt={`Ürün resmi ${index + 1}`}
-              className={styles.image || ''}
               loading={index === currentIndex ? 'eager' : 'lazy'}
             />
           </div>
