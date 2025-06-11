@@ -11,6 +11,9 @@
     <meta name="telegram-web-app" content="true" />
     <meta name="format-detection" content="telephone=no" />
 
+    <!-- Content Security Policy için nonce -->
+    <meta name="csp-nonce" content="not-store-csp-nonce" />
+
     <!-- Preload critical fonts -->
     <link
       rel="preload"
@@ -25,7 +28,7 @@
   </head>
   <body>
     <!-- Telegram Web App resmi script yükleyicisi -->
-    <script src="https://telegram.org/js/telegram-web-app.js" async></script>
+    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
