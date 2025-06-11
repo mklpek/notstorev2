@@ -11,22 +11,40 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self' blob:; script-src 'self' https://telegram.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://not-contest-cdn.openbuilders.xyz https://telegram.org https://*.telegram-cdn.org; connect-src 'self' https://api.telegram.org https://not-contest-cdn.openbuilders.xyz https://raw.githubusercontent.com; frame-ancestors https://t.me; font-src 'self' data:;"
+          "value": "default-src 'self'; script-src 'self' https://telegram.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://not-contest-cdn.openbuilders.xyz https://telegram.org https://*.telegram-cdn.org https://api.telegram.org; connect-src 'self' https://api.telegram.org https://not-contest-cdn.openbuilders.xyz https://raw.githubusercontent.com; frame-ancestors https://t.me; font-src 'self' data:;"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "ALLOW-FROM https://t.me"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600"
+          "value": "public, max-age=3600, must-revalidate"
         }
       ]
     },
     {
-      "source": "/images/(.*)",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     }
   ]
 }

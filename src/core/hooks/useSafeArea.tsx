@@ -39,15 +39,15 @@ export function useSafeAreaInsets() {
 
     const tgVer = getTgVersion();
 
-    // CSS değişkenlerini güncelleme fonksiyonu - sadeleştirilmiş
+    // CSS değişkenlerini güncelleme fonksiyonu
     const updateCSSVariables = (insets: SafeAreaInsets) => {
-      // Sadece CSS değişkenlerini güncelle - HTML padding'i CSS yapar
-      ['top', 'right', 'bottom', 'left'].forEach(key => {
-        document.documentElement.style.setProperty(
-          `--tg-safe-area-inset-${key}`,
-          `${insets[key as keyof SafeAreaInsets]}px`
-        );
-      });
+      document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
+      document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${insets.right}px`);
+      document.documentElement.style.setProperty(
+        '--tg-safe-area-inset-bottom',
+        `${insets.bottom}px`
+      );
+      document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
     };
 
     // Safe area değerlerini güncelleme fonksiyonu
@@ -91,11 +91,21 @@ export function useSafeAreaInsets() {
 
     // ❷ Telegram WebApp safeAreaInset özelliği (varsa)
     if (wa.safeAreaInset) {
+      const sa = wa.safeAreaInset;
+      // Telegram değerlerini CSS değişkenlerine kopyala - env() değerlerinden büyükse
+      ['top', 'right', 'bottom', 'left'].forEach(side => {
+        // TypeScript için doğru tip erişimi
+        const sideKey = side as keyof typeof sa;
+        const value = sa[sideKey] || 0;
+
+        document.documentElement.style.setProperty(`--tg-safe-area-inset-${side}`, `${value}px`);
+      });
+
       updateSafeArea({
-        top: wa.safeAreaInset.top || 0,
-        right: wa.safeAreaInset.right || 0,
-        bottom: wa.safeAreaInset.bottom || 0,
-        left: wa.safeAreaInset.left || 0,
+        top: sa.top || 0,
+        right: sa.right || 0,
+        bottom: sa.bottom || 0,
+        left: sa.left || 0,
       });
     }
 
