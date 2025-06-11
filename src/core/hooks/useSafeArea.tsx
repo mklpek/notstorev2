@@ -31,6 +31,9 @@ export function useSafeAreaInsets() {
   });
 
   useEffect(() => {
+    // .tg sınıfı yoksa hiçbir şey yapma (localhost / web önizleme)
+    if (!document.documentElement.classList.contains('tg')) return;
+
     const wa = window.Telegram?.WebApp;
     if (!wa) return;
 
