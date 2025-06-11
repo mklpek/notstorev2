@@ -1,11 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { useNavigate } from 'react-router-dom';
 import type { Item } from '../../../core/api/notApi';
 import { useAppSelector } from '../../../core/store/hooks';
 import { selectIsInCart } from '../../cart/selectors';
-import ImageGallery from './ImageGallery';
 import CartTagIcon from '../../../core/ui/Icons/CartTagIcon';
+import ProgressiveImage from '../../../core/ui/ProgressiveImage';
 import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
@@ -14,15 +12,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  // InView hook optimizasyonu - daha yüksek threshold ve rootMargin
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-    rootMargin: '200px 0px', // Daha erken yükleme için 200px yukarıdan başlat
-  });
-
   // Ürünün sepette olup olmadığını kontrol et
   const isInCart = useAppSelector(selectIsInCart(product.id));
 
@@ -41,31 +30,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
     [product.category, product.name]
   );
 
-  // onIndexChange fonksiyonunu memoize et
-  const handleIndexChange = useMemo(() => {
-    return (index: number) => {
-      setCurrentImageIndex(index);
-    };
-  }, []);
+  // İlk görseli al - GridView'da sadece ilk görseli gösteriyoruz
+  const firstImage = product.images?.[0] || '';
 
   return (
-    <div ref={ref} className={styles.productCard} onClick={handleCardClick}>
+    <div className={styles.productCard} onClick={handleCardClick}>
       <div className={styles.imageContainer}>
-        {/* İnView olduğunda render et - görünürlük tespiti yapalım */}
-        {inView && (
-          <>
-            <ImageGallery
-              images={product.images}
-              currentIndex={currentImageIndex}
-              onIndexChange={handleIndexChange}
-            />
-            {/* Tag elementi - sadece ürün sepetteyse görünür */}
-            {isInCart && (
-              <div className={styles.cartTag}>
-                <CartTagIcon />
-              </div>
-            )}
-          </>
+        {/* Sadece ilk görseli göster - ProgressiveImage içinde lazy loading var */}
+        <ProgressiveImage
+          src={firstImage}
+          alt={displayTitle}
+          className={styles.image}
+          loading="lazy"
+          fetchPriority="low"
+        />
+
+        {/* Tag elementi - sadece ürün sepetteyse görünür */}
+        {isInCart && (
+          <div className={styles.cartTag}>
+            <CartTagIcon />
+          </div>
         )}
       </div>
       <div className={styles.productInfo}>

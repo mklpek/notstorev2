@@ -1,99 +1,81 @@
 .productCard {
-  background: transparent;
-  border-radius: var(--spacing-lg);
-  overflow: hidden;
-  width: 100%;
-  height: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex: 0 0 calc((100% - 12px) / 2);
-  min-width: 0;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+  position: relative;
+  width: 100%;
+  max-width: 168px;
+  border-radius: 16px;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease-out,
+    opacity 0.2s ease-out;
+  user-select: none;
+  margin: 0 auto;
 }
 
 .productCard:hover {
-  opacity: 0.8;
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .imageContainer {
   position: relative;
   width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--spacing-lg);
+  height: 168px;
+  border-radius: 16px;
   overflow: hidden;
-  background: var(--tg-theme-bg-color, #000000);
 }
 
-.productImage {
+.image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  border-radius: 16px;
 }
 
-/* Cart Tag - Figma tasarımına uygun */
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0px;
+}
+
+.productTitle {
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--tg-theme-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.productPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.priceMain {
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tg-theme-text-color);
+}
+
+.priceCurrency {
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--tg-theme-hint-color);
+}
+
 .cartTag {
   position: absolute;
   top: 8px;
   right: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: rgba(36, 129, 204, 0.9);
+  border-radius: 16px;
+  padding: 4px;
   z-index: 2;
-}
-
-.productInfo {
-  padding: 0px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.productTitle {
-  font-family:
-    'SF Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
-  font-weight: 590;
-  font-size: 17px;
-  line-height: 1.41176; /* Approximately 24px */
-  letter-spacing: -0.041em; /* Approximately -0.7px or -4.11% of 17px */
-  color: #ffffff;
-  margin: 0;
-  text-align: left;
-  align-self: stretch;
-  /* Figma'da taşma durumunda sarmalama belirtilmemiş, ancak gerekirse: */
-  /* white-space: normal; */
-  /* overflow-wrap: break-word; */
-}
-
-.productPrice {
-  font-family:
-    'SF Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.42857; /* Approximately 20px */
-  letter-spacing: -0.014em; /* Approximately -0.2px or -1.42% of 14px */
-  color: #ffffff;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  align-self: stretch;
-}
-
-.priceMain {
-  /* Inherits from .productPrice, no need to repeat if styles are identical */
-}
-
-.priceCurrency {
-  color: rgba(255, 255, 255, 0.5);
-  /* Inherits font styles from .productPrice */
 }
