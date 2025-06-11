@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './ImageGallery.module.css';
 import ProgressiveImage from '../../../core/ui/ProgressiveImage';
 
@@ -35,19 +35,32 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onInd
     }
   };
 
-  // Dinamik API görselini kullan
-  const currentImageSrc = images[currentIndex] || '';
-  // Güvenlik önlemi fallback (şimdilik yorum satırında)
-  // const currentImageSrc = images[currentIndex] || '/images/product-1.png'
-
   return (
     <div className={styles.imageGallery}>
       <div className={styles.imageContainer}>
-        <ProgressiveImage
-          src={currentImageSrc}
-          alt={`Ürün resmi ${currentIndex + 1}`}
-          className={styles.image || ''}
-        />
+        {/* 
+          TÜM GÖRSELLERİ RENDER ET, SADECE AKTİF OLANI GÖSTER.
+          Bu yöntem, `src` değiştirmekten daha güvenilirdir ve tarayıcının
+          görselleri tekrar indirmesini engeller.
+          ProgressiveImage kendi IntersectionObserver'ını kullanır.
+        */}
+        {images.map((image, index) => (
+          <div
+            key={image}
+            style={{
+              display: index === currentIndex ? 'block' : 'none',
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <ProgressiveImage
+              src={image}
+              alt={`Ürün resmi ${index + 1}`}
+              className={styles.image || ''}
+              loading={index === currentIndex ? 'eager' : 'lazy'}
+            />
+          </div>
+        ))}
       </div>
 
       <div className={styles.pagination}>
