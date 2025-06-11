@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProductCard from './components/ProductCard';
 import { useGetCatalogueQuery, catalogSelectors } from '../../core/api/notApi';
@@ -15,43 +15,75 @@ const COLUMN_COUNT = 2; // Her satırda 2 ürün
 const CARD_GAP = 12; // px, tasarımdaki boşluk
 const ITEM_BATCH_SIZE = 10; // Her seferde kaç ürün gösterileceği
 
+// Sayfa geçişlerinde state'i korumak için global değişken (singleton pattern)
+let cachedVisibleItems = ITEM_BATCH_SIZE;
+
 const ProductGrid: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rawQuery = searchParams.get('q') || '';
   const gridRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Kaç ürün gösterileceğini tutan state
-  const [visibleItems, setVisibleItems] = useState(ITEM_BATCH_SIZE);
+  // Kaç ürün gösterileceğini tutan state - cached değeri başlangıçta kullan
+  const [visibleItems, setVisibleItems] = useState(cachedVisibleItems);
 
-  // Scroll eventi için useEffect
+  // visibleItems değiştiğinde cache'i güncelle
   useEffect(() => {
-    // İntersection Observer kurulumu - viewport'a yaklaşan ürünleri tespit etmek için
-    const observer = new IntersectionObserver(
-      entries => {
-        // Son element görünür olduğunda daha fazla ürün yükle
-        if (entries[0]?.isIntersecting) {
-          setVisibleItems(prev => prev + ITEM_BATCH_SIZE);
-        }
-      },
-      { rootMargin: '200px' } // 200px aşağıdan yüklemeye başla
-    );
+    cachedVisibleItems = visibleItems;
+  }, [visibleItems]);
+
+  // IntersectionObserver için callback - useCallback ile memoize et
+  const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
+    // Son element görünür olduğunda daha fazla ürün yükle
+    if (entries[0]?.isIntersecting) {
+      setVisibleItems(prev => prev + ITEM_BATCH_SIZE);
+    }
+  }, []);
+
+  // Ref'i ve observer'ı temizleyen bağımsız bir useEffect
+  useEffect(() => {
+    // Observer'ı bir kez oluştur ve ref'te sakla
+    observerRef.current = new IntersectionObserver(handleIntersection, {
+      rootMargin: '200px',
+      threshold: 0.1,
+    });
+
+    return () => {
+      // Component unmount olduğunda observer'ı temizle
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [handleIntersection]); // sadece callback değiştiğinde yeniden oluştur
+
+  // Son element değiştiğinde observer'ı güncelle
+  useEffect(() => {
+    const observer = observerRef.current;
+    if (!observer || !gridRef.current) return;
+
+    // Önce tüm gözlemleri temizle
+    observer.disconnect();
 
     // Son elemana observer ekle
-    const lastElement = gridRef.current?.lastElementChild;
+    const lastElement = gridRef.current.lastElementChild;
     if (lastElement) {
       observer.observe(lastElement);
     }
-
-    return () => observer.disconnect();
-  }, [visibleItems]); // visibleItems değiştiğinde observer'ı yeniden kur
+  }); // dependency array yok - her render'da kontrol et ama observer'ı yeniden oluşturma
 
   // Debounce ederek, kullanıcı her tuşa bastığında değil,
   // 300ms duraklamadan sonra arama yapmasını sağlıyoruz
   const debouncedQuery = useDebouncedValue(rawQuery.trim(), 300);
 
   // RTK Query kullanımı - refetch fonksiyonunu doğrudan alıyoruz
-  const { isLoading, error, data, refetch } = useGetCatalogueQuery();
+  // staleTime ve cacheTime artırıldı - API önbelleğe alınıyor
+  const { isLoading, error, data, refetch } = useGetCatalogueQuery(undefined, {
+    // Sayfa geçişlerinde önbelleği koru
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false,
+    refetchOnReconnect: true,
+  });
 
   // Filtrelenmiş ürünleri hesapla
   const filteredProducts = useMemo(() => {
@@ -76,13 +108,14 @@ const ProductGrid: React.FC = () => {
     return filteredProducts.slice(0, visibleItems);
   }, [filteredProducts, visibleItems]);
 
-  // handleProductClick fonksiyonunu useMemo ile optimize ediyoruz
-  // navigate fonksiyonu değişmediği sürece yeniden oluşturulmayacak
-  const handleProductClick = useMemo(() => {
-    return (productId: number) => {
+  // handleProductClick fonksiyonunu useCallback ile optimize ediyoruz
+  // useCallback, useMemo'dan daha uygun bir seçimdir fonksiyonlar için
+  const handleProductClick = useCallback(
+    (productId: number) => {
       navigate(`/product/${productId}`);
-    };
-  }, [navigate]);
+    },
+    [navigate]
+  );
 
   // Skeleton render etme için memoize edilmiş bir değer kullanıyoruz
   // isLoading değişmediği sürece bu kısım yeniden render edilmeyecek
@@ -96,7 +129,7 @@ const ProductGrid: React.FC = () => {
   );
 
   // Aşağıya doğru kaydıkça daha fazla ürün yüklensin diye en altta bir yükleme göstergesi
-  const renderLoadingIndicator = () => {
+  const renderLoadingIndicator = useCallback(() => {
     // Hala gösterilecek ürün varsa
     if (visibleProducts.length < filteredProducts.length) {
       return (
@@ -110,7 +143,7 @@ const ProductGrid: React.FC = () => {
       );
     }
     return null;
-  };
+  }, [visibleProducts.length, filteredProducts.length]);
 
   if (isLoading) {
     return loadingContent;
