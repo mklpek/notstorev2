@@ -152,7 +152,7 @@ const AccountPage: React.FC = () => {
     : 'User';
 
   return (
-    <div className={`appContainer ${styles.accountPage}`}>
+    <div className={styles.accountPage}>
       {/* Account Header */}
       <div className={styles.accountHeader}>
         <div className={styles.avatar}>

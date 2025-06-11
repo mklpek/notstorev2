@@ -25,7 +25,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   };
 
   return (
-    <div className={`appContainer ${styles.mainLayout}`}>
+    <div className={styles.mainLayout}>
       {showHeader && (
         <Header {...(onCartClick && { onCartClick })} onSearchOpen={handleSearchOpenChange} />
       )}
