@@ -25,7 +25,7 @@
 - **CSP Optimization**: Content Security Policy optimizasyonu ve Vercel uyumluluğu (✅ Aktif)
 - **ESLint Compliance**: TypeScript strict mode ve lint kuralları uyumluluğu (✅ Aktif)
 - **API Proxy System**: GitHub raw içeriği için proxy endpoint'leri (✅ Aktif)
-- **Optimized Asset Management**: Statik görseller public/, dinamik ikonlar src/assets/
+- **Responsive Layout System**: Telegram WebView uyumlu responsive tasarım (✅ Tamamlandı)
 - **CSS Modules Architecture**: Tek global theme + modüler bileşen stilleri
 - **Clean Project Structure**: Tutarlı isimlendirme ve optimize edilmiş klasör yapısı
 - **Telegram WebApp 2.0 Integration**: Bot API 8+ paradigması ile modern entegrasyon (✅ Tamamlandı)
@@ -33,7 +33,7 @@
 - **Version-Aware API Calls**: Telegram sürüm kontrolü ile güvenli API kullanımı (✅ Tamamlandı)
 - **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
 - **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
-- **Responsive Tasarım**: 390px mobil odaklı responsive yapı
+- **Responsive Tasarım**: 320px-430px arası tüm cihazlarda uyumlu
 - **Modüler Mimari**: Temiz ve sürdürülebilir kod yapısı
 - **TypeScript**: Tip güvenliği ve geliştirici deneyimi
 - **Git Hooks**: Husky ile pre-commit ve commit-msg kontrolü
@@ -165,7 +165,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 ├── node_modules/                  # NPM dependencies
 ├── scripts/                       # Build ve deployment scriptleri
 ├── api/                           # Vercel Edge Functions (✅ Aktif)
-│   └── wallets.ts                 # TON wallets proxy (TypeScript) (923B, 27 satır)
+│   └── wallets.ts                 # TON wallets proxy (TypeScript) (1.4KB, 43 satır) - ✅ Güncel
 ├── public/                        # Static public files (2.5MB)
 │   ├── fonts/                     # Font files (✅ Aktif)
 │   │   ├── SF Pro Rounded.woff2   # SF Pro Rounded font (515KB)
@@ -176,15 +176,15 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   ├── icons/                     # Public icon assets
 │   ├── tonconnect-manifest.json   # TON Connect manifest dosyası (293B, 8 satır) - ✅ Aktif
 │   └── vite.svg                   # Vite logo (1.5KB)
-├── src/                           # Source code
+├── src/                           # Source code (1.2MB)
 │   ├── core/                      # Core application modules (✅ Aktif)
 │   │   ├── store/                 # Redux store configuration (✅ Aktif)
-│   │   │   ├── store.ts           # Redux store setup
-│   │   │   ├── hooks.ts           # Typed Redux hooks
-│   │   │   └── index.ts           # Store exports
+│   │   │   ├── store.ts           # Redux store setup (2.4KB, 65 satır) - ✅ Güncel
+│   │   │   ├── hooks.ts           # Typed Redux hooks (371B, 8 satır)
+│   │   │   └── index.ts           # Store exports (197B, 7 satır)
 │   │   ├── api/                   # RTK Query API layer (✅ Aktif)
 │   │   │   ├── notApi.ts          # API endpoints & types
-│   │   │   ├── telegramApi.ts     # Telegram API integration
+│   │   │   ├── telegramApi.ts     # Telegram API integration (2.8KB, 77 satır)
 │   │   │   └── index.ts           # API exports
 │   │   ├── ui/                    # Reusable UI components (✅ Aktif)
 │   │   │   ├── Icons/             # Icon components (6 dosya)
@@ -234,7 +234,8 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── useSafeAreaExample.tsx # Safe area örnek kullanımı
 │   │   │   └── index.ts               # Hooks exports
 │   │   ├── styles/                # Global styles
-│   │   │   └── theme.css              # Global theme/reset dosyası
+│   │   │   ├── theme.css              # Global theme/reset dosyası (6.5KB, 281 satır) - ✅ Güncel
+│   │   │   └── layout-helpers.css     # Responsive layout yardımcıları (468B, 21 satır) - ✅ YENİ
 │   │   └── utils/                 # Core utility functions
 │   ├── assets/                    # Import edilen assets (684KB)
 │   │   ├── icons/                 # Figma SVG icons ve görseller (13 dosya) - ✅ Aktif
@@ -255,9 +256,11 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   └── react.svg              # React logo (4.0KB)
 │   ├── features/                  # Feature-based modules
 │   │   ├── account/               # Account/Profile feature
-│   │   │   ├── AccountPage.module.css  # Account page styles
-│   │   │   ├── AccountPage.tsx         # Account page component with skeleton integration - ✅ Aktif
-│   │   │   └── api.ts                  # Account API functions
+│   │   │   ├── AccountPage.module.css  # Account page styles (6.9KB, 392 satır) - ✅ Güncel
+│   │   │   ├── AccountPage.tsx         # Account page component with skeleton integration (9.1KB, 255 satır) - ✅ Güncel
+│   │   │   ├── api.ts                  # Account API functions (5.1KB, 138 satır) - ✅ Güncel
+│   │   │   ├── userSlice.ts            # User state management (1.2KB, 48 satır) - ✅ Güncel
+│   │   │   └── index.ts                # Account exports (135B, 5 satır)
 │   │   ├── cart/                  # Cart feature (✅ Tamamlandı)
 │   │   │   ├── CartModal.tsx      # Cart modal component
 │   │   │   ├── CartModal.module.css # Cart modal styles
@@ -269,7 +272,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── components/        # Product components
 │   │   │   │   ├── ImageGallery.module.css  # Image gallery styles
 │   │   │   │   ├── ImageGallery.tsx         # Image gallery component
-│   │   │   │   ├── ItemPage.module.css      # Item page styles
+│   │   │   │   ├── ItemPage.module.css      # Item page styles (8.4KB, 344 satır) - ✅ Responsive güncel
 │   │   │   │   ├── ItemPage.tsx             # Item page component
 │   │   │   │   ├── NoResultsFound.module.css # No results styles
 │   │   │   │   ├── NoResultsFound.tsx       # No results component
@@ -288,7 +291,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── SearchBar.tsx      # Search bar component
 │   │   │   └── index.ts           # Search export
 │   │   ├── tonConnect/            # TON Connect blockchain integration (✅ Tamamlandı)
-│   │   │   ├── TonConnectProvider.tsx # TON Connect React context provider (4.6KB, 141 satır) - ✅ Aktif
+│   │   │   ├── TonConnectProvider.tsx # TON Connect React context provider (4.4KB, 136 satır) - ✅ Güncel
 │   │   │   ├── TonConnectContext.ts   # TON Connect React context (277B, 6 satır) - ✅ Aktif
 │   │   │   ├── TonConnectButton.tsx   # TON Connect wallet button component (1.2KB, 44 satır)
 │   │   │   ├── TonConnectButton.module.css # TON Connect button styles (544B, 29 satır)
@@ -296,13 +299,15 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── SuccessModal.module.css # Success modal styles (2.9KB, 147 satır) - ✅ Aktif
 │   │   │   ├── useTonConnect.ts       # TON Connect custom hook (666B, 21 satır)
 │   │   │   ├── buyNow.ts              # Buy now transaction utilities (4.0KB, 119 satır)
-│   │   │   ├── config.ts              # TON Connect configuration (537B, 22 satır) - ✅ Aktif
+│   │   │   ├── config.ts              # TON Connect configuration (537B, 22 satır) - ✅ Güncel
 │   │   │   ├── utils/                 # TON Connect utilities (✅ Aktif)
 │   │   │   │   └── dom.ts             # DOM manipulation helpers - ✅ Aktif
 │   │   │   └── index.ts               # TON Connect exports (313B, 6 satır) - ✅ Aktif
-│   │   ├── theme/                 # Theme feature (boş - gelecek geliştirme)
-│   │   │   └── themeSlice.ts      # Theme slice
+│   │   ├── theme/                 # Theme feature
+│   │   │   └── themeSlice.ts      # Theme slice (1.5KB, 54 satır) - ✅ Güncel
 │   │   └── checkout/              # Checkout feature (geliştirme aşamasında)
+│   │       ├── index.ts           # Checkout exports (133B, 4 satır)
+│   │       └── components/        # Checkout components
 │   ├── layouts/                   # Layout components
 │   │   ├── Header/                # Header component
 │   │   │   ├── Header.module.css  # Header styles
@@ -313,17 +318,17 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── Footer.tsx         # Footer component
 │   │   │   └── index.ts           # Footer export
 │   │   ├── TabBar/                # Navigation TabBar
-│   │   │   ├── TabBar.module.css  # TabBar styles
+│   │   │   ├── TabBar.module.css  # TabBar styles - ✅ Responsive güncel
 │   │   │   ├── TabBar.tsx         # TabBar component
 │   │   │   └── index.ts           # TabBar export
 │   │   ├── MainLayout.module.css  # Main layout styles
-│   │   ├── MainLayout.tsx         # Main layout component
+│   │   ├── MainLayout.tsx         # Main layout component - ✅ appContainer güncel
 │   │   └── index.ts               # Layout exports
 │   ├── utils/                     # Utility functions
 │   │   ├── lqip.ts                # Low Quality Image Placeholder utilities
 │   │   └── telegramHelpers.ts     # Telegram WebApp yardımcı fonksiyonları (✅ Tamamlandı)
 │   ├── App.tsx                    # Main App component (5.3KB, 157 satır) - ✅ Aktif
-│   ├── main.tsx                   # Application entry point (830B, 25 satır)
+│   ├── main.tsx                   # Application entry point (873B, 26 satır) - ✅ layout-helpers import güncel
 │   ├── types.d.ts                 # Global type definitions (176B, 10 satır)
 │   ├── vite-env.d.ts              # Vite type definitions (2.6KB, 118 satır)
 │   ├── app.d.ts                   # App type definitions (boş dosya) - ✅ Aktif
@@ -332,17 +337,17 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 ├── .gitattributes                 # Git attributes (66B, 3 satır)
 ├── .gitignore                     # Git ignore rules (327B, 31 satır)
 ├── .prettierrc                    # Prettier configuration (179B, 11 satır)
-├── README.md                      # Project documentation (47KB, 1062 satır) - ✅ Aktif
+├── README.md                      # Project documentation (48KB, 1074+ satır) - ✅ Güncel
 ├── commitlint.config.js           # Commit lint configuration (65B, 2 satır)
 ├── eslint.config.js               # ESLint configuration (1.0KB, 34 satır)
-├── index.html                     # HTML entry point (968B, 32 satır)
+├── index.html                     # HTML entry point (988B, 32 satır) - ✅ Viewport güncel
 ├── package-lock.json              # NPM lock file (442KB, 12846 satır) - ✅ Aktif
 ├── package.json                   # NPM package configuration (2.2KB, 78 satır) - ✅ Aktif
 ├── tsconfig.app.json              # TypeScript app config (744B, 30 satır)
 ├── tsconfig.json                  # TypeScript main config (107B, 5 satır)
 ├── tsconfig.node.json             # TypeScript node config (630B, 26 satır)
 ├── vite.config.ts                 # Vite configuration (2.3KB, 73 satır)
-├── vercel.json                    # Vercel deployment configuration (934B, 33 satır) - ✅ Aktif
+├── vercel.json                    # Vercel deployment configuration (1.0KB, 33 satır) - ✅ CSP güncel
 └── .DS_Store                      # macOS system file (8.0KB, 3 satır) - ✅ Aktif
 ```
 
@@ -352,27 +357,27 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 **Kategoriler:**
 
-- **Kaynak Kod:** 120+ dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
+- **Kaynak Kod:** 115+ dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
 - **API Endpoints:** 1 dosya (Vercel Edge Functions) - ✅ Aktif
 - **Assets:** 13 dosya (SVG/PNG icons - src/assets/) - ✅ GÜNCEL
 - **Public Images:** 2 dosya (PNG görselleri - public/images/) - ✅ Optimize Edildi
 - **Public Fonts:** 2 dosya (SF Pro Rounded font ailesi - public/fonts/) - ✅ GÜNCEL
 - **TON Connect Manifest:** 1 dosya (tonconnect-manifest.json) - ✅ Aktif
-- **Konfigürasyon:** 15+ dosya (JSON/JS/TS)
+- **Konfigürasyon:** 23+ dosya (JSON/JS/TS/HTML)
 - **Git/Husky:** 20+ dosya (.husky/ klasörü dahil)
 - **Scripts:** Build ve deployment scriptleri
 - **Vercel:** Deployment cache ve konfigürasyon dosyaları - ✅ Aktif
 
 **Kod Satırları:**
 
-- **TypeScript/TSX/CSS:** ~8,000+ satır - ✅ GÜNCEL
-- **Toplam:** ~8,000+ satır kod
+- **TypeScript/TSX/CSS:** ~7,700+ satır - ✅ GÜNCEL
+- **Toplam:** ~7,700+ satır kod
 
 **Asset Boyutları:**
 
 - **Public Klasörü:** 2.5MB (fonts + images + icons) - ✅ GÜNCEL
-- **Src/Assets Klasörü:** 684KB (SVG icons + profile image) - ✅ GÜNCEL
-- **Toplam Asset Boyutu:** ~3.2MB
+- **Src Klasörü:** 1.2MB (kod + assets) - ✅ GÜNCEL
+- **Toplam Proje Boyutu:** ~3.7MB
 
 ## 🎯 Uygulama Akışı ve Navigasyon - ✅ GÜNCEL
 
@@ -713,24 +718,7 @@ ProductGrid (components) - 516B (29 satır)
 - `hatching_chick.svg` - Hatching chick icon (13KB)
 - `react.svg` - React logo (4.0KB)
 
-### 🎯 Asset Optimizasyon Stratejisi
-
-**Public Klasörü Avantajları:**
-
-- ✅ Build sırasında bundle'a dahil edilmez
-- ✅ Doğrudan URL ile erişim (sadece profil görselleri için)
-- ✅ Daha hızlı build süresi
-- ✅ Daha küçük bundle boyutu
-- ✅ CDN optimizasyonu için uygun
-
-**Src/Assets Kullanımı:**
-
-- ✅ Küçük SVG ikonlar için (13 dosya)
-- ✅ Import edilerek kullanım
-- ✅ TypeScript tip kontrolü
-- ✅ Tree-shaking desteği
-
-**✅ Asset Optimizasyonu Tamamlandı:**
+### �� Asset Optimizasyonu Tamamlandı:\*\*
 
 - ❌ Kullanılmayan 14 görsel dosyası silindi (~38MB tasarruf)
 - ❌ figma-stickers/ klasörü kaldırıldı (5 dosya)
@@ -874,98 +862,12 @@ interface RootState {
 - **useSafeArea Hook**: Safe area ve viewport yönetimi (✅ Tamamlandı)
 - **Telegram Helpers**: Sürüm tespiti ve özellik kontrolü yardımcı fonksiyonları (✅ Tamamlandı)
 
-### ⚠️ Kritik Eksiklikler
-
-- **History Feature**: Geliştirme aşamasında (✅ API entegrasyonu tamamlandı)
-- **Theme Feature**: Temel slice mevcut, UI geliştirme gerekli
-- **Utils**: Temel LQIP utilities mevcut
-
-### 🔄 History Feature - Geliştirme Aşamasında
-
-- ✅ API entegrasyonu tamamlandı (getHistory, getEmptyHistory)
-- ✅ AccountPage entegrasyonu tamamlandı
-- 🔄 History slice oluşturulması
-- 🔄 Sipariş geçmişi UI bileşenleri
-
-### ✅ Cart Feature - Tamamlandı
-
-- ✅ Cart modal UI tamamlandı
-- ✅ Redux cart slice tamamlandı
-- ✅ Sepet ekleme/çıkarma logic
-- ✅ Redux Persist entegrasyonu (Tamamlandı)
-- 🔄 Checkout süreci (gelecek)
-
-### 🎨 Theme Feature
-
-- Dark/Light mode toggle
-- Kullanıcı tema tercihleri
-- Dinamik renk sistemi
-
-### 🔧 Utils & Hooks
-
-- ✅ useDebounce hook tamamlandı
-- ✅ useSkeletonTheme hook tamamlandı
-- 🔄 Utility functions
-- 🔄 API helpers
-
-### 🌐 Backend Entegrasyonu
-
-- ✅ REST API bağlantısı (RTK Query ile hazır)
-- ✅ API endpoint'leri tanımlı
-- ✅ API response tip güvenliği (✅ Aktif)
-- ✅ API hata işleme (✅ Aktif)
-- 🔄 Gerçek backend bağlantısı
-- 🔄 Kullanıcı authentication
-
-## 📊 Proje Durumu - ✅ GÜNCEL
-
-### ✅ Tamamlanan Özellikler:
-
-- **Redux Toolkit Store**: Tam konfigürasyon
-- **RTK Query API**: Endpoint'ler ve hooks
-- **Products Slice**: EntityAdapter ile state management
-- **Cart System**: Tam sepet sistemi (slice + UI)
-- **Redux Persist**: State persistence (✅ Tamamlandı)
-- **React Router DOM**: Modern routing entegrasyonu
-- **Modal System**: Genel modal bileşeni
-- **Search Bar**: Arama overlay'i + debounce
-- **API Integration**: RTK Query ile API entegrasyonu (✅ Aktif)
-- **Error Handling**: API hata yakalama ve gösterme (✅ Aktif)
-- **NoResultsFound**: Arama sonucu bulunamadığında gösterilen bileşen
-- **Skeleton Loading**: React Loading Skeleton entegrasyonu (✅ Tamamlandı)
-- **Lazy Loading**: Code splitting ve performance optimizasyonu (✅ Tamamlandı)
-- **Virtualization**: React Window ile performans optimizasyonu (✅ Tamamlandı)
-- **Custom Hooks**: useDebounce ve useSkeletonTheme hooks
-- **TypeScript Integration**: Tam tip güvenliği
-- **CSS Modules**: Modüler stil sistemi
-- **Advanced Skeleton System**: ItemPageSkeleton, TabBarSkeleton, HeaderSkeleton (✅ Aktif)
-- **Skeleton Theme Hook**: useSkeletonTheme hook (✅ Aktif)
-- **TON Connect Integration**: Blockchain cüzdan bağlantısı ve ödeme sistemi (✅ Tamamlandı)
-- **CSP Optimization**: Content Security Policy optimizasyonu ve Vercel uyumluluğu (✅ Aktif)
-- **ESLint Compliance**: TypeScript strict mode ve lint kuralları uyumluluğu (✅ Aktif)
-- **API Proxy System**: GitHub raw içeriği için proxy endpoint'leri (✅ Aktif)
-- **DOM Utilities**: setBlur ve diğer DOM manipulation helpers (✅ Aktif)
-- **Context Separation**: React Fast Refresh uyumluluğu için context ayrımı (✅ Aktif)
-- **BlurHash Integration**: Görsel yükleme için blur placeholder sistemi (✅ Aktif)
-- **React Swipeable**: Touch gesture desteği ve swipe functionality (✅ Aktif)
-- **Intersection Observer**: Performans optimizasyonu için görünürlük kontrolü (✅ Aktif)
-- **Progressive Image Loading**: ProgressiveImage bileşeni ile optimize görsel yükleme (✅ Aktif)
-- **Sharp Integration**: Görsel işleme ve optimizasyon (✅ Aktif)
-- **LQIP Plugin**: Low Quality Image Placeholder entegrasyonu (✅ Aktif)
-- **Telegram WebApp 2.0 Integration**: Bot API 8+ paradigması ile modern entegrasyon (✅ Tamamlandı)
-- **Safe Area Support**: iOS/Android home indicator ve gesture bar desteği (✅ Tamamlandı)
-- **Version Compatibility**: Telegram v6.0-8.0+ arası uyumluluk (✅ Tamamlandı)
-- **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
-- **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
-- **useTelegramHeader Hook**: Telegram header ve buton yönetimi (✅ Tamamlandı)
-- **useSafeArea Hook**: Safe area ve viewport yönetimi (✅ Tamamlandı)
-- **Telegram Helpers**: Sürüm tespiti ve özellik kontrolü yardımcı fonksiyonları (✅ Tamamlandı)
-
 ### ⚠️ Kritik Sorunlar:
 
-- **History UI Slice**: Geliştirme aşamasında (API entegrasyonu tamamlandı)
-- **Theme Slice**: Temel slice mevcut, UI geliştirme gerekli
-- **Utils**: Temel LQIP utilities mevcut
+- **History UI Geliştirme**: Sipariş geçmişi slice ve UI bileşenlerinin tamamlanması
+- **Theme Slice**: Tema yönetimi
+- **Animation System**: Geçiş animasyonları
+- **Checkout Process**: Ödeme süreci
 
 ### 🔄 Devam Eden Geliştirmeler:
 
@@ -976,7 +878,7 @@ interface RootState {
 
 ### 📈 Kod Metrikleri - ✅ GÜNCEL:
 
-- **Toplam Satır:** ~8,000+ satır - ✅ GÜNCEL
+- **Toplam Satır:** ~7,700+ satır - ✅ GÜNCEL
 - **Component Sayısı:** 60+ bileşen - ✅ GÜNCEL
 - **Feature Modülü:** 6 modül (1 geliştirme aşamasında) - ✅ GÜNCEL
 - **Custom Hook:** 4 aktif hook (useDebounce, useSkeletonTheme, useTelegramHeader, useSafeArea) - ✅ GÜNCEL
@@ -1016,7 +918,7 @@ Vercel deployment'ında Telegram Mini App CSP kısıtlamalarını aşmak için o
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://not-contest-cdn.openbuilders.xyz https://telegram.org https://*.telegram-cdn.org; connect-src 'self' https://api.telegram.org https://not-contest-cdn.openbuilders.xyz https://raw.githubusercontent.com; frame-ancestors https://t.me; font-src 'self' data:;"
+          "value": "default-src 'self'; script-src 'self' https://telegram.org 'unsafe-inline' 'unsafe-hashes'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://not-contest-cdn.openbuilders.xyz https://api.telegram.org https://t.me https://*.telegram-cdn.org https://i.imgur.com blob:; connect-src 'self' https://api.telegram.org https://not-contest-cdn.openbuilders.xyz https://raw.githubusercontent.com; frame-ancestors https://t.me; font-src 'self' data:;"
         }
       ]
     }
@@ -1037,15 +939,56 @@ Husky pre-commit hook'larını geçmek için tüm TypeScript strict mode kuralla
 GitHub raw içeriği için Vercel Edge Functions:
 
 ```typescript
-// api/wallets.ts - TON Connect wallet listesi proxy
+// api/wallets.ts - TON Connect wallet listesi proxy (1.4KB, 43 satır)
 export default async function handler(request: VercelRequest, response: VercelResponse) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
   const res = await fetch(
-    'https://raw.githubusercontent.com/ton-blockchain/wallets-list/main/wallets-v2.json'
+    'https://raw.githubusercontent.com/ton-blockchain/wallets-list/main/wallets-v2.json',
+    {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'Not-Store-TelegramMiniApp/1.0',
+      },
+      signal: controller.signal,
+    }
   );
-  response.setHeader('Cache-Control', 's-maxage=86400');
+
+  response.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate=43200');
   response.status(200).send(await res.text());
 }
 ```
+
+### 📱 Responsive Layout System - ✅ YENİ
+
+Telegram WebView'da farklı cihaz boyutlarında (320px-430px) mükemmel uyumluluk için:
+
+```css
+/* layout-helpers.css - 468B, 21 satır */
+.appContainer {
+  width: 100%; /* shrink on narrow phones */
+  max-width: 390px; /* never exceed Figma canvas */
+  margin-inline: auto; /* centre on tablets/desktop */
+  box-sizing: border-box; /* include padding in width */
+}
+
+:root {
+  --safe-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.tg-safe-pad-bottom {
+  padding-bottom: var(--safe-bottom);
+}
+```
+
+**Uygulanan Düzeltmeler:**
+
+- **MainLayout.tsx**: `appContainer` class'ı eklendi
+- **AccountPage.tsx**: `appContainer` class'ı eklendi
+- **ItemPage.module.css**: Responsive genişlik (100%, max-width: 390px)
+- **TabBar.module.css**: Modern centring (margin-inline: auto)
+- **index.html**: Viewport meta tag güncellemesi (viewport-fit=cover)
 
 ### 🎯 BotFather Domain Konfigürasyonu
 

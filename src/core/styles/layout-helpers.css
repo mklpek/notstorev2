@@ -6,15 +6,5 @@
   box-sizing: border-box; /* include padding in width */
 }
 
-:root {
-  /* Safe area helpers */
-  --safe-bottom: env(safe-area-inset-bottom, 0);
-}
-
-.tg-safe-pad-bottom {
-  padding-bottom: var(--safe-bottom);
-}
-
-.tg-safe-height-bot {
-  height: var(--safe-bottom);
-}
+/* Layout-specific safe area helpers - theme.css'deki genel safe area sınıflarını kullan */
+/* Bu dosya sadece responsive layout için özel yardımcılar içerir */
