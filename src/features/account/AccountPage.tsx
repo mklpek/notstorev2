@@ -157,17 +157,9 @@ const AccountPage: React.FC = () => {
       <div className={styles.accountHeader}>
         <div className={styles.avatar}>
           <img
-            src={
-              user?.photoUrl !== 'none'
-                ? user?.photoUrl || '/images/profile-avatar.png'
-                : '/images/profile-avatar.png'
-            }
+            src={user?.photoUrl || '/images/profile-avatar.png'}
             alt={fullName}
             className={styles.avatarImage}
-            referrerPolicy="no-referrer"
-            crossOrigin="anonymous"
-            loading="lazy"
-            decoding="async"
           />
         </div>
         <div className={styles.info}>
