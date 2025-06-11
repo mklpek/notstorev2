@@ -109,9 +109,9 @@ export function useSafeAreaInsets() {
     }
 
     // ❷.1 Yeni: Telegram contentSafeAreaInset özelliği (Bot API 8.0+)
-    if (wa.contentSafeAreaInset) {
+    if ('contentSafeAreaInset' in wa && wa.contentSafeAreaInset) {
       updateSafeArea({
-        contentTop: wa.contentSafeAreaInset.top || 0,
+        contentTop: wa.contentSafeAreaInset.top ?? 0,
       });
     }
 
@@ -184,6 +184,7 @@ export function useSafeAreaInsets() {
       // Yeni: content_safe_area_changed eventi - sadece TG >= 8.0
       if (
         tgVer >= 8.0 &&
+        typeof wa.onEvent === 'function' &&
         safeCall('onEvent', 'content_safe_area_changed', contentSafeAreaHandler)
       ) {
         cleanupFns.push(() => {
