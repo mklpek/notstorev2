@@ -63,12 +63,13 @@ function App() {
         if (!wa?.initDataUnsafe?.user) return;
 
         const user = wa.initDataUnsafe.user;
+        const cachedPhoto = localStorage.getItem(`avatar:${user.id}`);
 
         // TelegramUser tipine uygun veriyi hazırla
         const userDetails: TelegramUser = {
           id: user.id,
           first_name: user.first_name,
-          photoUrl: user.photo_url ?? '', // ➊ copy into camelCase
+          photoUrl: cachedPhoto ?? user.photo_url ?? '',
         };
 
         // Opsiyonel alanları kontrol ederek ekle
@@ -77,19 +78,21 @@ function App() {
         if (user.language_code) userDetails.language_code = user.language_code;
         if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
         if (user.photo_url) userDetails.photo_url = user.photo_url;
+        if (cachedPhoto) userDetails.cachedPhotoUrl = cachedPhoto;
 
         // Önce temel kullanıcı bilgilerini Redux'a kaydet
         dispatch(setTelegramUser(userDetails));
 
-        // ➌ fallback only when missing
-        if (!user.photo_url) {
+        // Fallback sadece photo_url ve cache yoksa çalışır
+        if (!user.photo_url && !cachedPhoto) {
           const photoUrl = await getUserProfilePhoto(user.id);
           if (photoUrl) {
+            localStorage.setItem(`avatar:${user.id}`, photoUrl);
             dispatch(setUserPhotoUrl(photoUrl));
           }
         }
-      } catch {
-        /* ignored – a warning is already printed above */
+      } catch (error) {
+        console.error('Failed to initialize user:', error);
       }
     };
 

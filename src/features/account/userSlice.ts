@@ -10,6 +10,7 @@ export interface TelegramUser {
   is_premium?: boolean;
   photo_url?: string;
   photoUrl?: string;
+  cachedPhotoUrl?: string;
 }
 
 // TelegramUser | null olarak değil doğrudan TelegramUser olarak tanımlıyoruz
