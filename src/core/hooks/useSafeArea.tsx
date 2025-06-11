@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import { getTgVersion, safeCall } from '../utils/telegramHelpers';
+import { getTgVersion, safeCall } from '../../utils/telegramHelpers';
 
 // Safe Area Context tipi
 interface SafeAreaInsets {
@@ -48,6 +48,12 @@ export function useSafeAreaInsets() {
         `${insets.bottom}px`
       );
       document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
+
+      // Ayrıca content safe area için CSS değişkeni ekle (yeni eklenen)
+      document.documentElement.style.setProperty(
+        '--tg-content-safe-area-inset-top',
+        `${insets.top}px`
+      );
     };
 
     // Safe area değerlerini güncelleme fonksiyonu
@@ -128,6 +134,36 @@ export function useSafeAreaInsets() {
       }
     };
 
+    // Content Safe Area handler'ı (yeni eklenen)
+    const contentSafeAreaHandler = (...args: unknown[]) => {
+      const data = args[0] as
+        | {
+            top?: number;
+            right?: number;
+            bottom?: number;
+            left?: number;
+          }
+        | undefined;
+
+      if (data && data.top !== undefined) {
+        // Content safe area CSS değişkenini güncelle
+        document.documentElement.style.setProperty(
+          '--tg-content-safe-area-inset-top',
+          `${data.top}px`
+        );
+
+        // Normal safe area değerlerini de güncelle
+        const updates: Partial<SafeAreaInsets> = {};
+        if (data.right !== undefined) updates.right = data.right;
+        if (data.bottom !== undefined) updates.bottom = data.bottom;
+        if (data.left !== undefined) updates.left = data.left;
+
+        if (Object.keys(updates).length > 0) {
+          updateSafeArea(updates);
+        }
+      }
+    };
+
     // ❹ Telegram event'lerini dinle
     const cleanupFns: (() => void)[] = [];
 
@@ -137,6 +173,26 @@ export function useSafeAreaInsets() {
         cleanupFns.push(() => {
           safeCall('offEvent', 'viewport_changed', viewportHandler);
         });
+      }
+
+      // Content safe area'yı aktif et (Telegram 8.0+)
+      if (tgVer >= 8.0) {
+        // İlk content safe area isteğini yap
+        try {
+          // @ts-expect-error: Telegram.WebApp tiplerinde bu metot henüz tanımlı değil
+          if (typeof wa.requestContentSafeArea === 'function') {
+            wa.requestContentSafeArea();
+          }
+        } catch (e) {
+          // Hata durumunda sessizce devam et
+        }
+
+        // content_safe_area_changed event'ini dinle
+        if (safeCall('onEvent', 'content_safe_area_changed', contentSafeAreaHandler)) {
+          cleanupFns.push(() => {
+            safeCall('offEvent', 'content_safe_area_changed', contentSafeAreaHandler);
+          });
+        }
       }
 
       // safe_area_changed eventi - sadece TG >= 8.0

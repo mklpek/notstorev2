@@ -109,6 +109,10 @@ interface TelegramWebApp {
     bottom: number;
     left: number;
   };
+  // Telegram WebApp 2.0 (Bot API 8.0+) yeni metodlar
+  requestContentSafeArea?: () => void;
+  viewportHeight?: number;
+  viewportStableHeight?: number;
   // Diğer WebApp metodları
 }
 

@@ -1,6 +1,7 @@
 .mainLayout {
   min-height: 100vh;
-  padding-top: var(--tg-safe-area-inset-top);
+  /* Çentik + sistem header kombinasyonu */
+  padding-top: var(--tg-content-safe-area-inset-top, var(--tg-safe-area-inset-top));
   display: flex;
   flex-direction: column;
   background: var(--background-color);

@@ -33,6 +33,7 @@
 - **Version-Aware API Calls**: Telegram sürüm kontrolü ile güvenli API kullanımı (✅ Tamamlandı)
 - **Dynamic Viewport Management**: Klavye ve sistem çubuğu değişikliklerini takip (✅ Tamamlandı)
 - **Transparent Header**: Şeffaf sistem başlığı ile modern görünüm (✅ Tamamlandı)
+- **Header Overlap Fix**: Telegram header ile uygulama içeriği çakışması düzeltildi (✅ Tamamlandı)
 - **Responsive Tasarım**: 390px mobil odaklı responsive yapı
 - **Modüler Mimari**: Temiz ve sürdürülebilir kod yapısı
 - **TypeScript**: Tip güvenliği ve geliştirici deneyimi
@@ -166,14 +167,14 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 ├── scripts/                       # Build ve deployment scriptleri
 ├── api/                           # Vercel Edge Functions (✅ Aktif)
 │   └── wallets.ts                 # TON wallets proxy (TypeScript) (923B, 27 satır)
-├── public/                        # Static public files (2.5MB)
+├── public/                        # Static public files (~3.9MB)
 │   ├── fonts/                     # Font files (✅ Aktif)
 │   │   ├── SF Pro Rounded.woff2   # SF Pro Rounded font (515KB)
 │   │   └── SF Pro Rounded.woff    # SF Pro Rounded font (766KB)
 │   ├── images/                    # Profile images only (2 dosya, ~1.2MB)
 │   │   ├── profile-avatar.png     # Profil avatarı (612KB)
 │   │   └── profile-image.png      # TabBar profil resmi (612KB)
-│   ├── icons/                     # Public icon assets
+│   ├── icons/                     # Public icon assets (boş)
 │   ├── tonconnect-manifest.json   # TON Connect manifest dosyası (293B, 8 satır) - ✅ Aktif
 │   └── vite.svg                   # Vite logo (1.5KB)
 ├── src/                           # Source code
@@ -233,7 +234,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   └── index.ts           # Hooks exports (316B, 11 satır) - ✅ Aktif
 │   │   ├── styles/                # Global styles (✅ Aktif)
 │   │   │   └── theme.css          # Global theme/reset dosyası (6.5KB, 281 satır)
-│   │   └── utils/                 # Core utility functions
+│   │   └── utils/                 # Core utility functions (boş)
 │   ├── assets/                    # Import edilen assets (684KB)
 │   │   ├── icons/                 # Figma SVG icons ve görseller (13 dosya) - ✅ Aktif
 │   │   │   ├── basket-icon.svg    # Sepet ikonu (1.7KB)
@@ -299,7 +300,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── utils/                 # TON Connect utilities (✅ Aktif)
 │   │   │   │   └── dom.ts             # DOM manipulation helpers - ✅ Aktif
 │   │   │   └── index.ts               # TON Connect exports (313B, 6 satır) - ✅ Aktif
-│   │   ├── checkout/              # Checkout feature (✅ Yeni eklendi)
+│   │   ├── checkout/              # Checkout feature (✅ Yeni eklendi - boş)
 │   │   └── theme/                 # Theme feature (boş - gelecek geliştirme)
 │   │       └── themeSlice.ts      # Theme slice
 │   ├── layouts/                   # Layout components (✅ Aktif)
@@ -315,23 +316,22 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── TabBar.module.css  # TabBar styles
 │   │   │   ├── TabBar.tsx         # TabBar component
 │   │   │   └── index.ts           # TabBar export
-│   │   ├── MainLayout.module.css  # Main layout styles (453B, 23 satır)
+│   │   ├── MainLayout.module.css  # Main layout styles (453B, 23 satır) - ✅ Safe area düzeltmesi eklendi
 │   │   ├── MainLayout.tsx         # Main layout component (1.3KB, 46 satır)
 │   │   └── index.ts               # Layout exports (159B, 5 satır)
 │   ├── utils/                     # Utility functions
 │   │   ├── lqip.ts                # Low Quality Image Placeholder utilities
 │   │   └── telegramHelpers.ts     # Telegram WebApp yardımcı fonksiyonları (✅ Tamamlandı)
-│   ├── App.tsx                    # Main App component (5.3KB, 157 satır) - ✅ Aktif
+│   ├── App.tsx                    # Main App component (5.9KB, 169 satır) - ✅ Aktif
 │   ├── main.tsx                   # Application entry point (830B, 25 satır)
 │   ├── types.d.ts                 # Global type definitions (176B, 10 satır)
-│   ├── vite-env.d.ts              # Vite type definitions (2.6KB, 118 satır)
-│   ├── app.d.ts                   # App type definitions (boş dosya) - ✅ Aktif
-│   ├── telegram-webapp-script.ts  # Telegram WebApp script (boş dosya) - ✅ Aktif
+│   ├── vite-env.d.ts              # Vite type definitions (2.8KB, 120 satır)
+│   ├── .DS_Store                  # macOS system file (6.0KB, 6 satır)
 │   └── index.html                 # HTML entry point (1.1KB, 28 satır) - ✅ Aktif
 ├── .gitattributes                 # Git attributes (66B, 3 satır)
 ├── .gitignore                     # Git ignore rules (327B, 31 satır)
 ├── .prettierrc                    # Prettier configuration (179B, 11 satır)
-├── README.md                      # Project documentation (47KB, 1062 satır) - ✅ Aktif
+├── README.md                      # Project documentation (48KB, 1063 satır) - ✅ Aktif
 ├── commitlint.config.js           # Commit lint configuration (65B, 2 satır)
 ├── eslint.config.js               # ESLint configuration (1.0KB, 34 satır)
 ├── index.html                     # HTML entry point (968B, 32 satır)
@@ -341,7 +341,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 ├── tsconfig.json                  # TypeScript main config (107B, 5 satır)
 ├── tsconfig.node.json             # TypeScript node config (630B, 26 satır)
 ├── vite.config.ts                 # Vite configuration (2.3KB, 73 satır)
-├── vercel.json                    # Vercel deployment configuration (934B, 33 satır) - ✅ Aktif
+├── vercel.json                    # Vercel deployment configuration (1.1KB, 33 satır) - ✅ Aktif
 └── .DS_Store                      # macOS system file (8.0KB, 3 satır) - ✅ Aktif
 ```
 
@@ -351,7 +351,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 **Kategoriler:**
 
-- **Kaynak Kod:** 110 dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
+- **Kaynak Kod:** 110+ dosya (TypeScript/JavaScript/CSS) - ✅ GÜNCEL
 - **API Endpoints:** 1 dosya (Vercel Edge Functions) - ✅ Aktif
 - **Assets:** 13 dosya (SVG/PNG icons - src/assets/) - ✅ GÜNCEL
 - **Public Images:** 2 dosya (PNG görselleri - public/images/) - ✅ Optimize Edildi
@@ -364,14 +364,21 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 **Kod Satırları:**
 
-- **TypeScript/TSX/CSS:** ~7,400 satır - ✅ GÜNCEL
-- **Toplam:** ~7,400 satır kod
+- **TypeScript/TSX/CSS:** ~7,500+ satır - ✅ GÜNCEL
+- **Toplam:** ~7,500+ satır kod
 
 **Asset Boyutları:**
 
-- **Public Klasörü:** 2.5MB (fonts + images + icons) - ✅ GÜNCEL
+- **Public Klasörü:** ~3.9MB (fonts + images + icons) - ✅ GÜNCEL
 - **Src/Assets Klasörü:** 684KB (SVG icons + profile image) - ✅ GÜNCEL
-- **Toplam Asset Boyutu:** ~3.2MB
+- **Toplam Asset Boyutu:** ~4.6MB
+
+**🔧 Son Güncellemeler:**
+
+- **MainLayout.module.css**: Safe area padding-top eklendi (Telegram header çakışması düzeltildi) - ✅ Tamamlandı
+- **App.tsx**: Dosya boyutu 5.3KB'den 5.9KB'ye güncellendi
+- **vite-env.d.ts**: Dosya boyutu 2.6KB'den 2.8KB'ye güncellendi
+- **vercel.json**: Dosya boyutu 934B'den 1.1KB'ye güncellendi
 
 ## 🎯 Uygulama Akışı ve Navigasyon - ✅ GÜNCEL
 
@@ -422,7 +429,7 @@ interface RootState {
 
 ### 🧩 Ana Bileşenler
 
-#### **App.tsx** (5.3KB, 157 satır) - ✅ Aktif
+#### **App.tsx** (5.9KB, 169 satır) - ✅ Aktif
 
 - React Router DOM entegrasyonu
 - Telegram WebApp SDK başlatma
@@ -967,7 +974,7 @@ interface RootState {
 
 ### 📈 Kod Metrikleri - ✅ GÜNCEL:
 
-- **Toplam Satır:** ~7,400 satır - ✅ GÜNCEL
+- **Toplam Satır:** ~7,500+ satır - ✅ GÜNCEL
 - **Component Sayısı:** 60+ bileşen - ✅ GÜNCEL
 - **Feature Modülü:** 7 modül (1 geliştirme aşamasında) - ✅ GÜNCEL
 - **Custom Hook:** 5 aktif hook (useDebounce, useSkeletonTheme, useTelegramHeader, useSafeArea, useSafeAreaExample) - ✅ GÜNCEL
