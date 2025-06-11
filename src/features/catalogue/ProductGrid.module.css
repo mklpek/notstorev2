@@ -1,47 +1,60 @@
 .productGrid {
-  composes: tg-container from global;
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  min-height: 400px;
+  position: relative;
+  /* Virtualization için içerik container */
+  overflow-x: hidden;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  /* iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Virtualized content container */
+.virtualizedContent {
+  position: relative;
+  width: 100%;
+}
+
+/* Visible items container */
+.visibleItems {
+  position: absolute;
+  left: 0;
+  right: 0;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 390px;
-  margin: 0 auto;
-  min-height: 400px; /* Minimum yükseklik */
-  position: relative; /* Positioning context */
+  flex-wrap: wrap;
+  justify-content: stretch;
+  align-items: stretch;
+  column-gap: 12px;
+  row-gap: 28px;
+  padding: 0px 16px;
 }
 
-.optimizedGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
-  padding: 16px;
+/* Individual item wrapper */
+.itemWrapper {
+  flex: 0 0 calc((100% - 12px) / 2);
+  min-width: 0;
 }
 
-.virtualGrid {
-  width: 100% !important; /* React-window inline stillerini override et */
-  outline: none !important; /* Focus outline'ı kaldır */
-  overflow-x: hidden !important; /* Yatay scroll'u gizle */
-}
-
-/* AutoSizer için içerik konteyneri */
-.autoSizerContainer {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-}
-
-/* Legacy fallback stili */
+/* Legacy fallback - non-virtualized grid */
 .legacyGrid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: stretch;
+  align-items: stretch;
+  column-gap: 12px;
+  row-gap: 28px;
+  padding: 0px 16px;
   width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  min-height: 400px;
+  position: relative;
 }
 
+/* Loading, error ve empty state'ler */
 .loading,
 .error,
 .empty {
@@ -57,4 +70,38 @@
 
 .error {
   color: var(--tg-theme-destructive-text-color, #ff4444);
+}
+
+/* Scroll optimizasyonları */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* Performance optimizasyonları */
+.productGrid {
+  /* GPU acceleration */
+  transform: translateZ(0);
+  will-change: transform;
+  /* Subpixel rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mobile optimizasyonları */
+@media (max-width: 768px) {
+  .visibleItems,
+  .legacyGrid {
+    padding: 0px 12px;
+    column-gap: 8px;
+    row-gap: 20px;
+  }
+
+  .itemWrapper {
+    flex: 0 0 calc((100% - 8px) / 2);
+  }
 }

@@ -11,41 +11,52 @@ interface ProgressiveImageProps {
   style?: React.CSSProperties;
   loading?: 'lazy' | 'eager';
   sizes?: string;
-  fetchPriority?: 'high' | 'low' | 'auto';
 }
 
-// Tüm bileşenler tarafından paylaşılan tek bir IntersectionObserver
+// Paylaşılan IntersectionObserver
+// Tüm görüntüleri gözlemlemek için tek bir observer kullanıyoruz
 const sharedObserver = (() => {
+  // Browser ortamında değilsek (SSR) null döndür
   if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
     return null;
   }
 
-  // Gözlemci callback'i
-  const callback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
+  // Observer için Map - her DOM elementi için bir callback
+  const callbacks = new Map<Element, (isIntersecting: boolean) => void>();
 
-      // Veri özelliğini al
-      const target = entry.target as HTMLElement;
-      const imageId = target.dataset.imageId;
+  // Ortak Observer instance
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        // Hedef element için kaydedilmiş callback varsa çağır
+        const callback = callbacks.get(entry.target);
+        if (callback) {
+          callback(entry.isIntersecting);
 
-      if (imageId) {
-        // Durum değişimini tetikle
-        const event = new CustomEvent('progressive-image:visible', {
-          detail: { imageId },
-        });
-        document.dispatchEvent(event);
+          // Eğer intersect olduysa ve bir kere gözlemlemek istiyorsak, observe'u sonlandır
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            callbacks.delete(entry.target);
+          }
+        }
+      });
+    },
+    { rootMargin: '200px', threshold: 0.01 } // 200px yukarıdan yüklemeye başla
+  );
 
-        // Görünen elemanı gözlemlemeyi bırak
-        observer.unobserve(entry.target);
-      }
-    });
+  return {
+    // Element'i gözlemle
+    observe: (element: Element, callback: (isIntersecting: boolean) => void) => {
+      callbacks.set(element, callback);
+      observer.observe(element);
+    },
+
+    // Gözlemlemeyi durdur
+    unobserve: (element: Element) => {
+      observer.unobserve(element);
+      callbacks.delete(element);
+    },
   };
-
-  return new IntersectionObserver(callback, {
-    rootMargin: '200px 0px',
-    threshold: 0.01,
-  });
 })();
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
@@ -57,12 +68,10 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   style,
   loading = 'lazy',
   sizes = '100vw',
-  fetchPriority = 'auto',
 }) => {
   const [loaded, setLoaded] = useState(false);
-  const [isIntersecting, setIsIntersecting] = useState(loading === 'eager');
+  const [isIntersecting, setIsIntersecting] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageId = useRef(`img-${Math.random().toString(36).substring(2, 10)}`);
 
   // Görsel URL güvenlik kontrolü
   const secureSrc = src || '';
@@ -75,32 +84,25 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       return;
     }
 
-    // Paylaşılan observer'ı kullan
-    if (containerRef.current && sharedObserver) {
-      // Veri özelliği ekle
-      containerRef.current.dataset.imageId = imageId.current;
-      sharedObserver.observe(containerRef.current);
+    const currentContainer = containerRef.current;
 
-      // Görünürlük olayını dinle
-      const handleVisibility = (e: Event) => {
-        const customEvent = e as CustomEvent;
-        if (customEvent.detail.imageId === imageId.current) {
-          setIsIntersecting(true);
-        }
-      };
-
-      document.addEventListener('progressive-image:visible', handleVisibility as EventListener);
-
-      return () => {
-        if (containerRef.current && sharedObserver) {
-          sharedObserver.unobserve(containerRef.current);
-        }
-        document.removeEventListener(
-          'progressive-image:visible',
-          handleVisibility as EventListener
-        );
-      };
+    // Container varsa ve shared observer mevcutsa
+    if (currentContainer && sharedObserver) {
+      // Paylaşılan observer'a container'ı ekle
+      sharedObserver.observe(currentContainer, isVisible => {
+        setIsIntersecting(isVisible);
+      });
+    } else {
+      // Fallback - sharedObserver yoksa veya container yoksa doğrudan görünür yap
+      setIsIntersecting(true);
     }
+
+    return () => {
+      // Cleanup - observer'dan çıkar
+      if (currentContainer && sharedObserver) {
+        sharedObserver.unobserve(currentContainer);
+      }
+    };
   }, [loading]);
 
   // srcset oluştur - farklı çözünürlükler için
@@ -138,7 +140,6 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         aria-hidden="true"
         loading="eager"
         fetchPriority="high"
-        decoding="sync"
         className={`${styles.image} ${styles.placeholder} ${loaded ? styles.fadeOut : styles.fadeIn}`}
         alt=""
         width={width}
@@ -154,7 +155,6 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           alt={alt}
           loading={loading}
           decoding="async"
-          fetchPriority={loading === 'eager' ? 'high' : 'low'}
           onLoad={() => setLoaded(true)}
           className={`${styles.image} ${loaded ? styles.fadeIn : styles.fadeOut}`}
           width={width}
