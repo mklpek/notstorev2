@@ -9,11 +9,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { SafeAreaProvider } from './core/hooks/useSafeArea';
 import 'virtual:svg-icons-register'; // SVG sprite eklentisi için
 
-// ✅ CSP SAFE: .tg class switch - bundled code içinde
-if (window.Telegram?.WebApp) {
-  document.documentElement.classList.add('tg');
-}
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SafeAreaProvider>
