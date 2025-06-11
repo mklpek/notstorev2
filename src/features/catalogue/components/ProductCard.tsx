@@ -1,70 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom';
 import type { Item } from '../../../core/api/notApi';
 import { useAppSelector } from '../../../core/store/hooks';
 import { selectIsInCart } from '../../cart/selectors';
 import ImageGallery from './ImageGallery';
 import CartTagIcon from '../../../core/ui/Icons/CartTagIcon';
 import styles from './ProductCard.module.css';
-import ProgressiveImage from '../../../core/ui/ProgressiveImage';
 
 interface ProductCardProps {
   product: Item;
   onProductClick?: ((productId: number) => void) | undefined;
-  skipInView?: boolean; // IntersectionObserver'ı atlamak için
-  loading?: 'lazy' | 'eager'; // Görsel yükleme stratejisi
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-  onProductClick,
-  skipInView = false,
-  loading = 'lazy',
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // skipInView true ise IntersectionObserver kullanma, doğrudan göster
-  const inViewProps = skipInView
-    ? { inView: true }
-    : useInView({ triggerOnce: true, threshold: 0.1 });
-
-  const { ref, inView } = inViewProps as { ref: React.RefObject<HTMLDivElement>; inView: boolean };
+  // InView hook optimizasyonu - daha yüksek threshold ve rootMargin
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+    rootMargin: '200px 0px', // Daha erken yükleme için 200px yukarıdan başlat
+  });
 
   // Ürünün sepette olup olmadığını kontrol et
   const isInCart = useAppSelector(selectIsInCart(product.id));
 
-  const handleCardClick = () => {
-    if (onProductClick) {
-      onProductClick(product.id);
-    }
-  };
+  // Click handler'ı memoize et
+  const handleCardClick = useMemo(() => {
+    return () => {
+      if (onProductClick) {
+        onProductClick(product.id);
+      }
+    };
+  }, [product.id, onProductClick]);
 
-  // Figma tasarımına göre kategori ve ismi birleştir
-  const displayTitle = `${product.category} ${product.name}`;
+  // Figma tasarımına göre kategori ve ismi birleştir - useMemo ile hesapla
+  const displayTitle = useMemo(
+    () => `${product.category} ${product.name}`,
+    [product.category, product.name]
+  );
 
-  // Performans optimizasyonu: virtualization kullanılıyorsa sadece ilk resmi göster
-  const shouldUseGallery = !skipInView;
+  // onIndexChange fonksiyonunu memoize et
+  const handleIndexChange = useMemo(() => {
+    return (index: number) => {
+      setCurrentImageIndex(index);
+    };
+  }, []);
 
   return (
     <div ref={ref} className={styles.productCard} onClick={handleCardClick}>
       <div className={styles.imageContainer}>
+        {/* İnView olduğunda render et - görünürlük tespiti yapalım */}
         {inView && (
           <>
-            {shouldUseGallery ? (
-              <ImageGallery
-                images={product.images}
-                currentIndex={currentImageIndex}
-                onIndexChange={setCurrentImageIndex}
-              />
-            ) : (
-              // Tek resimli basit versiyonu kullan (daha performanslı)
-              <ProgressiveImage
-                src={product.images[0] || ''}
-                alt={displayTitle}
-                className={styles.productImage}
-                loading={loading}
-              />
-            )}
+            <ImageGallery
+              images={product.images}
+              currentIndex={currentImageIndex}
+              onIndexChange={handleIndexChange}
+            />
             {/* Tag elementi - sadece ürün sepetteyse görünür */}
             {isInCart && (
               <div className={styles.cartTag}>
@@ -85,4 +79,5 @@ const ProductCard: React.FC<ProductCardProps> = ({
   );
 };
 
-export default ProductCard;
+// Bileşeni memo ile sarmalayarak gereksiz render'ları önlüyoruz
+export default React.memo(ProductCard);

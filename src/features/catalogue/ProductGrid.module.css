@@ -1,7 +1,7 @@
 .productGrid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: stretch;
   align-items: stretch;
   column-gap: 12px;
   row-gap: 28px;
@@ -11,8 +11,6 @@
   margin: 0 auto;
   min-height: 400px; /* Minimum yükseklik */
   position: relative; /* Positioning context */
-  box-sizing: border-box;
-  overflow-x: hidden; /* Yatay kaydırmayı engelle */
 }
 
 .virtualGrid {
@@ -48,7 +46,6 @@
   color: var(--tg-theme-hint-color, #999);
   width: 100%;
   text-align: center;
-  padding: 20px 0;
 }
 
 .error {

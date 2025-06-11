@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProductCard from './components/ProductCard';
 import { useGetCatalogueQuery, catalogSelectors } from '../../core/api/notApi';
@@ -8,58 +8,14 @@ import { useDebouncedValue } from '../../core/hooks/useDebounce';
 import NoResultsFound from './components/NoResultsFound';
 import ProductCardSkeleton from '../../core/ui/Skeleton/ProductCardSkeleton';
 import { ApiErrorMessage } from '../../core/ui';
-import AutoSizer from 'react-virtualized-auto-sizer';
-
-// Virtualization için basit bir alternatif yaklaşım
-// React-window type hatalarını çözmek için şimdilik normal liste kullanıyoruz
-// Temel virtualization prensiplerini uygulayacağız
-const ITEMS_PER_PAGE = 6;
 
 // 'count' parametresini değişken hale getiriyoruz
 const SKELETON_COUNT = 6;
-
-// 2 sütun için sabit değerler
-const COLUMN_COUNT = 2;
-const COLUMN_WIDTH = 176; // 160px + 16px gap
-const ROW_HEIGHT = 236; // Ürün kartı + gap
-const GRID_GAP = 12; // Grid boşluğu
 
 const ProductGrid: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rawQuery = searchParams.get('q') || '';
-  const [page, setPage] = useState(0);
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
-  // Ekran boyutunu takip et
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: Math.min(window.innerWidth, 390), // 390px max-width
-        height: window.innerHeight,
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Scroll olayını takip et - temel bir lazy loading yaklaşımı
-  useEffect(() => {
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      // Sayfa sonuna yaklaşıldıysa bir sonraki sayfayı yükle
-      if (scrollTop + clientHeight >= scrollHeight - 200) {
-        setPage(prevPage => prevPage + 1);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Debounce ederek, kullanıcı her tuşa bastığında değil,
   // 300ms duraklamadan sonra arama yapmasını sağlıyoruz
@@ -86,31 +42,27 @@ const ProductGrid: React.FC = () => {
     );
   }, [data, debouncedQuery]);
 
-  // Sayfalanmış ürünler - Virtualization yerine temel bir sayfalama yaklaşımı
-  const paginatedProducts = useMemo(() => {
-    const endIndex = Math.min((page + 1) * ITEMS_PER_PAGE, filteredProducts.length);
-    return filteredProducts.slice(0, endIndex);
-  }, [filteredProducts, page]);
-
-  // handleProductClick fonksiyonunu useCallback ile optimize ediyoruz
-  const handleProductClick = useCallback(
-    (productId: number) => {
+  // handleProductClick fonksiyonunu useMemo ile optimize ediyoruz
+  // navigate fonksiyonu değişmediği sürece yeniden oluşturulmayacak
+  const handleProductClick = useMemo(() => {
+    return (productId: number) => {
       navigate(`/product/${productId}`);
-    },
-    [navigate]
-  );
+    };
+  }, [navigate]);
 
-  // Loading state için ProductCardSkeleton kullan
-  if (isLoading) {
-    return (
-      <div
-        className={`${styles.productGrid} tg-container`}
-        aria-busy="true"
-        aria-label="Ürünler yükleniyor"
-      >
+  // Skeleton render etme için memoize edilmiş bir değer kullanıyoruz
+  // isLoading değişmediği sürece bu kısım yeniden render edilmeyecek
+  const loadingContent = useMemo(
+    () => (
+      <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
         <ProductCardSkeleton count={SKELETON_COUNT} />
       </div>
-    );
+    ),
+    []
+  );
+
+  if (isLoading) {
+    return loadingContent;
   }
 
   if (error) {
@@ -130,27 +82,18 @@ const ProductGrid: React.FC = () => {
       return <NoResultsFound />;
     }
     // Arama sorgusu yoksa hiçbir şey gösterme (boş grid döndür)
-    return <div className={`${styles.productGrid} tg-container`}></div>;
+    return <div className={styles.productGrid}></div>;
   }
 
-  // Optimize edilmiş liste görünümü - sadece görünür ürünleri yükle
+  // ItemPage'deki optimize edilmiş yapıya benzer şekilde filtrelenmiş ürünleri göster
   return (
-    <div className={`${styles.productGrid} tg-container`}>
-      {paginatedProducts.map((product, index) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onProductClick={handleProductClick}
-          skipInView={index < 4} // İlk 4 ürün için eager loading
-          loading={index < 4 ? 'eager' : 'lazy'} // İlk 4 ürün için eager loading
-        />
+    <div className={styles.productGrid}>
+      {filteredProducts.map((product: Item) => (
+        <ProductCard key={product.id} product={product} onProductClick={handleProductClick} />
       ))}
-      {/* Yükleme göstergesi - Eğer daha fazla ürün varsa */}
-      {paginatedProducts.length < filteredProducts.length && (
-        <div className={styles.loading}>Daha fazla yükleniyor...</div>
-      )}
     </div>
   );
 };
 
-export default ProductGrid;
+// Bileşeni memo ile sarmalayarak gereksiz render'ları önlüyoruz
+export default React.memo(ProductGrid);
