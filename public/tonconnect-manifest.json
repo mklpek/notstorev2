@@ -1,7 +1,7 @@
 {
   "url": "https://not-store-telegram-miniapp.vercel.app",
   "name": "Not Store - Telegram Mini App",
-  "iconUrl": "https://not-store-telegram-miniapp.vercel.app/favicon.png",
+  "iconUrl": "https://not-store-telegram-miniapp.vercel.app/vite.svg",
   "termsOfUseUrl": "https://example.com/terms-of-use",
   "privacyPolicyUrl": "https://example.com/privacy-policy"
 }

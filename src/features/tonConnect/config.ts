@@ -9,8 +9,13 @@ export const CHAIN = {
 // App manifest URL - kendi manifestimizi kullanıyoruz
 export const MANIFEST_URL = '/tonconnect-manifest.json';
 
-// Wallets listesi için kendi proxy API'mizi kullan
-export const WALLETS_LIST_URL = '/api/wallets';
+// Wallets listesi için ana ve yedek kaynaklar
+// CSP izinleri eklendi, artık direkt GitHub'dan çekebiliriz
+export const WALLETS_LIST_URL =
+  'https://raw.githubusercontent.com/ton-blockchain/wallets-list/main/wallets-v2.json';
+
+// Yedek olarak kendi proxy API'mizi kullan
+export const FALLBACK_WALLETS_LIST_URL = '/api/wallets';
 
 // Optional TON Connect UI configuration
 export const TON_CONNECT_UI_CONFIG = {

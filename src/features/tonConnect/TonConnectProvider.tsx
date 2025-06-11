@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { TonConnectUI } from '@tonconnect/ui';
 import type { Locales } from '@tonconnect/ui';
-import { MANIFEST_URL, TON_CONNECT_UI_CONFIG, WALLETS_LIST_URL } from './config';
+import {
+  MANIFEST_URL,
+  TON_CONNECT_UI_CONFIG,
+  WALLETS_LIST_URL,
+  FALLBACK_WALLETS_LIST_URL,
+} from './config';
 import { TonConnectUIContext } from './TonConnectContext';
 import { setBlur } from './utils/dom';
 
@@ -18,12 +23,34 @@ const tonConnectUI = new TonConnectUI({
   language: TON_CONNECT_UI_CONFIG.language as Locales,
 });
 
-// TON Connect walletsList URL'yi manuel override et
-// @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
-if (tonConnectUI.connector && tonConnectUI.connector.walletsList) {
-  // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
-  tonConnectUI.connector.walletsList.walletsListSource = WALLETS_LIST_URL;
-}
+// TON Connect walletsList URL'yi ayarlayan fonksiyon
+const setWalletsListSource = (url: string) => {
+  try {
+    // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+    if (tonConnectUI.connector && tonConnectUI.connector.walletsList) {
+      // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+      tonConnectUI.connector.walletsList.walletsListSource = url;
+      return true;
+    }
+  } catch (error) {
+    console.error('TON Connect wallets list source ayarlanırken hata:', error);
+  }
+  return false;
+};
+
+// URL erişilebilir mi kontrol et
+const isUrlAccessible = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      mode: 'no-cors',
+    });
+    return true; // no-cors modunda response başarılı kabul edilir
+  } catch (error) {
+    console.warn(`URL erişilemez: ${url}`, error);
+    return false;
+  }
+};
 
 // TON Connect modal blur efekti için dinamik stil ekleme
 const addTonConnectModalStyles = () => {
@@ -119,6 +146,35 @@ const observeTonConnectModal = () => {
 };
 
 const TonConnectProvider: React.FC<TonConnectProviderProps> = ({ children }) => {
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // TON Connect wallets listesi URL'sini ayarla
+  useEffect(() => {
+    const setupWalletsList = async () => {
+      try {
+        // Önce ana URL'yi dene
+        const isMainUrlWorking = await isUrlAccessible(WALLETS_LIST_URL);
+
+        if (isMainUrlWorking) {
+          // Ana URL çalışıyorsa onu kullan
+          setWalletsListSource(WALLETS_LIST_URL);
+        } else {
+          // Ana URL çalışmıyorsa fallback URL'yi kullan
+          console.log('Ana wallets listesi URL erişilemez, fallback kullanılıyor');
+          setWalletsListSource(FALLBACK_WALLETS_LIST_URL);
+        }
+      } catch (error) {
+        console.error('Wallets listesi ayarlanırken hata:', error);
+        // Hata durumunda fallback URL'yi dene
+        setWalletsListSource(FALLBACK_WALLETS_LIST_URL);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    setupWalletsList();
+  }, []);
+
   useEffect(() => {
     // Dinamik stil ekle
     addTonConnectModalStyles();
