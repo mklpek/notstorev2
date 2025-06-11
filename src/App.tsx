@@ -4,6 +4,7 @@ import CartModal from './features/cart/CartModal';
 import AppSkeleton from './core/ui/Skeleton/AppSkeleton';
 import ItemPageSkeleton from './core/ui/Skeleton/ItemPageSkeleton';
 import AccountPageSkeleton from './core/ui/Skeleton/AccountPageSkeleton';
+import SafeAreaDebug from './core/ui/SafeAreaDebug';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useSkeletonTheme } from './core/hooks/useSkeletonTheme';
@@ -113,6 +114,9 @@ function App() {
         enableAnimation={skeletonTheme.enableAnimation}
         duration={skeletonTheme.animationDuration}
       >
+        {/* Debug bileşeni - geliştirme için */}
+        <SafeAreaDebug />
+
         <Routes>
           {/* Tam-ekran ürün detayı - özel ItemPageSkeleton kullanır */}
           <Route

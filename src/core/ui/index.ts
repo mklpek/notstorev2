@@ -2,6 +2,8 @@
 export { default as Modal } from './Modal';
 export { default as Button } from './Button/Button';
 export { default as ProgressiveImage } from './ProgressiveImage';
+export { default as SafeFrame } from './SafeFrame';
+export { default as SafeAreaDebug } from './SafeAreaDebug';
 
 // Icons
 export { default as BasketIcon } from './Icons/BasketIcon';

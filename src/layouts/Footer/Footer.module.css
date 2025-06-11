@@ -11,14 +11,22 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  padding-bottom: max(0px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
+  padding-bottom: max(
+    8px,
+    /* design gap */ env(safe-area-inset-bottom, 0px),
+    var(--tg-safe-area-inset-bottom, 0px)
+  );
   min-height: calc(50px + env(safe-area-inset-bottom));
 }
 
 /* Modern browser desteği */
 @supports (padding: max(0px)) {
   .footer {
-    padding-block-end: max(0px, env(safe-area-inset-bottom));
+    padding-block-end: max(
+      8px,
+      /* design gap */ env(safe-area-inset-bottom, 0px),
+      var(--tg-safe-area-inset-bottom, 0px)
+    );
   }
 }
 

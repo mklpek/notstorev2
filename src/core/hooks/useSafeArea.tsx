@@ -55,6 +55,13 @@ export function useSafeAreaInsets() {
       setSafeAreaInsets(prev => {
         const updated = { ...prev, ...newInsets };
         updateCSSVariables(updated);
+
+        // SafeFrame'e dinamik padding uygula (sadece bottom için)
+        const safeFrame = document.getElementById('safe-frame');
+        if (safeFrame && updated.bottom !== undefined) {
+          safeFrame.style.setProperty('padding-bottom', `max(0px, ${updated.bottom}px)`);
+        }
+
         return updated;
       });
     };
