@@ -1,41 +1,16 @@
 .productGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px 12px; /* Satır ve sütun boşlukları */
-  padding: 0px 16px 16px;
-  /* GPU hızlandırma ekleyelim */
-  will-change: transform;
-  /* Smoother scrolling */
-  -webkit-overflow-scrolling: touch;
-  /* Gerçek height verilmiş container içinde max-width ile merkezle */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: stretch;
+  align-items: stretch;
+  column-gap: 12px;
+  row-gap: 28px;
+  padding: 0px 16px;
   width: 100%;
-  max-width: 390px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
-  /* Satır sayısı önizlemesi için content-visibility kullan */
-  content-visibility: auto;
-  /* Tahmini boyut ekleyerek layout shift'i önle */
-  contain-intrinsic-size: 0 1000px;
-}
-
-/* Safari ve iOS'ta grid hızlandırma */
-@supports (-webkit-touch-callout: none) {
-  .productGrid {
-    transform: translateZ(0);
-  }
-}
-
-/* Düşük cihazlarda animasyon sürelerini kısalt */
-@media (max-refresh-rate: 60hz) {
-  .productGrid {
-    transition-duration: 0ms;
-  }
-}
-
-/* Kullanıcı hareket azaltma tercih ettiğinde animasyonları devre dışı bırak */
-@media (prefers-reduced-motion: reduce) {
-  .productGrid {
-    transition: none;
-  }
+  min-height: 400px; /* Minimum yükseklik */
+  position: relative; /* Positioning context */
 }
 
 .virtualGrid {

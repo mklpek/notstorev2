@@ -15,14 +15,8 @@
 
 .header.searchOpen {
   height: 60px;
-  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
   padding: 12px 16px;
-}
-
-@media (hover: hover) and (min-width: 768px) {
-  .header.searchOpen {
-    backdrop-filter: blur(16px);
-  }
 }
 
 .headerLeft {
@@ -63,10 +57,8 @@
   transition: opacity 0.2s ease;
 }
 
-@media (hover: hover) {
-  .headerButton:hover {
-    opacity: 0.8;
-  }
+.headerButton:hover {
+  opacity: 0.8;
 }
 
 .headerButton svg,
@@ -95,13 +87,8 @@
   flex: 1;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
+  backdrop-filter: blur(16px);
   position: relative;
-}
-
-@media (hover: hover) and (min-width: 768px) {
-  .searchInput {
-    backdrop-filter: blur(16px);
-  }
 }
 
 .searchIcon {
@@ -158,10 +145,8 @@
   transition: opacity 0.2s ease;
 }
 
-@media (hover: hover) {
-  .clearButton:hover {
-    opacity: 0.7;
-  }
+.clearButton:hover {
+  opacity: 0.7;
 }
 
 .cancelButton {
@@ -216,11 +201,6 @@
 /* Erişilebilirlik için animasyon kontrolü */
 @media (prefers-reduced-motion: reduce) {
   .header {
-    transition: none;
-  }
-
-  .headerButton,
-  .clearButton {
     transition: none;
   }
 

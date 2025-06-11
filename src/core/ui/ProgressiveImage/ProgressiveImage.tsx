@@ -58,7 +58,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
     };
   }, [loading]);
 
-  // srcset oluştur - daha az ve optimum çözünürlükler için
+  // srcset oluştur - farklı çözünürlükler için
   const createSrcSet = () => {
     if (!secureSrc) return '';
 
@@ -68,12 +68,12 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       const hasQuery = secureSrc.includes('?');
       const queryPrefix = hasQuery ? '&' : '?';
 
-      // Daha az ve optimum çözünürlükler için srcset değerleri
-      // Mobil cihazlar için 320/480/640 değerleri yeterlidir - 960/1280 kaldırıldı
+      // Farklı genişlikler için srcset değerleri
       return [
         `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '320', format: 'webp' }).toString()} 320w`,
-        `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '480', format: 'webp' }).toString()} 480w`,
         `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '640', format: 'webp' }).toString()} 640w`,
+        `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '960', format: 'webp' }).toString()} 960w`,
+        `${baseUrl}${queryPrefix}${new URLSearchParams({ width: '1280', format: 'webp' }).toString()} 1280w`,
       ].join(', ');
     } catch (error) {
       console.warn('srcSet oluşturma hatası:', error);
