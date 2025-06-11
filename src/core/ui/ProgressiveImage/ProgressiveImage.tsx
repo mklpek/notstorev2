@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import { lqip } from '../../utils/lqip'; // LQIP özelliğini yorum satırı yaptım
+import { lqip } from '../../utils/lqip';
 import styles from './ProgressiveImage.module.css';
 
 interface ProgressiveImageProps {
@@ -87,9 +87,8 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       className={`${styles.container} ${className || ''}`}
       style={{ width, height, ...style }}
     >
-      {/* LQIP ve blur özelliği kaldırıldı - sadece normal görsel gösteriliyor */}
       {/* Düşük kaliteli LQIP - eager loading */}
-      {/* <img
+      <img
         src={lqip(secureSrc, 16)}
         aria-hidden="true"
         loading="eager"
@@ -98,7 +97,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         alt=""
         width={width}
         height={height}
-      /> */}
+      />
 
       {/* Tam kaliteli görsel - lazy loading */}
       {isIntersecting && (
@@ -110,8 +109,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           loading={loading}
           decoding="async"
           onLoad={() => setLoaded(true)}
-          className={`${styles.image}`}
-          /* ${loaded ? styles.fadeIn : styles.fadeOut} - Geçiş efekti kaldırıldı */
+          className={`${styles.image} ${loaded ? styles.fadeIn : styles.fadeOut}`}
           width={width}
           height={height}
         />

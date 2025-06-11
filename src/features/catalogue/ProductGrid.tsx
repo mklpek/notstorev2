@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProductCard from './components/ProductCard';
 import { useGetCatalogueQuery, catalogSelectors } from '../../core/api/notApi';
@@ -24,34 +24,41 @@ const ProductGrid: React.FC = () => {
   // RTK Query kullanımı - refetch fonksiyonunu doğrudan alıyoruz
   const { isLoading, error, data, refetch } = useGetCatalogueQuery();
 
-  // Filtrelenmiş ürünleri hesapla - memoization kaldırıldı
-  let filteredProducts: Item[] = [];
+  // Filtrelenmiş ürünleri hesapla
+  const filteredProducts = useMemo(() => {
+    if (!data) return [];
 
-  if (data) {
     // Tüm ürünleri adapter selektörü ile al
     const allProducts = catalogSelectors.selectAll(data);
 
     // Arama yoksa tüm ürünleri döndür
     if (!debouncedQuery) {
-      filteredProducts = allProducts;
-    } else {
-      // Arama terimine göre filtrele
-      filteredProducts = allProducts.filter((p: Item) =>
-        `${p.category} ${p.name}`.toLowerCase().includes(debouncedQuery.toLowerCase())
-      );
+      return allProducts;
     }
-  }
 
-  // Basit click handler - memoization kaldırıldı
-  const handleProductClick = (productId: number) => {
-    navigate(`/product/${productId}`);
-  };
+    // Arama terimine göre filtrele
+    return allProducts.filter((p: Item) =>
+      `${p.category} ${p.name}`.toLowerCase().includes(debouncedQuery.toLowerCase())
+    );
+  }, [data, debouncedQuery]);
 
-  // Basit loading içerik - memoization kaldırıldı
-  const loadingContent = (
-    <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
-      <ProductCardSkeleton count={SKELETON_COUNT} />
-    </div>
+  // handleProductClick fonksiyonunu useMemo ile optimize ediyoruz
+  // navigate fonksiyonu değişmediği sürece yeniden oluşturulmayacak
+  const handleProductClick = useMemo(() => {
+    return (productId: number) => {
+      navigate(`/product/${productId}`);
+    };
+  }, [navigate]);
+
+  // Skeleton render etme için memoize edilmiş bir değer kullanıyoruz
+  // isLoading değişmediği sürece bu kısım yeniden render edilmeyecek
+  const loadingContent = useMemo(
+    () => (
+      <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
+        <ProductCardSkeleton count={SKELETON_COUNT} />
+      </div>
+    ),
+    []
   );
 
   if (isLoading) {
@@ -78,7 +85,7 @@ const ProductGrid: React.FC = () => {
     return <div className={styles.productGrid}></div>;
   }
 
-  // Basit grid render - optimize edilmiş yapı kaldırıldı
+  // ItemPage'deki optimize edilmiş yapıya benzer şekilde filtrelenmiş ürünleri göster
   return (
     <div className={styles.productGrid}>
       {filteredProducts.map((product: Item) => (
@@ -88,5 +95,5 @@ const ProductGrid: React.FC = () => {
   );
 };
 
-// React.memo kaldırıldı
-export default ProductGrid;
+// Bileşeni memo ile sarmalayarak gereksiz render'ları önlüyoruz
+export default React.memo(ProductGrid);

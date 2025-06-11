@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-// import { useInView } from 'react-intersection-observer'; // Lazy loading özelliğini kaldırıyorum
+import React, { useState, useMemo } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
 import type { Item } from '../../../core/api/notApi';
 import { useAppSelector } from '../../../core/store/hooks';
@@ -16,45 +16,56 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // InView hook kaldırıldı - her zaman görünür kabul edeceğiz
-  // const { ref, inView } = useInView({
-  //   triggerOnce: true,
-  //   threshold: 0.1,
-  //   rootMargin: '200px 0px', // Daha erken yükleme için 200px yukarıdan başlat
-  // });
+  // InView hook optimizasyonu - daha yüksek threshold ve rootMargin
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+    rootMargin: '200px 0px', // Daha erken yükleme için 200px yukarıdan başlat
+  });
 
   // Ürünün sepette olup olmadığını kontrol et
   const isInCart = useAppSelector(selectIsInCart(product.id));
 
-  // Click handler basitleştirildi - memoization kaldırıldı
-  const handleCardClick = () => {
-    if (onProductClick) {
-      onProductClick(product.id);
-    }
-  };
+  // Click handler'ı memoize et
+  const handleCardClick = useMemo(() => {
+    return () => {
+      if (onProductClick) {
+        onProductClick(product.id);
+      }
+    };
+  }, [product.id, onProductClick]);
 
-  // Basitleştirilmiş görüntüleme ismi - memoization kaldırıldı
-  const displayTitle = `${product.category} ${product.name}`;
+  // Figma tasarımına göre kategori ve ismi birleştir - useMemo ile hesapla
+  const displayTitle = useMemo(
+    () => `${product.category} ${product.name}`,
+    [product.category, product.name]
+  );
 
-  // Basit fonksiyon - memoization kaldırıldı
-  const handleIndexChange = (index: number) => {
-    setCurrentImageIndex(index);
-  };
+  // onIndexChange fonksiyonunu memoize et
+  const handleIndexChange = useMemo(() => {
+    return (index: number) => {
+      setCurrentImageIndex(index);
+    };
+  }, []);
 
   return (
-    <div className={styles.productCard} onClick={handleCardClick}>
+    <div ref={ref} className={styles.productCard} onClick={handleCardClick}>
       <div className={styles.imageContainer}>
-        {/* Her zaman render et - inView kontrolü kaldırıldı */}
-        <ImageGallery
-          images={product.images}
-          currentIndex={currentImageIndex}
-          onIndexChange={handleIndexChange}
-        />
-        {/* Tag elementi - sadece ürün sepetteyse görünür */}
-        {isInCart && (
-          <div className={styles.cartTag}>
-            <CartTagIcon />
-          </div>
+        {/* İnView olduğunda render et - görünürlük tespiti yapalım */}
+        {inView && (
+          <>
+            <ImageGallery
+              images={product.images}
+              currentIndex={currentImageIndex}
+              onIndexChange={handleIndexChange}
+            />
+            {/* Tag elementi - sadece ürün sepetteyse görünür */}
+            {isInCart && (
+              <div className={styles.cartTag}>
+                <CartTagIcon />
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className={styles.productInfo}>
@@ -68,5 +79,5 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
   );
 };
 
-// React.memo kaldırıldı - normal export
-export default ProductCard;
+// Bileşeni memo ile sarmalayarak gereksiz render'ları önlüyoruz
+export default React.memo(ProductCard);
