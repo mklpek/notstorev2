@@ -65,11 +65,14 @@ function App() {
         const user = wa.initDataUnsafe.user;
         const cachedPhoto = localStorage.getItem(`avatar:${user.id}`);
 
+        if (cachedPhoto) {
+          dispatch(setUserPhotoUrl(cachedPhoto));
+        }
+
         // TelegramUser tipine uygun veriyi hazırla
         const userDetails: TelegramUser = {
           id: user.id,
           first_name: user.first_name,
-          photoUrl: cachedPhoto ?? user.photo_url ?? '',
         };
 
         // Opsiyonel alanları kontrol ederek ekle
@@ -80,16 +83,21 @@ function App() {
         if (user.photo_url) userDetails.photo_url = user.photo_url;
         if (cachedPhoto) userDetails.cachedPhotoUrl = cachedPhoto;
 
-        // Önce temel kullanıcı bilgilerini Redux'a kaydet
         dispatch(setTelegramUser(userDetails));
 
-        // Fallback sadece photo_url ve cache yoksa çalışır
-        if (!user.photo_url && !cachedPhoto) {
+        // Anında yol: photo_url varsa, hemen kullan ve cache'le
+        if (user.photo_url) {
+          dispatch(setUserPhotoUrl(user.photo_url));
+          localStorage.setItem(`avatar:${user.id}`, user.photo_url);
+          return; // Bot API'ye gitmeyi atla
+        }
+
+        // Fallback: photo_url yoksa ve cache boşsa API'ye git
+        if (!cachedPhoto) {
           const photoUrl = await getUserProfilePhoto(user.id);
-          if (photoUrl) {
-            localStorage.setItem(`avatar:${user.id}`, photoUrl);
-            dispatch(setUserPhotoUrl(photoUrl));
-          }
+          const finalPhotoUrl = photoUrl ?? 'none'; // API'den cevap gelmezse 'none' olarak cache'le
+          localStorage.setItem(`avatar:${user.id}`, finalPhotoUrl);
+          dispatch(setUserPhotoUrl(finalPhotoUrl));
         }
       } catch (error) {
         console.error('Failed to initialize user:', error);
