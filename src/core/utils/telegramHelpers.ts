@@ -1,4 +1,11 @@
 /**
+ * Telegram WebApp içinde olup olmadığımızı kontrol eder
+ */
+export function isTelegram(): boolean {
+  return Boolean(window.Telegram?.WebApp);
+}
+
+/**
  * Mevcut Telegram WebApp versiyonunu tespit eder
  */
 export function getTgVersion(): number {

@@ -49,10 +49,24 @@ export function useSafeAreaInsets() {
       );
       document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
 
-      // SafeFrame wrapper'ını da güncelle - sadece Telegram'da mevcut
-      const safeFrame = document.getElementById('safe-frame');
-      if (safeFrame) {
-        safeFrame.style.setProperty('padding-bottom', `max(0px, ${insets.bottom}px)`);
+      // ✅ NATIVE ENV() MIRROR: .tg class'ına sahip element'lerin padding'ini güncelle
+      if (document.documentElement.classList.contains('tg')) {
+        document.documentElement.style.setProperty(
+          'padding-top',
+          `max(${insets.top}px, env(safe-area-inset-top, 0px))`
+        );
+        document.documentElement.style.setProperty(
+          'padding-bottom',
+          `max(${insets.bottom}px, env(safe-area-inset-bottom, 0px))`
+        );
+        document.documentElement.style.setProperty(
+          'padding-left',
+          `max(${insets.left}px, env(safe-area-inset-left, 0px))`
+        );
+        document.documentElement.style.setProperty(
+          'padding-right',
+          `max(${insets.right}px, env(safe-area-inset-right, 0px))`
+        );
       }
     };
 

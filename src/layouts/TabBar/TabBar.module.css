@@ -10,13 +10,13 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  padding-bottom: max(0px, env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0));
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
 }
 
 /* Modern browser desteği */
 @supports (padding: max(0px)) {
   .tabBar {
-    padding-block-end: max(0px, env(safe-area-inset-bottom));
+    padding-block-end: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
   }
 }
 
@@ -27,18 +27,6 @@
   padding: 0px 20px;
   width: 390px;
   align-items: center;
-}
-
-/* TabBar home indicator alanı için arka plan efekti (opsiyonel) */
-.tabBar::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: var(--tg-safe-area-inset-bottom, 0);
-  background: #000000;
-  z-index: -1;
 }
 
 /* Individual Tab */
@@ -147,4 +135,17 @@
   padding: 0;
   width: auto;
   height: auto;
+}
+
+/* ✅ Home indicator arka plan efekti - sadece Telegram'da */
+.tg .tabBar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
+  background: #000000;
+  z-index: -1;
+  pointer-events: none; /* gesture bar çalışsın */
 }

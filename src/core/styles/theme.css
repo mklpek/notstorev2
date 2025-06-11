@@ -88,11 +88,20 @@ body {
   overflow-x: hidden;
   max-width: var(--container-max-width); /* iOS Telegram'da yatay scroll kaçmasını engeller */
   margin: 0 auto;
-  /* Telegram safe area inset paddingleri */
-  padding-top: var(--tg-safe-area-inset-top, 0);
-  padding-left: var(--tg-safe-area-inset-left, 0);
-  padding-right: var(--tg-safe-area-inset-right, 0);
-  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
+}
+
+/* ✅ SAFE AREA: Sadece Telegram içindeyken uygula */
+.tg {
+  /* Telegram'ın şeffaf header'ının altından başla */
+  padding-top: max(env(safe-area-inset-top, 0px), var(--tg-safe-area-inset-top, 0px));
+
+  /* Home indicator'ın üstünde kal */
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
+
+  /* Yan taraflar için de güvenlik */
+  padding-left: max(env(safe-area-inset-left, 0px), var(--tg-safe-area-inset-left, 0px));
+
+  padding-right: max(env(safe-area-inset-right, 0px), var(--tg-safe-area-inset-right, 0px));
 }
 
 #root {
@@ -277,41 +286,4 @@ div[style*='position: fixed'][style*='top: 0'][style*='left: 0'] {
   background-color: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
-}
-
-/* ==========================================================================
-   TELEGRAM-SPECIFIC SAFE AREA STYLING - Sadece Telegram içinde aktif
-   ========================================================================== */
-
-/* Sadece Telegram ortamında aktif olan kurallar - localhost'ta hiçbir etkisi yok */
-.tg-app {
-  /* Telegram header'ının altından başla - web'de 0 kalır */
-  padding-top: max(env(safe-area-inset-top, 0px), var(--tg-safe-area-inset-top, 0px));
-
-  /* Home indicator'ın üzerinde kal - web'de 0 kalır */
-  padding-bottom: max(0px, env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
-}
-
-/* TabBar ve Footer için Telegram-specific kurallar */
-.tg-app .tabBar,
-.tg-app .footer {
-  /* Mevcut padding'i koruyarak safe area ekle */
-  padding-block-end: max(
-    8px,
-    /* mevcut tasarım boşluğu */ env(safe-area-inset-bottom, 0px),
-    var(--tg-safe-area-inset-bottom, 0px)
-  );
-}
-
-/* Home indicator arka plan efekti - sadece Telegram'da */
-.tg-app .footer::after,
-.tg-app .tabBar::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
-  background: #000000; /* component arka planı ile aynı */
-  pointer-events: none; /* gesture bar'ın çalışmasını engelleme */
 }
