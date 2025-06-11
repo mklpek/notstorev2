@@ -32,13 +32,11 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     // Font dosyalarının asset olarak işlenmesi için
-    assetsInclude: ['**/*.woff', '**/*.woff2'],
+    assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.otf'],
     build: {
       // Üretim için optimizasyonlar
       minify: isProduction ? 'terser' : false,
       sourcemap: !isProduction,
-      // Chunk size uyarısını gidermek için limit artırıldı
-      chunkSizeWarningLimit: 700,
       rollupOptions: {
         output: {
           manualChunks: {
@@ -46,13 +44,6 @@ export default defineConfig(({ mode }) => {
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
             'redux-vendor': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
             'ui-vendor': ['react-loading-skeleton', 'react-window', 'react-virtualized-auto-sizer'],
-            'ton-vendor': ['@tonconnect/ui-react'],
-            'utils-vendor': [
-              'blurhash',
-              'react-blurhash',
-              'react-swipeable',
-              'react-intersection-observer',
-            ],
           },
           // Asset dosyalarının isimlendirme formatı
           assetFileNames: assetInfo => {
@@ -60,7 +51,7 @@ export default defineConfig(({ mode }) => {
               return `assets/[name].[hash][extname]`;
             }
 
-            if (/\.(woff|woff2)$/.test(assetInfo.name)) {
+            if (/\.(woff|woff2|ttf|otf)$/.test(assetInfo.name)) {
               return `fonts/[name].[hash][extname]`;
             }
             if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name)) {
