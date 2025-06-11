@@ -54,8 +54,10 @@ const ProductGrid: React.FC = () => {
   // isLoading değişmediği sürece bu kısım yeniden render edilmeyecek
   const loadingContent = useMemo(
     () => (
-      <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
-        <ProductCardSkeleton count={SKELETON_COUNT} />
+      <div className="centeredWrapper">
+        <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
+          <ProductCardSkeleton count={SKELETON_COUNT} />
+        </div>
       </div>
     ),
     []
@@ -67,11 +69,13 @@ const ProductGrid: React.FC = () => {
 
   if (error) {
     return (
-      <ApiErrorMessage
-        error={error}
-        onRetry={() => refetch()}
-        customMessage="Ürünleri yüklerken bir sorun oluştu."
-      />
+      <div className="centeredWrapper">
+        <ApiErrorMessage
+          error={error}
+          onRetry={() => refetch()}
+          customMessage="Ürünleri yüklerken bir sorun oluştu."
+        />
+      </div>
     );
   }
 
@@ -79,18 +83,28 @@ const ProductGrid: React.FC = () => {
   if (!filteredProducts || filteredProducts.length === 0) {
     // Sadece arama sorgusu varsa NoResultsFound göster
     if (rawQuery.trim()) {
-      return <NoResultsFound />;
+      return (
+        <div className="centeredWrapper">
+          <NoResultsFound />
+        </div>
+      );
     }
     // Arama sorgusu yoksa hiçbir şey gösterme (boş grid döndür)
-    return <div className={styles.productGrid}></div>;
+    return (
+      <div className="centeredWrapper">
+        <div className={styles.productGrid}></div>
+      </div>
+    );
   }
 
   // Normal liste görünümünü kullanın
   return (
-    <div className={styles.productGrid}>
-      {filteredProducts.map((product: Item) => (
-        <ProductCard key={product.id} product={product} onProductClick={handleProductClick} />
-      ))}
+    <div className="centeredWrapper">
+      <div className={styles.productGrid}>
+        {filteredProducts.map((product: Item) => (
+          <ProductCard key={product.id} product={product} onProductClick={handleProductClick} />
+        ))}
+      </div>
     </div>
   );
 };

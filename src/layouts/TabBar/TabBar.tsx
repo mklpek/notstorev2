@@ -1,6 +1,6 @@
 import React from 'react';
-import StoreIcon from '../../core/ui/Icons/StoreIcon';
 import styles from './TabBar.module.css';
+import StoreIcon from '../../core/ui/Icons/StoreIcon';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../core/store';
 
@@ -24,39 +24,41 @@ const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => 
   };
 
   return (
-    <div className={styles.tabBar}>
-      <div className={styles.body}>
-        {/* Store Tab */}
-        <div
-          className={`${styles.tab} ${activeTab === 'store' ? styles.active : styles.idle}`}
-          onClick={() => handleTabClick('store')}
-        >
-          <div className={styles.iconContainer}>
-            <StoreIcon className={styles.icon} />
-          </div>
-          <span className={styles.text}>Store</span>
-        </div>
-
-        {/* Profile Tab */}
-        <div
-          className={`${styles.tab} ${activeTab === 'profile' ? styles.active : styles.idle}`}
-          onClick={() => handleTabClick('profile')}
-        >
-          <div className={styles.iconContainer}>
-            <div className={styles.profileContainer}>
-              <img
-                src={user?.photoUrl || '/images/profile-avatar.png'}
-                alt="Profile"
-                className={styles.profileImage}
-              />
-              {user?.is_premium && (
-                <div className={styles.premiumIndicator} title="Premium User">
-                  ⭐
-                </div>
-              )}
+    <div className="centeredWrapper">
+      <div className={styles.tabBar}>
+        <div className={styles.body}>
+          {/* Store Tab */}
+          <div
+            className={`${styles.tab} ${activeTab === 'store' ? styles.active : styles.idle}`}
+            onClick={() => handleTabClick('store')}
+          >
+            <div className={styles.iconContainer}>
+              <StoreIcon className={styles.icon} />
             </div>
+            <span className={styles.text}>Store</span>
           </div>
-          <span className={styles.text}>{displayName}</span>
+
+          {/* Profile Tab */}
+          <div
+            className={`${styles.tab} ${activeTab === 'profile' ? styles.active : styles.idle}`}
+            onClick={() => handleTabClick('profile')}
+          >
+            <div className={styles.iconContainer}>
+              <div className={styles.profileContainer}>
+                <img
+                  src={user?.photoUrl || '/images/profile-avatar.png'}
+                  alt="Profile"
+                  className={styles.profileImage}
+                />
+                {user?.is_premium && (
+                  <div className={styles.premiumIndicator} title="Premium User">
+                    ⭐
+                  </div>
+                )}
+              </div>
+            </div>
+            <span className={styles.text}>{displayName}</span>
+          </div>
         </div>
       </div>
     </div>

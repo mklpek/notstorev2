@@ -75,102 +75,104 @@ const ItemPage: React.FC = () => {
   const fabricInfo = parseFabricInfo(product.tags.fabric);
 
   return (
-    <div className={styles.itemPage}>
-      <div className={styles.body}>
-        {/* Stickers Info */}
-        <div className={styles.stickersInfo}>
-          {/* Stickers Collections */}
-          <div className={styles.stickersCollections}>
-            {/* Header */}
-            <div className={styles.header}>
-              <div className={styles.left}>
-                <div className={styles.title}>
-                  <h1 className={styles.titleText}>{displayTitle}</h1>
+    <div className="centeredWrapper">
+      <div className={styles.itemPage}>
+        <div className={styles.body}>
+          {/* Stickers Info */}
+          <div className={styles.stickersInfo}>
+            {/* Stickers Collections */}
+            <div className={styles.stickersCollections}>
+              {/* Header */}
+              <div className={styles.header}>
+                <div className={styles.left}>
+                  <div className={styles.title}>
+                    <h1 className={styles.titleText}>{displayTitle}</h1>
+                  </div>
+                </div>
+                <div className={styles.buttons}>
+                  <button className={styles.shareButton}>
+                    <ShareIcon className={styles.shareIcon} />
+                  </button>
                 </div>
               </div>
-              <div className={styles.buttons}>
-                <button className={styles.shareButton}>
-                  <ShareIcon className={styles.shareIcon} />
-                </button>
+
+              {/* Description */}
+              <div className={styles.description}>
+                <p className={styles.descriptionText}>{product.description}</p>
               </div>
             </div>
 
-            {/* Description */}
-            <div className={styles.description}>
-              <p className={styles.descriptionText}>{product.description}</p>
+            {/* Tags */}
+            <div className={styles.tags}>
+              <div className={styles.tag}>
+                <span className={styles.tagNumber}>{product.price}</span>
+                <span className={styles.tagCurrency}>{product.currency}</span>
+              </div>
+              <div className={styles.tag}>
+                <span className={styles.tagNumber}>{product.left}</span>
+                <span className={styles.tagText}>LEFT</span>
+              </div>
+              <div className={styles.tag}>
+                <span className={styles.tagNumber}>{fabricInfo.percentage}</span>
+                <span className={styles.tagText}>{fabricInfo.material}</span>
+              </div>
             </div>
           </div>
 
-          {/* Tags */}
-          <div className={styles.tags}>
-            <div className={styles.tag}>
-              <span className={styles.tagNumber}>{product.price}</span>
-              <span className={styles.tagCurrency}>{product.currency}</span>
-            </div>
-            <div className={styles.tag}>
-              <span className={styles.tagNumber}>{product.left}</span>
-              <span className={styles.tagText}>LEFT</span>
-            </div>
-            <div className={styles.tag}>
-              <span className={styles.tagNumber}>{fabricInfo.percentage}</span>
-              <span className={styles.tagText}>{fabricInfo.material}</span>
+          {/* Big Sticker Container */}
+          <div className={styles.bigStickerContainer}>
+            <div className={styles.bigSticker}>
+              {/* 
+                TÜM GÖRSELLERİ RENDER ET, SADECE AKTİF OLANI GÖSTER.
+                Bu yöntem, `src` değiştirmekten daha güvenilirdir ve tarayıcının
+                görselleri tekrar indirmesini engeller.
+              */}
+              {product.images.map((image, index) => (
+                <div
+                  key={image}
+                  style={{
+                    display: index === activeImageIndex ? 'block' : 'none',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <ProgressiveImage
+                    src={image}
+                    alt={`${displayTitle} - ${index + 1}`}
+                    className={styles.bigStickerImage || ''}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Big Sticker Container */}
-        <div className={styles.bigStickerContainer}>
-          <div className={styles.bigSticker}>
-            {/* 
-              TÜM GÖRSELLERİ RENDER ET, SADECE AKTİF OLANI GÖSTER.
-              Bu yöntem, `src` değiştirmekten daha güvenilirdir ve tarayıcının
-              görselleri tekrar indirmesini engeller.
-            */}
-            {product.images.map((image, index) => (
-              <div
-                key={image}
-                style={{
-                  display: index === activeImageIndex ? 'block' : 'none',
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
-                <ProgressiveImage
-                  src={image}
-                  alt={`${displayTitle} - ${index + 1}`}
-                  className={styles.bigStickerImage || ''}
-                />
-              </div>
-            ))}
+        {/* Fixed Bottom Content */}
+        <div className={styles.fixedBottom}>
+          {/* Stickers Slider */}
+          <div className={styles.sliderContainer}>
+            <div className={styles.stickersSlider} ref={sliderRef}>
+              {product.images.map((image, index) => (
+                <div
+                  key={index}
+                  className={`${styles.sticker} ${index === activeImageIndex ? styles.stickerActive : ''}`}
+                  onClick={() => handleImageClick(index)}
+                >
+                  {/* Tüm slider görselleri için ProgressiveImage kullan */}
+                  <ProgressiveImage
+                    src={image}
+                    alt={`${displayTitle} - thumb ${index + 1}`}
+                    className={styles.stickerFill || ''}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Footer'ı portal olarak document.body'de render et */}
+        {createPortal(<Footer product={product} />, document.body)}
       </div>
-
-      {/* Fixed Bottom Content */}
-      <div className={styles.fixedBottom}>
-        {/* Stickers Slider */}
-        <div className={styles.sliderContainer}>
-          <div className={styles.stickersSlider} ref={sliderRef}>
-            {product.images.map((image, index) => (
-              <div
-                key={index}
-                className={`${styles.sticker} ${index === activeImageIndex ? styles.stickerActive : ''}`}
-                onClick={() => handleImageClick(index)}
-              >
-                {/* Tüm slider görselleri için ProgressiveImage kullan */}
-                <ProgressiveImage
-                  src={image}
-                  alt={`${displayTitle} - thumb ${index + 1}`}
-                  className={styles.stickerFill || ''}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Footer'ı portal olarak document.body'de render et */}
-      {createPortal(<Footer product={product} />, document.body)}
     </div>
   );
 };
