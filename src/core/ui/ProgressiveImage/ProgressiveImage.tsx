@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { lqip } from '../../utils/lqip';
+// import { lqip } from '../../utils/lqip'; // LQIP özelliğini yorum satırı yaptım
 import styles from './ProgressiveImage.module.css';
 
 interface ProgressiveImageProps {
@@ -12,52 +12,6 @@ interface ProgressiveImageProps {
   loading?: 'lazy' | 'eager';
   sizes?: string;
 }
-
-// Paylaşılan IntersectionObserver
-// Tüm görüntüleri gözlemlemek için tek bir observer kullanıyoruz
-const sharedObserver = (() => {
-  // Browser ortamında değilsek (SSR) null döndür
-  if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
-    return null;
-  }
-
-  // Observer için Map - her DOM elementi için bir callback
-  const callbacks = new Map<Element, (isIntersecting: boolean) => void>();
-
-  // Ortak Observer instance
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        // Hedef element için kaydedilmiş callback varsa çağır
-        const callback = callbacks.get(entry.target);
-        if (callback) {
-          callback(entry.isIntersecting);
-
-          // Eğer intersect olduysa ve bir kere gözlemlemek istiyorsak, observe'u sonlandır
-          if (entry.isIntersecting) {
-            observer.unobserve(entry.target);
-            callbacks.delete(entry.target);
-          }
-        }
-      });
-    },
-    { rootMargin: '200px', threshold: 0.01 } // 200px yukarıdan yüklemeye başla
-  );
-
-  return {
-    // Element'i gözlemle
-    observe: (element: Element, callback: (isIntersecting: boolean) => void) => {
-      callbacks.set(element, callback);
-      observer.observe(element);
-    },
-
-    // Gözlemlemeyi durdur
-    unobserve: (element: Element) => {
-      observer.unobserve(element);
-      callbacks.delete(element);
-    },
-  };
-})();
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   src,
@@ -84,24 +38,23 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       return;
     }
 
-    const currentContainer = containerRef.current;
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0]?.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px', threshold: 0.01 } // 200px yukarıdan yüklemeye başla
+    );
 
-    // Container varsa ve shared observer mevcutsa
-    if (currentContainer && sharedObserver) {
-      // Paylaşılan observer'a container'ı ekle
-      sharedObserver.observe(currentContainer, isVisible => {
-        setIsIntersecting(isVisible);
-      });
-    } else {
-      // Fallback - sharedObserver yoksa veya container yoksa doğrudan görünür yap
-      setIsIntersecting(true);
+    // containerRef.current'ı observe et
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
 
     return () => {
-      // Cleanup - observer'dan çıkar
-      if (currentContainer && sharedObserver) {
-        sharedObserver.unobserve(currentContainer);
-      }
+      observer.disconnect();
     };
   }, [loading]);
 
@@ -134,8 +87,9 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
       className={`${styles.container} ${className || ''}`}
       style={{ width, height, ...style }}
     >
+      {/* LQIP ve blur özelliği kaldırıldı - sadece normal görsel gösteriliyor */}
       {/* Düşük kaliteli LQIP - eager loading */}
-      <img
+      {/* <img
         src={lqip(secureSrc, 16)}
         aria-hidden="true"
         loading="eager"
@@ -144,7 +98,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         alt=""
         width={width}
         height={height}
-      />
+      /> */}
 
       {/* Tam kaliteli görsel - lazy loading */}
       {isIntersecting && (
@@ -156,7 +110,8 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           loading={loading}
           decoding="async"
           onLoad={() => setLoaded(true)}
-          className={`${styles.image} ${loaded ? styles.fadeIn : styles.fadeOut}`}
+          className={`${styles.image}`}
+          /* ${loaded ? styles.fadeIn : styles.fadeOut} - Geçiş efekti kaldırıldı */
           width={width}
           height={height}
         />

@@ -1,32 +1,34 @@
 .container {
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   background-color: var(--tg-theme-bg-color, #000000);
 }
 
 .image {
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease;
-  will-change: opacity;
+  object-position: center;
 }
 
-.placeholder {
+/* Blur efektini devre dışı bıraktım */
+/* .placeholder {
   filter: blur(20px);
-  transform: scale(1.1); /* Bulanık kenarlıkları gizle */
-  will-change: transform; /* GPU hızlandırma */
-}
+} */
 
-.fadeIn {
+/* Animasyon ve geçiş efektlerini devre dışı bıraktım */
+/* .fadeIn {
   opacity: 1;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .fadeOut {
   opacity: 0;
-}
+  transition: opacity 0.3s ease-in-out;
+} */
