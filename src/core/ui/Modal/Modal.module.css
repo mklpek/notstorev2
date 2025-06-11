@@ -16,7 +16,7 @@
   background-color: var(--tg-theme-bg-color, #000000);
   border-radius: 20px 20px 0 0;
   width: 100%;
-  max-width: 390px;
+  max-width: var(--container-max-width);
   max-height: 90vh;
   position: relative;
   animation: slideUp 0.3s ease-out;

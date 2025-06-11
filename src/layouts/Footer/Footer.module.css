@@ -1,7 +1,7 @@
 /* Footer Container */
 .footer {
   width: 100%;
-  max-width: 390px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   background-color: #000000;
   display: flex;

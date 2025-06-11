@@ -5,7 +5,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  width: 390px;
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
   height: 844px;
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(24px);
@@ -17,7 +21,6 @@
   padding: 122px 16px;
   z-index: 2000;
   overflow-y: auto;
-  margin: 0 auto;
 }
 
 .modalBody {

@@ -81,29 +81,3 @@
 .actionButton:active {
   opacity: 0.8;
 }
-
-/* Mobil optimizasyon */
-@media (max-width: 390px) {
-  .container {
-    padding: 24px 16px;
-    min-height: 200px;
-  }
-
-  .icon {
-    width: 64px;
-    height: 64px;
-  }
-
-  .title {
-    font-size: 18px;
-  }
-
-  .description {
-    font-size: 14px;
-  }
-
-  .actionButton {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-}
