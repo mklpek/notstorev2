@@ -38,7 +38,7 @@
 - **TypeScript**: Tip güvenliği ve geliştirici deneyimi
 - **Git Hooks**: Husky ile pre-commit ve commit-msg kontrolü
 - **Code Quality**: ESLint, Prettier ve lint-staged entegrasyonu
-- **Custom Font Integration**: SF Pro Rounded font ailesi (✅ Aktif)
+- **Custom Font Integration**: SF Pro Rounded font ailesi (.woff2, .woff) (✅ Aktif)
 - **BlurHash Integration**: Görsel yükleme için blur placeholder (✅ Aktif)
 - **React Swipeable**: Touch gesture desteği (✅ Aktif)
 - **Intersection Observer**: Performans optimizasyonu için görünürlük kontrolü (✅ Aktif)
@@ -198,7 +198,7 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   │   ├── AppSkeleton.tsx    # App skeleton component (893B, 32 satır)
 │   │   │   │   ├── AppSkeleton.module.css # App skeleton styles (2.2KB, 127 satır) - ✅ Aktif
 │   │   │   │   ├── ItemPageSkeleton.tsx # Item page skeleton component (3.0KB, 90 satır) - ✅ Aktif
-│   │   │   │   ├── ItemPageSkeleton.module.css # Item page skeleton styles (4.7KB, 261 satır) - ✅ Aktif
+│   │   │   │   ├── ItemPageSkeleton.module.css # Item page skeleton styles (4.8KB, 261 satır) - ✅ Aktif
 │   │   │   │   ├── ProductCardSkeleton.tsx # Product card skeleton (1.2KB, 38 satır) - ✅ Aktif
 │   │   │   │   ├── ProductCardSkeleton.module.css # Product card skeleton styles (572B, 38 satır) - ✅ Aktif
 │   │   │   │   ├── TabBarSkeleton.tsx # TabBar skeleton component (1.2KB, 39 satır) - ✅ Aktif
@@ -227,12 +227,12 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   │   │   ├── Form.tsx               # Form component (3.7KB, 139 satır)
 │   │   │   └── index.ts               # Component exports (1.0KB, 32 satır) - ✅ Aktif
 │   │   ├── hooks/                 # Custom React hooks (✅ Aktif)
-│   │   │   ├── useDebounce.ts         # Debounce hook
-│   │   │   ├── useSkeletonTheme.ts    # Skeleton theme hook - ✅ Aktif
-│   │   │   ├── useTelegramHeader.ts   # Telegram header ve buton yönetimi (✅ Tamamlandı)
-│   │   │   ├── useSafeArea.tsx        # Safe area ve viewport yönetimi (✅ Tamamlandı)
-│   │   │   ├── useSafeAreaExample.tsx # Safe area örnek kullanımı
-│   │   │   └── index.ts               # Hooks exports
+│   │   │   ├── useDebounce.ts         # Debounce hook (589B, 24 satır)
+│   │   │   ├── useSkeletonTheme.ts    # Skeleton theme hook (711B, 24 satır) - ✅ Aktif
+│   │   │   ├── useTelegramHeader.ts   # Telegram header ve buton yönetimi (2.5KB, 85 satır) - ✅ Tamamlandı
+│   │   │   ├── useSafeArea.tsx        # Safe area ve viewport yönetimi (6.1KB, 200 satır) - ✅ Tamamlandı
+│   │   │   ├── useSafeAreaExample.tsx # Safe area örnek kullanımı (897B, 31 satır)
+│   │   │   └── index.ts               # Hooks exports (316B, 11 satır)
 │   │   ├── styles/                # Global styles
 │   │   │   └── theme.css              # Global theme/reset dosyası
 │   │   └── utils/                 # Core utility functions
@@ -326,8 +326,6 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 │   ├── main.tsx                   # Application entry point (830B, 25 satır)
 │   ├── types.d.ts                 # Global type definitions (176B, 10 satır)
 │   ├── vite-env.d.ts              # Vite type definitions (2.6KB, 118 satır)
-│   ├── app.d.ts                   # App type definitions (boş dosya) - ✅ Aktif
-│   ├── telegram-webapp-script.ts  # Telegram WebApp script (boş dosya) - ✅ Aktif
 │   └── index.html                 # HTML entry point (1.1KB, 28 satır) - ✅ Aktif
 ├── .gitattributes                 # Git attributes (66B, 3 satır)
 ├── .gitignore                     # Git ignore rules (327B, 31 satır)
@@ -370,9 +368,9 @@ Uygulama [Figma tasarımından](https://www.figma.com/design/CNyDh8dajidImm7mGiM
 
 **Asset Boyutları:**
 
-- **Public Klasörü:** 2.5MB (fonts + images + icons) - ✅ GÜNCEL
+- **Public Klasörü:** ~2.3MB (fonts + images + icons) - ✅ GÜNCEL
 - **Src/Assets Klasörü:** 684KB (SVG icons + profile image) - ✅ GÜNCEL
-- **Toplam Asset Boyutu:** ~3.2MB
+- **Toplam Asset Boyutu:** ~3.0MB
 
 ## 🎯 Uygulama Akışı ve Navigasyon - ✅ GÜNCEL
 
@@ -599,21 +597,21 @@ interface RootState {
 
 ### 🪝 Custom Hooks
 
-#### **useDebounce.ts** (589B, 23 satır) - ✅ AKTİF
+#### **useDebounce.ts** (589B, 24 satır)
 
 - Debounce functionality
 - Search performans optimizasyonu
 - Generic tip desteği
 - Configurable delay
 
-#### **useSkeletonTheme.ts** (689B, 20 satır) - ✅ Aktif
+#### **useSkeletonTheme.ts** (711B, 24 satır)
 
 - Skeleton tema değerlerini yönetme
 - Telegram tema entegrasyonu
 - Memoized tema değerleri
 - Performans optimizasyonu
 
-#### **useTelegramHeader.ts** (2.5KB, 85 satır) - ✅ Tamamlandı
+#### **useTelegramHeader.ts** (2.5KB, 85 satır)
 
 - Telegram WebApp 2.0 API entegrasyonu
 - Sürüm kontrolü ile güvenli API çağrıları
@@ -622,7 +620,7 @@ interface RootState {
 - Route-aware buton kontrolü
 - Eski Telegram sürümleri ile uyumluluk
 
-#### **useSafeArea.tsx** (6.1KB, 200 satır) - ✅ Tamamlandı
+#### **useSafeArea.tsx** (6.1KB, 200 satır)
 
 - iOS/Android safe area desteği
 - Home indicator ve gesture bar uyumluluğu
@@ -686,7 +684,6 @@ ProductGrid (components) - 516B (29 satır)
 
 - `SF Pro Rounded.woff2` - Modern web font (515KB)
 - `SF Pro Rounded.woff` - Web font fallback (766KB)
-- `SF Pro Rounded.ttf` - Desktop font (1.8MB)
 
 **✅ Ürün Görselleri:** Artık tamamen API'den dinamik olarak yükleniyor!
 
