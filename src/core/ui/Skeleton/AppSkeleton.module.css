@@ -99,7 +99,6 @@
   left: 7px;
 }
 
-/* Optimize edilmiş skeleton stilleri - blur yerine opacity ve gradient */
 .wrapper :global(.react-loading-skeleton) {
   --base-color: rgba(255, 255, 255, 0.05);
   --highlight-color: rgba(255, 255, 255, 0.08);
@@ -117,21 +116,11 @@
   will-change: background-position;
 }
 
-/* Basitleştirilmiş shimmer animasyonu - sadece 2 keyframe (GPU yükünü azaltır) */
 @keyframes shimmer {
   0% {
     background-position: -200px 0;
   }
   100% {
     background-position: calc(200px + 100%) 0;
-  }
-}
-
-/* Prefers-reduced-motion için animasyonları devre dışı bırakalım */
-@media (prefers-reduced-motion: reduce) {
-  .wrapper :global(.react-loading-skeleton) {
-    animation: none;
-    background-image: none;
-    background-color: var(--base-color);
   }
 }

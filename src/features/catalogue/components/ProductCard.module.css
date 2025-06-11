@@ -10,14 +10,11 @@
   flex: 0 0 calc((100% - 12px) / 2);
   min-width: 0;
   cursor: pointer;
-  transition: opacity 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.2s ease;
 }
 
-/* Touch cihazlarda gereksiz hover efektini kaldır */
-@media (hover: hover) {
-  .productCard:hover {
-    opacity: 0.8;
-  }
+.productCard:hover {
+  opacity: 0.8;
 }
 
 .imageContainer {
@@ -99,11 +96,4 @@
 .priceCurrency {
   color: rgba(255, 255, 255, 0.5);
   /* Inherits font styles from .productPrice */
-}
-
-/* Erişilebilirlik için animasyon kontrolü */
-@media (prefers-reduced-motion: reduce) {
-  .productCard {
-    transition: none;
-  }
 }
