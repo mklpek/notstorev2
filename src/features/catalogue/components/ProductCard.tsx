@@ -1,9 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Item } from '../../../core/api/notApi';
 import { useAppSelector } from '../../../core/store/hooks';
 import { selectIsInCart } from '../../cart/selectors';
-import ImageGallery from './ImageGallery';
 import CartTagIcon from '../../../core/ui/Icons/CartTagIcon';
 import styles from './ProductCard.module.css';
 
@@ -13,8 +12,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   // Ürünün sepette olup olmadığını kontrol et
   const isInCart = useAppSelector(selectIsInCart(product.id));
 
@@ -33,21 +30,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
     [product.category, product.name]
   );
 
-  // onIndexChange fonksiyonunu memoize et
-  const handleIndexChange = useMemo(() => {
-    return (index: number) => {
-      setCurrentImageIndex(index);
-    };
-  }, []);
+  // İlk görseli al - ürün sayfasında tüm galeri görüntülenecek
+  const mainImage = product.images && product.images.length > 0 ? product.images[0] : '';
 
   return (
     <div className={styles.productCard} onClick={handleCardClick}>
       <div className={styles.imageContainer}>
-        <ImageGallery
-          images={product.images}
-          currentIndex={currentImageIndex}
-          onIndexChange={handleIndexChange}
-        />
+        {/* Sadece ilk görseli göster - standart img kullanarak */}
+        <img src={mainImage} alt={displayTitle} className={styles.productImage} loading="lazy" />
+
         {/* Tag elementi - sadece ürün sepetteyse görünür */}
         {isInCart && (
           <div className={styles.cartTag}>
