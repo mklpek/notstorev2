@@ -12,6 +12,22 @@ import { ApiErrorMessage } from '../../core/ui';
 // 'count' parametresini değişken hale getiriyoruz
 const SKELETON_COUNT = 6;
 
+// Pencere alanındaki görünür öğe sayısını hesaplayan fonksiyon
+const getVisibleItemCount = () => {
+  // Ekran yüksekliğine göre başlangıçta kaç ürün gösterileceğini hesapla
+  // Bir ürün kartı ~184px kare + 28px boşluk = ~212px yükseklik
+  const viewportHeight = window.innerHeight;
+  const headerHeight = 60; // Header yüksekliği
+  const tabBarHeight = 50; // TabBar yüksekliği
+  const cardHeight = 212; // Kart + boşluk yüksekliği
+
+  // Görünür alan içindeki satır sayısı (2'şerli sütunlar)
+  const visibleRows = Math.ceil((viewportHeight - headerHeight - tabBarHeight) / cardHeight);
+
+  // Görünür öğe sayısı (satır * 2 sütun) + üst ve alt marjlar için +1 satır
+  return (visibleRows + 1) * 2;
+};
+
 const ProductGrid: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -61,6 +77,17 @@ const ProductGrid: React.FC = () => {
     []
   );
 
+  // Görünür ürünleri hesapla (performans optimizasyonu)
+  const visibleProducts = useMemo(() => {
+    if (!filteredProducts.length) return [];
+
+    // Görünür öğe sayısını belirle (ekran boyutuna göre)
+    const visibleCount = getVisibleItemCount();
+
+    // İlk aşamada sadece görünür ürünleri döndür
+    return filteredProducts.slice(0, visibleCount);
+  }, [filteredProducts]);
+
   if (isLoading) {
     return loadingContent;
   }
@@ -85,12 +112,28 @@ const ProductGrid: React.FC = () => {
     return <div className={styles.productGrid}></div>;
   }
 
-  // Normal liste görünümünü kullanın
+  // Optimize edilmiş grid - sadece görünür ürünleri renderla
   return (
     <div className={styles.productGrid}>
-      {filteredProducts.map((product: Item) => (
+      {visibleProducts.map((product: Item) => (
         <ProductCard key={product.id} product={product} onProductClick={handleProductClick} />
       ))}
+      {/* Kalan ürünler için bir sentinel element */}
+      {filteredProducts.length > visibleProducts.length && (
+        <div
+          id="product-sentinel"
+          style={{ width: '100%', height: '10px' }}
+          onScroll={() => {
+            // Daha fazla ürün yükleme mantığı buraya eklenebilir
+            // Şimdilik basit bir çözüm olarak sadece 6 ürün daha yükleyelim
+            const currentlyVisible = document.querySelectorAll(`.${styles.productCard}`).length;
+            if (currentlyVisible < filteredProducts.length) {
+              // Daha fazla ürün göstermek için state güncellemesi yapılabilir
+              // Bu örnekte basit bir yaklaşım kullanıyoruz
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

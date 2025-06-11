@@ -18,9 +18,9 @@
 }
 
 .placeholder {
-  filter: blur(20px);
-  transform: scale(1.1); /* Bulanık kenarlıkları gizle */
-  will-change: transform; /* GPU hızlandırma */
+  /* filter: blur(20px) kaldırıldı - GPU kullanımını azaltmak için */
+  opacity: 0.3; /* Blur yerine şeffaflık kullanıyoruz */
+  /* transform: scale(1.1) kaldırıldı - GPU yükünü azaltmak için */
 }
 
 .fadeIn {
@@ -29,4 +29,21 @@
 
 .fadeOut {
   opacity: 0;
+}
+
+/* Touch cihazlarda gereksiz repaints'i önlemek için hover'ı kısıtlayalım */
+@media (hover: hover) {
+  .fadeIn,
+  .fadeOut {
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Prefers-reduced-motion için animasyonları devre dışı bırakalım */
+@media (prefers-reduced-motion: reduce) {
+  .image,
+  .fadeIn,
+  .fadeOut {
+    transition: none;
+  }
 }

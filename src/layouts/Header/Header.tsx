@@ -25,9 +25,16 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Daha optimum focus yönetimi - klavye açılırken jank azaltır
   useEffect(() => {
     if (isSearchOpen && inputRef.current) {
-      inputRef.current.focus();
+      // Input'a focus yapmayı animation frame'e sar
+      // Bu klavye açılırken daha akıcı bir deneyim sağlar
+      requestAnimationFrame(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      });
     }
   }, [isSearchOpen]);
 
@@ -89,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
               onKeyDown={handleKeyDown}
               placeholder="Search"
               className={styles.input}
-              autoFocus
+              // autoFocus kaldırıldı - requestAnimationFrame içinde manuel focus kullanıyoruz
             />
             {query && (
               <button
