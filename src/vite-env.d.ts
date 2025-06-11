@@ -80,6 +80,29 @@ interface TelegramWebAppButton {
   hideProgress?: () => void;
 }
 
+// Popup button tipi
+interface PopupButton {
+  id: string;
+  type: 'default' | 'ok' | 'close' | 'cancel' | 'destructive';
+  text: string;
+}
+
+// Popup parametreleri
+interface PopupParams {
+  title?: string;
+  message: string;
+  buttons?: PopupButton[];
+}
+
+// Story paylaşım parametreleri
+interface StoryShareParams {
+  text?: string;
+  widget_link?: {
+    url: string;
+    name?: string;
+  };
+}
+
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
@@ -97,6 +120,9 @@ interface TelegramWebApp {
   requestFullscreen?: () => void;
   setHeaderColor?: (color: string) => void;
   openLink?: (url: string) => void;
+  openTelegramLink?: (url: string) => void;
+  showPopup?: (params: PopupParams, callback?: (buttonId: string) => void) => void;
+  shareToStory?: (mediaUrl: string, params?: StoryShareParams) => void;
   BackButton?: TelegramWebAppButton;
   SettingsButton?: TelegramWebAppButton;
   onEvent?: (eventType: string, handler: (...args: unknown[]) => void) => void;

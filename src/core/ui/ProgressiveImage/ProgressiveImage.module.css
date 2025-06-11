@@ -18,13 +18,9 @@
 }
 
 .placeholder {
-  /* 
-    'filter: blur(20px)' kaldırıldı. 
-    Bu özellik, çok sayıda görselin bulunduğu sayfalarda ciddi performans sorunlarına yol açıyordu.
-    Bunun yerine, düşük çözünürlüklü görselin tarayıcı tarafından büyütülürken 
-    doğal olarak oluşturduğu bulanıklığı kullanıyoruz. Bu çok daha performanslıdır.
-  */
-  /* transform: scale(1.1) de kaldırıldı, çünkü sadece blur'un kenarlarını gizlemek için vardı. */
+  filter: blur(20px);
+  transform: scale(1.1); /* Bulanık kenarlıkları gizle */
+  will-change: transform; /* GPU hızlandırma */
 }
 
 .fadeIn {

@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../../../layouts/Footer';
 import ShareIcon from '../../../core/ui/Icons/ShareIcon';
 import { useGetCatalogueQuery, catalogSelectors } from '../../../core/api/notApi';
+import { shareProduct } from '../../../utils/telegramHelpers';
 import styles from './ItemPage.module.css';
 import ItemPageSkeleton from '../../../core/ui/Skeleton/ItemPageSkeleton';
 import ProgressiveImage from '../../../core/ui/ProgressiveImage';
@@ -41,6 +42,14 @@ const ItemPage: React.FC = () => {
   // Slider image'e tıklama
   const handleImageClick = (index: number) => {
     setActiveImageIndex(index);
+  };
+
+  // Paylaş butonuna tıklama
+  const handleShareClick = () => {
+    if (product && productId) {
+      const displayTitle = `${product.category} ${product.name}`;
+      shareProduct(displayTitle, productId);
+    }
   };
 
   // Yükleme durumunda ItemPageSkeleton göster
@@ -89,7 +98,7 @@ const ItemPage: React.FC = () => {
                 </div>
               </div>
               <div className={styles.buttons}>
-                <button className={styles.shareButton}>
+                <button className={styles.shareButton} onClick={handleShareClick}>
                   <ShareIcon className={styles.shareIcon} />
                 </button>
               </div>
