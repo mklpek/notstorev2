@@ -223,26 +223,20 @@ const AccountPage: React.FC = () => {
         </div>
       ) : (
         // History yoksa - Collections
-        <div className={styles.collectionsContainer}>
-          <div className={styles.collectionsHeader}>
-            <div className={styles.collectionsTitle}>Collections</div>
-          </div>
-
-          <div className={styles.collections}>
-            <div className={styles.collection}>
-              <div className={styles.emojiPlaceholder}>🔥</div>
-              <span className={styles.collectionLabel}>Favorite</span>
-              <span className={styles.collectionCount}>0</span>
-            </div>
-            <div className={styles.collection}>
-              <div className={styles.emojiPlaceholder}>⌚️</div>
-              <span className={styles.collectionLabel}>Watch later</span>
-              <span className={styles.collectionCount}>0</span>
-            </div>
-            <div className={styles.collection}>
-              <div className={styles.emojiPlaceholder}>💎</div>
-              <span className={styles.collectionLabel}>Premium</span>
-              <span className={styles.collectionCount}>0</span>
+        <div className={styles.collections}>
+          <div className={styles.emojiPlaceholder}>
+            <div className={styles.placeholderBody}>
+              <img
+                src="/images/hatching_chick.svg"
+                alt="No history"
+                className={styles.placeholderImage}
+              />
+              <div className={styles.textFrame}>
+                <h2 className={styles.title}>No history yet</h2>
+                <p className={styles.description}>
+                  Your purchase history will appear here once you make your first order.
+                </p>
+              </div>
             </div>
           </div>
         </div>
