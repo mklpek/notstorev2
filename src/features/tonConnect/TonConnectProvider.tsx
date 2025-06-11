@@ -16,14 +16,9 @@ const tonConnectUI = new TonConnectUI({
   manifestUrl: MANIFEST_URL,
   uiPreferences: TON_CONNECT_UI_CONFIG.uiPreferences,
   language: TON_CONNECT_UI_CONFIG.language as Locales,
-});
-
-// TON Connect walletsList URL'yi manuel override et
-// @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
-if (tonConnectUI.connector && tonConnectUI.connector.walletsList) {
   // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
-  tonConnectUI.connector.walletsList.walletsListSource = WALLETS_LIST_URL;
-}
+  walletsListSource: WALLETS_LIST_URL,
+});
 
 // TON Connect modal blur efekti için dinamik stil ekleme
 const addTonConnectModalStyles = () => {
