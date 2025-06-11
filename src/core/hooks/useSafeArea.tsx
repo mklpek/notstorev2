@@ -8,6 +8,7 @@ interface SafeAreaInsets {
   right: number;
   bottom: number;
   left: number;
+  contentTop?: number; // Content safe area değeri için yeni alan
 }
 
 // Safe Area Context
@@ -16,6 +17,7 @@ export const SafeAreaContext = createContext<SafeAreaInsets>({
   right: 0,
   bottom: 0,
   left: 0,
+  contentTop: 0,
 });
 
 // Safe Area Context hook'u
@@ -28,6 +30,7 @@ export function useSafeAreaInsets() {
     right: 0,
     bottom: 0,
     left: 0,
+    contentTop: 0,
   });
 
   useEffect(() => {
@@ -48,6 +51,12 @@ export function useSafeAreaInsets() {
         `${insets.bottom}px`
       );
       document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
+
+      // Yeni: contentTop değişkeni için CSS değişkeni ekliyoruz
+      document.documentElement.style.setProperty(
+        '--tg-content-safe-area-top',
+        `${insets.contentTop ?? insets.top}px`
+      );
     };
 
     // Safe area değerlerini güncelleme fonksiyonu
@@ -99,6 +108,13 @@ export function useSafeAreaInsets() {
       });
     }
 
+    // ❷.1 Yeni: Telegram contentSafeAreaInset özelliği (Bot API 8.0+)
+    if (wa.contentSafeAreaInset) {
+      updateSafeArea({
+        contentTop: wa.contentSafeAreaInset.top || 0,
+      });
+    }
+
     // İlk viewport yüksekliğini ayarla
     updateViewportHeight();
 
@@ -128,6 +144,25 @@ export function useSafeAreaInsets() {
       }
     };
 
+    // Yeni: Content Safe Area değişikliklerini dinleyen handler
+    const contentSafeAreaHandler = (...args: unknown[]) => {
+      const data = args[0] as
+        | {
+            top?: number;
+            right?: number;
+            bottom?: number;
+            left?: number;
+          }
+        | undefined;
+
+      if (data) {
+        const updates: Partial<SafeAreaInsets> = {};
+        if (data.top !== undefined) updates.contentTop = data.top;
+
+        updateSafeArea(updates);
+      }
+    };
+
     // ❹ Telegram event'lerini dinle
     const cleanupFns: (() => void)[] = [];
 
@@ -143,6 +178,16 @@ export function useSafeAreaInsets() {
       if (tgVer >= 8.0 && safeCall('onEvent', 'safe_area_changed', safeAreaHandler)) {
         cleanupFns.push(() => {
           safeCall('offEvent', 'safe_area_changed', safeAreaHandler);
+        });
+      }
+
+      // Yeni: content_safe_area_changed eventi - sadece TG >= 8.0
+      if (
+        tgVer >= 8.0 &&
+        safeCall('onEvent', 'content_safe_area_changed', contentSafeAreaHandler)
+      ) {
+        cleanupFns.push(() => {
+          safeCall('offEvent', 'content_safe_area_changed', contentSafeAreaHandler);
         });
       }
     } catch {
