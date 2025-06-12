@@ -15,7 +15,7 @@
   min-height: calc(50px + env(safe-area-inset-bottom));
 }
 
-/* Modern browser support */
+/* Modern browser desteği */
 @supports (padding: max(0px)) {
   .footer {
     padding-block-end: max(0px, env(safe-area-inset-bottom));

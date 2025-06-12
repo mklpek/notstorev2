@@ -1,29 +1,17 @@
-/******************************************************************************
- * File: lqip.ts
- * Layer: utils
- * Desc: Low Quality Image Placeholder utility for optimized image loading
- ******************************************************************************/
-
-/**
- * Generates low quality image placeholder URL for progressive loading
- * @param src - Original image source URL
- * @param w - Width parameter for optimization (default: 16)
- * @returns Optimized image URL or original if invalid
- */
 export const lqip = (src: string, w = 16) => {
-  // Return empty string if src is empty or invalid
+  // Eğer src boş veya geçersizse boş string döndür
   if (!src) return '';
 
-  // URL security check
+  // URL güvenlik kontrolü
   try {
-    // Is it a valid URL?
+    // URL olarak geçerli mi?
     new URL(src);
 
-    // Add URL parameter
+    // URL parametresi ekle
     return `${src}${src.includes('?') ? '&' : '?'}width=${w}&optimize=low&format=webp`;
   } catch (error) {
-    // Return original src if invalid URL
-    console.warn('Invalid URL:', src);
+    // Geçersiz URL ise orijinal src'yi döndür
+    console.warn('Geçersiz URL:', src);
     return src;
   }
 };

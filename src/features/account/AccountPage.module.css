@@ -5,7 +5,7 @@
   align-items: center;
   gap: 32px;
   padding: 40px 0px 0px;
-  min-height: 100vh; /* Use min-height instead of height: 100vh */
+  min-height: 100vh; /* height: 100vh yerine min-height kullan */
   width: 100%;
   max-width: var(--container-max-width);
   margin: 0 auto;
@@ -69,7 +69,7 @@
   height: auto;
 }
 
-/* Collections Section - Shown when there's no History */
+/* Collections Section - History olmadığında gösterilir */
 .collections {
   display: flex;
   flex-direction: column;
@@ -107,7 +107,7 @@
   object-fit: contain;
 }
 
-/* Text Frame - Added from Figma */
+/* Text Frame - Figma'dan eklenen */
 .textFrame {
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@
   height: auto;
 }
 
-/* Title - Added from Figma */
+/* Title - Figma'dan eklenen */
 .title {
   font-family:
     'SF Pro',
@@ -136,7 +136,7 @@
   height: auto;
 }
 
-/* Description - Added from Figma */
+/* Description - Figma'dan eklenen */
 .description {
   font-family:
     'SF Pro',
@@ -171,7 +171,7 @@
   font-size: 17px;
 }
 
-/* History Container - Shown when there's History */
+/* History Container - History olduğunda gösterilir */
 .historyContainer {
   display: flex;
   flex-direction: column;
@@ -236,7 +236,7 @@
   background-color: rgba(255, 255, 255, 0.1); /* Placeholder while loading */
 }
 
-/* Sentinel Element - invisible element for automatic loading */
+/* Sentinel Element - otomatik yükleme için görünmez element */
 .sentinel {
   height: 20px;
   width: 100%;
@@ -250,7 +250,7 @@
   width: 100%;
   padding: 16px 0;
   margin-top: 8px;
-  /* Visually hide but keep accessible for screen readers */
+  /* Görsel olarak gizle ama ekran okuyucular için erilebilir bırak */
   position: absolute;
   width: 1px;
   height: 1px;
@@ -262,7 +262,7 @@
   border-width: 0;
 }
 
-/* Make visible when focused for keyboard users */
+/* Klavye kullanıcıları için odaklandığında görünür yap */
 .loadMoreContainer:focus-within {
   position: static;
   width: 100%;

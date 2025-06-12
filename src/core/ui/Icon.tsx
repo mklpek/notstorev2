@@ -1,27 +1,12 @@
-/******************************************************************************
- * File: Icon.tsx
- * Layer: core
- * Desc: SVG icon component with accessibility support and Telegram theme integration
- ******************************************************************************/
-
 import React from 'react';
 
 interface IconProps {
   name: string;
   size?: number;
-  label?: string; // for accessibility
+  label?: string; // erişilebilirlik için
   className?: string | undefined;
 }
 
-/**
- * SVG icon component using sprite system
- * Provides accessible icons with Telegram theme color support
- * @param name - Icon name from sprite
- * @param size - Icon size in pixels (default: 24)
- * @param label - Accessibility label for screen readers
- * @param className - Additional CSS classes
- * @returns JSX element containing SVG icon
- */
 const Icon: React.FC<IconProps> = ({ name, size = 24, label, className }) => (
   <svg
     width={size}
@@ -30,10 +15,10 @@ const Icon: React.FC<IconProps> = ({ name, size = 24, label, className }) => (
     aria-label={label}
     role="img"
     className={className}
-    style={{ fill: 'currentColor' }} // Telegram theme color
-    focusable="false" // Prevent from entering tab order
+    style={{ fill: 'currentColor' }} // Telegram tema rengi
+    focusable="false" // Tab sırasına girmemesi için
   >
-    <use xlinkHref={`#icon-${name}`} /> {/* symbol inside sprite */}
+    <use xlinkHref={`#icon-${name}`} /> {/* sprite içindeki <symbol> */}
   </svg>
 );
 

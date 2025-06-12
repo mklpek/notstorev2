@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: ItemPage.tsx
- * Layer: feature
- * Desc: Product detail page with image gallery, product info, and sharing functionality
- ******************************************************************************/
-
 import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -15,26 +9,21 @@ import ItemPageSkeleton from '../../../core/ui/Skeleton/ItemPageSkeleton';
 import ProgressiveImage from '../../../core/ui/ProgressiveImage';
 import { shareProduct } from '../../../utils/telegramHelpers';
 
-/**
- * Product detail page component
- * Displays product information, image gallery, and sharing functionality
- * @returns JSX element containing product detail page
- */
 const ItemPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
   const sliderRef = useRef<HTMLDivElement>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Fetch product data from API - use selectFromResult to get product directly
+  // API'den ürün verilerini çek - selectFromResult kullanarak doğrudan ürünü alalım
   const { product, isLoading, error } = useGetCatalogueQuery(undefined, {
     selectFromResult: ({ data, isLoading, error }) => {
-      // Return early if no data
+      // Veri yoksa erken dön
       if (!data || isLoading) {
         return { product: undefined, isLoading, error };
       }
 
-      // Get product directly with catalogSelectors.selectById - O(1) operation
+      // catalogSelectors.selectById ile doğrudan ürünü al - O(1) işlem
       const foundProduct = catalogSelectors.selectById(data, Number(productId));
 
       return {
@@ -45,31 +34,31 @@ const ItemPage: React.FC = () => {
     },
   });
 
-  // Handle back button
+  // Back butonunu ele almak için
   const handleBack = () => {
     navigate('/');
   };
 
-  // Handle slider image click
+  // Slider image'e tıklama
   const handleImageClick = (index: number) => {
     setActiveImageIndex(index);
   };
 
-  // Show ItemPageSkeleton during loading
+  // Yükleme durumunda ItemPageSkeleton göster
   if (isLoading) {
     return <ItemPageSkeleton />;
   }
 
   if (error || !product) {
-    return <div className={styles.error}>Product not found</div>;
+    return <div className={styles.error}>Ürün bulunamadı</div>;
   }
 
-  // Combine category and name according to Figma design
+  // Figma tasarımına göre kategori ve ismi birleştir
   const displayTitle = `${product.category} ${product.name}`;
 
-  // Parse fabric information
+  // Fabric bilgisini parse et
   const parseFabricInfo = (fabricText: string) => {
-    // Parse string like "100% cotton"
+    // "100% cotton" gibi bir string'i parse et
     const match = fabricText.match(/^(\d+%)\s*(.+)$/i);
     if (match && match[2]) {
       return {
@@ -77,7 +66,7 @@ const ItemPage: React.FC = () => {
         material: match[2].toUpperCase(), // "COTTON"
       };
     }
-    // If parsing fails, return original value
+    // Eğer parse edilemezse, orijinal değeri döndür
     return {
       percentage: fabricText,
       material: 'FABRIC',
@@ -134,9 +123,9 @@ const ItemPage: React.FC = () => {
         <div className={styles.bigStickerContainer}>
           <div className={styles.bigSticker}>
             {/* 
-              RENDER ALL IMAGES, SHOW ONLY THE ACTIVE ONE.
-              This method is more reliable than changing `src` and prevents
-              the browser from re-downloading images.
+              TÜM GÖRSELLERİ RENDER ET, SADECE AKTİF OLANI GÖSTER.
+              Bu yöntem, `src` değiştirmekten daha güvenilirdir ve tarayıcının
+              görselleri tekrar indirmesini engeller.
             */}
             {product.images.map((image, index) => (
               <div
@@ -169,7 +158,7 @@ const ItemPage: React.FC = () => {
                 className={`${styles.sticker} ${index === activeImageIndex ? styles.stickerActive : ''}`}
                 onClick={() => handleImageClick(index)}
               >
-                {/* Use ProgressiveImage for all slider images */}
+                {/* Tüm slider görselleri için ProgressiveImage kullan */}
                 <ProgressiveImage
                   src={image}
                   alt={`${displayTitle} - thumb ${index + 1}`}
@@ -181,7 +170,7 @@ const ItemPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Render Footer as portal in document.body */}
+      {/* Footer'ı portal olarak document.body'de render et */}
       {createPortal(<Footer product={product} />, document.body)}
     </div>
   );

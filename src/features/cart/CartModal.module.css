@@ -9,14 +9,14 @@
   background-color: var(--tg-theme-bg-color, #000000);
 }
 
-/* Full height for empty cart modal */
+/* Boş sepet modalı için tam ekran yükseklik */
 .emptyCartModal {
   height: 100%;
 }
 
-/* Dynamic height for filled cart modal */
+/* Dolu sepet modalı için dinamik yükseklik */
 .filledCartModal {
-  /* No height property, will expand/contract based on content */
+  /* Height özelliği yok, içeriğe göre uzayıp kısalacak */
   height: auto;
   min-height: min-content;
 }
@@ -154,7 +154,7 @@
   transform: scale(0.98);
 }
 
-/* Lines - Figma Lines structure compliant */
+/* Lines - Figma'daki Lines yapısına uygun */
 .lines {
   display: flex;
   flex-direction: column;
@@ -162,18 +162,18 @@
   padding: 16px;
   width: 100%;
   overflow-y: auto;
-  /* Correct calculation for 3 products:
-     - Each product: 60px (image height)
-     - Each product padding: 8px (4px top + 4px bottom)
-     - 2 gaps: 8px (4px * 2)
-     - Lines padding: 32px (16px top + 16px bottom)
-     Total: (3 * 68px) + 8px + 32px = 244px
-     Adding extra space: 260px
+  /* 3 ürün için doğru hesaplama:
+     - Her ürün: 60px (resim yüksekliği)
+     - Her ürün padding: 8px (4px üst + 4px alt)
+     - 2 gap: 8px (4px * 2)
+     - Lines padding: 32px (16px üst + 16px alt)
+     Toplam: (3 * 68px) + 8px + 32px = 244px
+     Fazladan alan ekliyorum: 260px
   */
   max-height: 260px;
 }
 
-/* Basket Line - Figma Basket line structure compliant */
+/* Basket Line - Figma'daki Basket line yapısına uygun */
 .basketLine {
   display: flex;
   flex-direction: row;
@@ -184,7 +184,7 @@
   border-radius: 16px;
 }
 
-/* Cart Items Styling - Updated to match Figma */
+/* Cart Items Styling - Figma'ya uygun şekilde güncellendi */
 .cartItems {
   display: flex;
   flex-direction: column;
@@ -211,7 +211,7 @@
   aspect-ratio: 1/1;
 }
 
-/* Preserve original img properties for backward compatibility */
+/* Orijinal img özelliklerini koruyalım, backward compatibility için */
 .itemImage img {
   width: 100%;
   height: 100%;

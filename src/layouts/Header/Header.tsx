@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: Header.tsx
- * Layer: layout
- * Desc: Main application header with search functionality and cart integration
- ******************************************************************************/
-
 import React, { useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAppSelector } from '../../core/store/hooks';
@@ -18,22 +12,15 @@ interface HeaderProps {
   onSearchOpen?: (isOpen: boolean) => void;
 }
 
-/**
- * Main application header component
- * Handles search functionality, cart display, and navigation
- * @param onCartClick - Optional callback when cart button is clicked
- * @param onSearchOpen - Optional callback when search state changes
- * @returns JSX element containing header with search and cart functionality
- */
 const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
-  // Use URL search params - to get search parameter from URL
+  // URL search params kullanımı - arama parametresini URL'den almak için
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
 
-  // Get total number of items in cart
+  // Sepetteki toplam ürün sayısını al
   const cartCount = useAppSelector(selectCartCount);
 
-  // Check if search bar is open from URL
+  // Arama barının açık olup olmadığını URL'den al
   const isSearchOpen = !!query || searchParams.has('search');
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -45,60 +32,41 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, onSearchOpen }) => {
   }, [isSearchOpen]);
 
   useEffect(() => {
-    // Notify parent component about search state
+    // Search durumunu parent bileşene bildir
     if (onSearchOpen) {
       onSearchOpen(isSearchOpen);
     }
   }, [isSearchOpen, onSearchOpen]);
 
-  /**
-   * Handles search button click
-   * Adds search parameter to URL when search button is clicked
-   */
   const handleSearchClick = () => {
+    // Arama butonuna tıklandığında search parametresini URL'e ekle
     setSearchParams({ search: 'true' }, { replace: true });
   };
 
-  /**
-   * Handles search close
-   * Clears all query parameters
-   */
   const handleSearchClose = () => {
+    // Tüm query parametrelerini temizle
     setSearchParams({}, { replace: true });
   };
 
-  /**
-   * Handles input value changes
-   * Updates URL parameters based on input value
-   * @param e - Input change event
-   */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value) {
-      // Add as q parameter if input has value
+      // Input değeri varsa q parametresi olarak ekle
       setSearchParams({ q: value }, { replace: true });
     } else {
-      // Stay in search mode but remove q parameter if input is empty
+      // Input boşsa arama modunda kal ama q parametresini kaldır
       setSearchParams({ search: 'true' }, { replace: true });
     }
   };
 
-  /**
-   * Handles keyboard events
-   * Closes search on Escape key
-   * @param e - Keyboard event
-   */
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       handleSearchClose();
     }
   };
 
-  /**
-   * Handles input clear button
-   * Clears input value and stays in search mode
-   */
   const handleClearInput = () => {
+    // Input değerini temizle ve search modunda kal
     setSearchParams({ search: 'true' }, { replace: true });
     if (inputRef.current) {
       inputRef.current.focus();

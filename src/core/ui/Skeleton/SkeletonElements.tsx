@@ -1,26 +1,15 @@
-/******************************************************************************
- * File: SkeletonElements.tsx
- * Layer: core
- * Desc: Reusable skeleton elements for loading states with memoized components
- ******************************************************************************/
-
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 
-// Memoized small skeleton components
-// Won't re-render unless their props change
+// Memoize edilmiş küçük skeleton bileşenleri
+// Props'ları değişmediği sürece yeniden render edilmezler
 
 interface CircleSkeletonProps {
   size?: number;
   className?: string;
 }
 
-/**
- * Circular skeleton component for icons
- * @param size - Circle diameter in pixels
- * @param className - Additional CSS classes
- * @returns Circular skeleton element
- */
+// Dairesel skeleton - ikonlar için
 export const CircleSkeleton = React.memo(({ size = 24, className = '' }: CircleSkeletonProps) => (
   <Skeleton circle width={size} height={size} className={className} aria-hidden="true" />
 ));
@@ -31,13 +20,7 @@ interface TextSkeletonProps {
   className?: string;
 }
 
-/**
- * Text skeleton component
- * @param width - Skeleton width (default: 100%)
- * @param height - Skeleton height in pixels (default: 20)
- * @param className - Additional CSS classes
- * @returns Text skeleton element
- */
+// Metin skeleton
 export const TextSkeleton = React.memo(
   ({ width = '100%', height = 20, className = '' }: TextSkeletonProps) => (
     <Skeleton width={width} height={height} className={className} aria-hidden="true" />
@@ -49,12 +32,7 @@ interface ImageSkeletonProps {
   borderRadius?: number;
 }
 
-/**
- * Image skeleton component
- * @param className - Additional CSS classes
- * @param borderRadius - Border radius in pixels (default: 12)
- * @returns Image skeleton element
- */
+// Görsel skeleton
 export const ImageSkeleton = React.memo(
   ({ className = '', borderRadius = 12 }: ImageSkeletonProps) => (
     <Skeleton
@@ -65,10 +43,7 @@ export const ImageSkeleton = React.memo(
   )
 );
 
-/**
- * Pagination dots skeleton component
- * @returns Array of skeleton dots for pagination
- */
+// Pagination dots skeleton
 export const PaginationDotsSkeleton = React.memo(() => (
   <>
     {Array.from({ length: 5 }).map((_, index) => (
@@ -77,7 +52,7 @@ export const PaginationDotsSkeleton = React.memo(() => (
   </>
 ));
 
-// Component names for React DevTools
+// React DevTools için komponent adları
 CircleSkeleton.displayName = 'CircleSkeleton';
 TextSkeleton.displayName = 'TextSkeleton';
 ImageSkeleton.displayName = 'ImageSkeleton';

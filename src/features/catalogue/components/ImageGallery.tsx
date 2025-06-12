@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: ImageGallery.tsx
- * Layer: feature
- * Desc: Image gallery component with pagination dots and progressive loading
- ******************************************************************************/
-
 import React, { useMemo } from 'react';
 import styles from './ImageGallery.module.css';
 import ProgressiveImage from '../../../core/ui/ProgressiveImage';
@@ -14,33 +8,25 @@ interface ImageGalleryProps {
   onIndexChange: (index: number) => void;
 }
 
-/**
- * Image gallery component with pagination dots
- * Displays images with navigation dots based on Figma design
- * @param images - Array of image URLs to display
- * @param currentIndex - Currently active image index
- * @param onIndexChange - Callback when image index changes
- * @returns JSX element containing image gallery with pagination
- */
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onIndexChange }) => {
-  // Calculate dot sizes according to Figma design - optimize calculation with useMemo
+  // Figma tasarımına göre dot boyutlarını hesapla - useMemo ile hesaplamayı optimize ediyoruz
   const getDotSizeClass = useMemo(() => {
     return (index: number, totalDots: number, activeIndex: number) => {
-      // In Figma design, active dot is always at 5th position (index 4)
-      // 4 dots on the right, 4 dots on the left
-      const activePosition = 4; // 5th position (0-indexed)
+      // Figma tasarımında aktif dot her zaman 5. pozisyonda (index 4)
+      // Sağında 4, solunda 4 dot var
+      const activePosition = 4; // 5. pozisyon (0-indexed)
 
       if (index === activePosition) {
         return styles.dotActive;
       }
 
-      // Calculate sizes based on distance from active position
+      // Aktif pozisyondan uzaklığa göre boyutları hesapla
       const distance = Math.abs(index - activePosition);
 
-      // Sizes according to Figma design:
-      // Distance 4 (outermost): 2px
-      // Distance 3 (second): 3px
-      // Distance 2,1 (close to center): 4px
+      // Figma tasarımına göre boyutlar:
+      // Distance 4 (en dış): 2px
+      // Distance 3 (ikinci): 3px
+      // Distance 2,1 (merkeze yakın): 4px
       if (distance === 4) {
         return styles.dotSize2px;
       } else if (distance === 3) {
@@ -55,9 +41,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onInd
     <div className={styles.imageGallery}>
       <div className={styles.imageContainer}>
         {/* 
-          RENDER ALL IMAGES, SHOW ONLY THE ACTIVE ONE.
-          This method is more reliable than changing `src` and prevents
-          the browser from re-downloading images.
+          TÜM GÖRSELLERİ RENDER ET, SADECE AKTİF OLANI GÖSTER.
+          Bu yöntem, `src` değiştirmekten daha güvenilirdir ve tarayıcının
+          görselleri tekrar indirmesini engeller.
         */}
         {images.map((image, index) => (
           <div
@@ -70,7 +56,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onInd
           >
             <ProgressiveImage
               src={image}
-              alt={`Product image ${index + 1}`}
+              alt={`Ürün resmi ${index + 1}`}
               className={styles.image || ''}
               loading={index === currentIndex ? 'eager' : 'lazy'}
             />
@@ -84,7 +70,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onInd
             key={index}
             className={`${styles.dot} ${getDotSizeClass(index, images.length, currentIndex)}`}
             onClick={() => onIndexChange(index)}
-            aria-label={`Image ${index + 1}`}
+            aria-label={`Resim ${index + 1}`}
           />
         ))}
       </div>
@@ -92,5 +78,5 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, currentIndex, onInd
   );
 };
 
-// Wrap component with memo to prevent unnecessary renders
+// Bileşeni memo ile sarmalayarak gereksiz render'ları önlüyoruz
 export default React.memo(ImageGallery);

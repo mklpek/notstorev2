@@ -1,76 +1,43 @@
-/******************************************************************************
- * File: themeSlice.ts
- * Layer: feature
- * Desc: Redux slice for theme management with light/dark/system mode support
- ******************************************************************************/
-
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../core/store';
 
-/**
- * Theme mode options for the application
- */
+// Tema ile ilgili durumları tanımlama
 export type ThemeMode = 'light' | 'dark' | 'system';
 
-/**
- * Theme state interface
- */
 interface ThemeState {
   mode: ThemeMode;
   prefersDarkColors: boolean;
 }
 
-/**
- * Initial theme state
- */
+// Başlangıç durumu
 const initialState: ThemeState = {
-  mode: 'system', // Default to system settings
-  prefersDarkColors: false, // Start with light theme
+  mode: 'system', // Default olarak sistem ayarlarını kullan
+  prefersDarkColors: false, // Başlangıçta açık tema
 };
 
-/**
- * Theme slice with reducers for theme management
- */
+// Tema slice'ını oluşturma
 export const themeSlice = createSlice({
   name: 'theme',
   initialState,
   reducers: {
-    /**
-     * Action to change theme mode
-     * @param state - Current theme state
-     * @param action - Payload containing new theme mode
-     */
+    // Tema modunu değiştiren eylem
     setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
       state.mode = action.payload;
     },
 
-    /**
-     * Action to update system color preference
-     * @param state - Current theme state
-     * @param action - Payload containing dark color preference
-     */
+    // Sistem renk tercihini güncelleyen eylem
     setPrefersDarkColors: (state, action: PayloadAction<boolean>) => {
       state.prefersDarkColors = action.payload;
     },
   },
 });
 
-// Export action creators
+// Eylem oluşturucuları dışa aktarma
 export const { setThemeMode, setPrefersDarkColors } = themeSlice.actions;
 
-/**
- * Selector to get current theme mode
- * @param state - Root state
- * @returns Current theme mode
- */
+// Tema seçici (selector)
 export const selectThemeMode = (state: RootState) => state.theme?.mode;
-
-/**
- * Selector to get effective theme (resolves system preference)
- * @param state - Root state
- * @returns Effective theme ('light' or 'dark')
- */
 export const selectEffectiveTheme = (state: RootState) => {
   const mode = state.theme?.mode;
   const prefersDarkColors = state.theme?.prefersDarkColors;
@@ -82,5 +49,5 @@ export const selectEffectiveTheme = (state: RootState) => {
   return mode;
 };
 
-// Export reducer
+// Reducer'ı dışa aktarma
 export default themeSlice.reducer;

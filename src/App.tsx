@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: App.tsx
- * Layer: main
- * Desc: Main application component with routing, theming, and Telegram integration
- ******************************************************************************/
-
 import { useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import CartModal from './features/cart/CartModal';
@@ -20,34 +14,29 @@ import { getUserProfilePhoto } from './core/api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
 import useTelegramHeader from './core/hooks/useTelegramHeader';
 
-// Lazy loaded components for code splitting
+// Lazy loaded components
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
 const ProductGrid = lazy(() => import('./features/catalogue/ProductGrid'));
 const ItemPage = lazy(() => import('./features/catalogue/components/ItemPage'));
 const AccountPage = lazy(() => import('./features/account/AccountPage'));
 
-/**
- * Main application component
- * Handles routing, theming, Telegram integration, and global state management
- * @returns JSX element containing the entire application
- */
 function App() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const dispatch = useDispatch();
 
-  // Use Telegram header hook - all controls are within this hook
+  // Telegram header hook'unu kullan - tüm kontroller bu hook içerisinde
   useTelegramHeader();
 
-  // Memoize skeleton theme values for performance
+  // Skeleton teması değerlerini memoize ediyoruz
   const skeletonTheme = useSkeletonTheme();
 
-  // Apply Telegram theme colors
+  // Telegram tema renklerini uygula
   useEffect(() => {
     try {
       const wa = window.Telegram?.WebApp;
       if (!wa) return;
 
-      // Set theme colors as CSS variables
+      // Tema renklerini CSS değişkenlerine ayarla
       document.documentElement.style.setProperty(
         '--tg-theme-bg-color',
         wa.themeParams.bg_color || '#000000'
@@ -65,12 +54,9 @@ function App() {
     }
   }, []);
 
-  // Load user information from Telegram WebApp
+  // Kullanıcı bilgilerini yükle
   useEffect(() => {
-    /**
-     * Initialize user data from Telegram WebApp
-     * Handles user profile, photo caching, and Redux state updates
-     */
+    // Telegram kullanıcı bilgilerini al ve Redux'a kaydet
     const initUser = async () => {
       try {
         const { WebApp: wa } = window.Telegram || { WebApp: undefined };
@@ -83,13 +69,13 @@ function App() {
           dispatch(setUserPhotoUrl(cachedPhoto));
         }
 
-        // Prepare data according to TelegramUser type
+        // TelegramUser tipine uygun veriyi hazırla
         const userDetails: TelegramUser = {
           id: user.id,
           first_name: user.first_name,
         };
 
-        // Add optional fields after checking
+        // Opsiyonel alanları kontrol ederek ekle
         if (user.last_name) userDetails.last_name = user.last_name;
         if (user.username) userDetails.username = user.username;
         if (user.language_code) userDetails.language_code = user.language_code;
@@ -99,17 +85,17 @@ function App() {
 
         dispatch(setTelegramUser(userDetails));
 
-        // Fast path: if photo_url exists, use immediately and cache
+        // Anında yol: photo_url varsa, hemen kullan ve cache'le
         if (user.photo_url) {
           dispatch(setUserPhotoUrl(user.photo_url));
           localStorage.setItem(`avatar:${user.id}`, user.photo_url);
-          return; // Skip Bot API call
+          return; // Bot API'ye gitmeyi atla
         }
 
-        // Fallback: if no photo_url and cache is empty, call API
+        // Fallback: photo_url yoksa ve cache boşsa API'ye git
         if (!cachedPhoto) {
           const photoUrl = await getUserProfilePhoto(user.id);
-          const finalPhotoUrl = photoUrl ?? 'none'; // Cache as 'none' if no API response
+          const finalPhotoUrl = photoUrl ?? 'none'; // API'den cevap gelmezse 'none' olarak cache'le
           localStorage.setItem(`avatar:${user.id}`, finalPhotoUrl);
           dispatch(setUserPhotoUrl(finalPhotoUrl));
         }
@@ -121,8 +107,8 @@ function App() {
     initUser();
   }, [dispatch]);
 
-  // Wrap functions with useCallback for performance
-  // They will only be recreated when dependencies change
+  // Fonksiyonları useCallback ile sarmalıyoruz
+  // Sadece bağımlılıkları değiştiğinde yeniden oluşturulurlar
   const handleCartClick = useCallback(() => {
     setIsCartModalOpen(true);
   }, []);
@@ -140,7 +126,7 @@ function App() {
         duration={skeletonTheme.animationDuration}
       >
         <Routes>
-          {/* Full-screen product detail - uses special ItemPageSkeleton */}
+          {/* Tam-ekran ürün detayı - özel ItemPageSkeleton kullanır */}
           <Route
             path="product/:productId"
             element={
@@ -150,7 +136,7 @@ function App() {
             }
           />
 
-          {/* Layout containing TabBar + Header - uses AppSkeleton */}
+          {/* TabBar + Header barındıran layout - AppSkeleton kullanır */}
           <Route
             element={
               <Suspense fallback={<AppSkeleton />}>
@@ -172,7 +158,7 @@ function App() {
           </Route>
         </Routes>
 
-        {/* Modal component - return to non-route based old version */}
+        {/* Modal component - route tabanlı olmayan eski versiyona dönüş */}
         <CartModal isOpen={isCartModalOpen} onClose={handleCartModalClose} />
       </SkeletonTheme>
     </TonConnectProvider>

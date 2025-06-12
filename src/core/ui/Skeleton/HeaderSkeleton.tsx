@@ -1,17 +1,10 @@
-/******************************************************************************
- * File: HeaderSkeleton.tsx
- * Layer: core
- * Desc: Header skeleton component for loading states with memoized rendering
- ******************************************************************************/
-
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import styles from './AppSkeleton.module.css';
 
 /**
- * Header skeleton component
- * Memoized pure component that only renders when props change
- * @returns JSX element containing header skeleton
+ * Header için skeleton bileşeni
+ * Memoize edilmiş saf bileşen, sadece prop değiştiğinde render edilir
  */
 const HeaderSkeleton = React.memo(() => {
   return (
@@ -23,7 +16,7 @@ const HeaderSkeleton = React.memo(() => {
   );
 });
 
-// Component name for React DevTools
+// React DevTools için komponent adı
 HeaderSkeleton.displayName = 'HeaderSkeleton';
 
 export default HeaderSkeleton;

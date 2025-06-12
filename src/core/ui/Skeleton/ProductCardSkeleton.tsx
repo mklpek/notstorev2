@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: ProductCardSkeleton.tsx
- * Layer: core
- * Desc: Product card skeleton component with optimized array rendering
- ******************************************************************************/
-
 import React, { useMemo } from 'react';
 import styles from './ProductCardSkeleton.module.css';
 import { ImageSkeleton, TextSkeleton } from './SkeletonElements';
@@ -13,13 +7,11 @@ interface ProductCardSkeletonProps {
 }
 
 /**
- * Product card skeleton component
- * Memoized and optimized structure for loading states
- * @param count - Number of skeleton cards to render (default: 1)
- * @returns Array of product card skeletons
+ * Ürün kartı skeleton bileşeni
+ * Memoize edilmiş ve optimize edilmiş yapı
  */
 const ProductCardSkeleton: React.FC<ProductCardSkeletonProps> = React.memo(({ count = 1 }) => {
-  // Create array with useMemo, only recalculated when count changes
+  // Array'i useMemo ile oluştur, sadece count değiştiğinde yeniden hesaplanır
   const skeletonItems = useMemo(() => {
     return Array.from({ length: count }).map((_, index) => (
       <div key={index} className={styles.skeletonCard} aria-hidden="true">
@@ -34,12 +26,12 @@ const ProductCardSkeleton: React.FC<ProductCardSkeletonProps> = React.memo(({ co
         </div>
       </div>
     ));
-  }, [count]); // Only recalculate when count changes
+  }, [count]); // Sadece count değiştiğinde yeniden hesapla
 
   return <>{skeletonItems}</>;
 });
 
-// Component name for React DevTools
+// React DevTools için komponent adı
 ProductCardSkeleton.displayName = 'ProductCardSkeleton';
 
 export default ProductCardSkeleton;

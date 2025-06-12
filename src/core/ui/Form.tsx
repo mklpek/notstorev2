@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: Form.tsx
- * Layer: core
- * Desc: Contact form component with validation and accessibility features
- ******************************************************************************/
-
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './Form.module.css';
 import Button from './Button/Button';
@@ -20,17 +14,10 @@ interface FormErrors {
   message?: string;
 }
 
-/**
- * Contact form component with validation
- * Provides accessible form with real-time validation and error handling
- * @param onSubmit - Callback function when form is submitted
- * @param buttonText - Custom text for submit button
- * @returns JSX element containing contact form
- */
 const Form: React.FC<{
   onSubmit: (data: { name: string; email: string; message: string }) => void;
   buttonText?: string;
-}> = ({ onSubmit, buttonText = 'Submit' }) => {
+}> = ({ onSubmit, buttonText = 'Gönder' }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -47,37 +34,29 @@ const Form: React.FC<{
     }
   }, []);
 
-  /**
-   * Validates form fields and returns validation status
-   * @returns True if form is valid, false otherwise
-   */
   const validateForm = () => {
     const newErrors: FormErrors = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Name field is required';
+      newErrors.name = 'İsim alanı zorunludur';
     }
 
     if (!email.trim()) {
-      newErrors.email = 'Email field is required';
+      newErrors.email = 'E-posta alanı zorunludur';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = 'Geçerli bir e-posta adresi giriniz';
     }
 
     if (!message.trim()) {
-      newErrors.message = 'Message field is required';
+      newErrors.message = 'Mesaj alanı zorunludur';
     } else if (message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters long';
+      newErrors.message = 'Mesaj en az 10 karakter olmalıdır';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  /**
-   * Handles form submission with validation
-   * @param e - Form submit event
-   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -101,7 +80,7 @@ const Form: React.FC<{
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.formGroup}>
         <label htmlFor="name" className={styles.label}>
-          Name
+          İsim
         </label>
         <input
           id="name"
@@ -117,7 +96,7 @@ const Form: React.FC<{
 
       <div className={styles.formGroup}>
         <label htmlFor="email" className={styles.label}>
-          Email
+          E-posta
         </label>
         <input
           id="email"
@@ -133,7 +112,7 @@ const Form: React.FC<{
 
       <div className={styles.formGroup}>
         <label htmlFor="message" className={styles.label}>
-          Message
+          Mesaj
         </label>
         <textarea
           id="message"
@@ -149,7 +128,7 @@ const Form: React.FC<{
 
       <div className={styles.formActions}>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : buttonText}
+          {isSubmitting ? 'Gönderiliyor...' : buttonText}
         </Button>
       </div>
     </form>

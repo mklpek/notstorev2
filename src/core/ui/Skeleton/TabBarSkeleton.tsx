@@ -1,17 +1,10 @@
-/******************************************************************************
- * File: TabBarSkeleton.tsx
- * Layer: core
- * Desc: Tab bar skeleton component for loading states with optimized rendering
- ******************************************************************************/
-
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import styles from './AppSkeleton.module.css';
 
 /**
- * TabBar skeleton component
- * Memoized pure component that prevents unnecessary renders
- * @returns JSX element containing tab bar skeleton
+ * TabBar için skeleton bileşeni
+ * Memoize edilmiş saf bileşen, gereksiz render'ları önler
  */
 const TabBarSkeleton = React.memo(() => {
   return (
@@ -39,7 +32,7 @@ const TabBarSkeleton = React.memo(() => {
   );
 });
 
-// Component name for React DevTools
+// React DevTools için komponent adı
 TabBarSkeleton.displayName = 'TabBarSkeleton';
 
 export default TabBarSkeleton;

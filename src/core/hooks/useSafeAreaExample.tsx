@@ -1,29 +1,19 @@
-/******************************************************************************
- * File: useSafeAreaExample.tsx
- * Layer: core
- * Desc: Example component demonstrating safe area usage with JavaScript and CSS
- ******************************************************************************/
-
 import React from 'react';
 import { useSafeAreaContext } from './useSafeArea.tsx';
 
-/**
- * Example component showing how to use Safe Area values in JavaScript
- * Demonstrates both JavaScript values and CSS variables usage
- * @returns JSX element displaying safe area values and usage examples
- */
+// Safe Area değerlerini JavaScript'te kullanma örneği
 export const SafeAreaExample: React.FC = () => {
   const { top, right, bottom, left } = useSafeAreaContext();
 
   return (
     <div style={{ padding: '16px' }}>
-      <h3>Safe Area Values</h3>
+      <h3>Safe Area Değerleri</h3>
       <p>Top: {top}px</p>
       <p>Right: {right}px</p>
       <p>Bottom: {bottom}px</p>
       <p>Left: {left}px</p>
 
-      {/* You can also use CSS variables */}
+      {/* CSS değişkenlerini de kullanabilirsiniz */}
       <div
         style={{
           marginTop: 'var(--tg-safe-area-inset-top)',
@@ -33,7 +23,7 @@ export const SafeAreaExample: React.FC = () => {
           borderRadius: '8px',
         }}
       >
-        This div uses both JavaScript values and CSS variables
+        Bu div hem JavaScript değerlerini hem de CSS değişkenlerini kullanır
       </div>
     </div>
   );

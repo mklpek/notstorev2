@@ -17,16 +17,16 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-bottom: 174px; /* Space for Footer (58px) + Slider (116px) */
+  padding-bottom: 174px; /* Footer (58px) + Slider (116px) için boşluk */
 }
 
-/* Fixed Bottom Content - Fix slider above footer */
+/* Fixed Bottom Content - Slider'ı footer üstüne sabitlemek için */
 .fixedBottom {
   position: fixed;
-  bottom: 58px; /* Above footer height */
+  bottom: 58px; /* Footer yüksekliği kadar yukarıda */
   left: 0;
   width: 100%;
-  z-index: 101; /* Lower than footer (9999) but higher than others */
+  z-index: 101; /* Footer'dan (9999) düşük ama diğerlerinden yüksek */
   background-color: #000000;
 }
 
@@ -226,7 +226,7 @@
   width: auto;
   flex: 1;
   min-height: 0;
-  margin-bottom: 0; /* Remove margin to stick to slider */
+  margin-bottom: 0; /* Slider'a yapışık olması için margin kaldır */
 }
 
 /* Big Sticker - Figma: row, stretch, gap 10px, padding 10px, width 358px, fill, border-radius 20px */
@@ -292,7 +292,7 @@
   box-sizing: border-box;
 }
 
-/* Sticker image scaling modes */
+/* Sticker görsel ölçekleme modları */
 .stickerFill,
 .stickerStretch {
   width: 100%;
@@ -330,9 +330,9 @@
   width: 100%;
   height: 100%;
   border: 1px solid #ffffff;
-  border-radius: 16px; /* Same radius as parent */
-  box-sizing: border-box; /* Include border inside */
-  pointer-events: none; /* Don't affect click events */
+  border-radius: 16px; /* Parent ile aynı radius */
+  box-sizing: border-box; /* Border içeri dahil */
+  pointer-events: none; /* Tıklama olaylarını etkilemesin */
 }
 
 .sticker:hover {

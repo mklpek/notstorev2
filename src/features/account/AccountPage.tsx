@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: AccountPage.tsx
- * Layer: feature
- * Desc: User account page with purchase history and profile information
- ******************************************************************************/
-
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import styles from './AccountPage.module.css';
 import {
@@ -19,26 +13,21 @@ import { ApiErrorMessage } from '../../core/ui';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../core/store';
 
-/**
- * Account page component
- * Displays user profile information and purchase history with infinite scroll
- * @returns JSX element containing account page with user info and history
- */
 const AccountPage: React.FC = () => {
-  // Get Telegram user information from Redux
+  // Redux'tan Telegram kullanıcı bilgilerini al
   const userState = useSelector((state: RootState) => state.user);
   const user = userState.user;
 
-  // State to track number of visible items
+  // Gösterilecek öğe sayısını tutan state
   const [visibleCount, setVisibleCount] = useState(20);
 
-  // State to determine which API to use
+  // Hangi API'nin kullanılacağını belirleyen state
   const [useEmptyHistoryAPI, setUseEmptyHistoryAPI] = useState(false);
 
-  // Ref for sentinel element
+  // Sentinel için ref
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Use RTK Query for history data - conditionally based on useEmptyHistoryAPI
+  // History verisi için RTK Query kullan - koşullu olarak useEmptyHistoryAPI'ye göre
   const standardHistoryResult = useGetHistoryQuery(undefined, {
     skip: useEmptyHistoryAPI,
   });
@@ -47,34 +36,37 @@ const AccountPage: React.FC = () => {
     skip: !useEmptyHistoryAPI,
   });
 
-  // Currently active history query
+  // Aktif olarak kullanılan history sorgusu
   const historyResult = useEmptyHistoryAPI ? emptyHistoryResult : standardHistoryResult;
   const { isLoading: historyLoading, error: historyError, refetch } = historyResult;
 
-  // If normal API fails, switch to empty history API
+  // Eğer normal API hata verirse, boş history API'sine geç
   useEffect(() => {
     if (standardHistoryResult.error && !useEmptyHistoryAPI) {
-      console.log('History API error, switching to empty history API', standardHistoryResult.error);
+      console.log(
+        "History API hatası, boş history API'sine geçiliyor",
+        standardHistoryResult.error
+      );
       setUseEmptyHistoryAPI(true);
     }
   }, [standardHistoryResult.error, useEmptyHistoryAPI]);
 
-  // Optimization with EntityAdapter selectors
+  // EntityAdapter selektörleriyle optimizasyon
   const visibleHistory = selectVisibleHistoryItems(historyResult, visibleCount);
   const remainingItems = selectRemainingHistoryCount(historyResult, visibleCount);
 
-  // Access product information with useGetCatalogueQuery - no longer using reduce
+  // Ürün bilgilerine erişim için useGetCatalogueQuery - artık reduce kullanmıyoruz
   const { data: catalogData } = useGetCatalogueQuery();
 
-  // Get product information using EntityAdapter
+  // Ürün bilgilerini EntityAdapter ile almak için
   const getProductInfo = useCallback(
     (productId: number) => {
-      // Return empty values if no data
+      // Veri yoksa boş değerler döndür
       if (!catalogData) {
         return { name: '', category: '', image: '' };
       }
 
-      // Get product directly from EntityAdapter using catalogSelectors.selectById - O(1) operation
+      // catalogSelectors.selectById kullanarak doğrudan EntityAdapter'dan ürünü al - O(1) operasyon
       const product = catalogSelectors.selectById(catalogData, productId);
 
       return {
@@ -86,14 +78,14 @@ const AccountPage: React.FC = () => {
     [catalogData]
   );
 
-  // Create a single Intl.DateTimeFormat object for date formatting
-  // Create once on first render with useMemo, don't recreate
+  // Tarih formatlamak için tek bir Intl.DateTimeFormat nesnesi oluştur
+  // useMemo ile ilk render'da bir kez oluştur, sonra tekrar oluşturma
   const dateFormatter = useMemo(() => {
-    // Separate formats for day and month
-    const dayFormatter = new Intl.DateTimeFormat('en-US', { day: 'numeric' });
-    const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'short' });
+    // Gün ve ay için ayrı formatlar
+    const dayFormatter = new Intl.DateTimeFormat('tr-TR', { day: 'numeric' });
+    const monthFormatter = new Intl.DateTimeFormat('tr-TR', { month: 'short' });
 
-    // More performant and consistent date formatting function
+    // Daha performanslı ve tutarlı tarih formatlama fonksiyonu
     return {
       format: (timestamp: number) => {
         const date = new Date(timestamp);
@@ -105,28 +97,28 @@ const AccountPage: React.FC = () => {
     };
   }, []);
 
-  // Create callback for IntersectionObserver
+  // IntersectionObserver için callback oluştur
   const intersectionCallback = useCallback((entries: IntersectionObserverEntry[]) => {
     const entry = entries[0];
     if (entry?.isIntersecting) {
-      // Load new data
+      // Yeni veri yükle
       setVisibleCount(prev => prev + 20);
     }
   }, []);
 
-  // Automatic loading with IntersectionObserver
+  // IntersectionObserver ile otomatik yükleme
   useEffect(() => {
     if (!sentinelRef.current || remainingItems <= 0) return;
 
     const observer = new IntersectionObserver(intersectionCallback, {
-      rootMargin: '200px', // Start loading 200px early
-      threshold: 0.1, // Trigger when 10% visible
+      rootMargin: '200px', // 200px önceden yüklemeye başla
+      threshold: 0.1, // %10 görünür olduğunda tetikle
     });
 
     const currentRef = sentinelRef.current;
     observer.observe(currentRef);
 
-    // Cleanup - sentinelRef.current might be null in this case
+    // Cleanup - sentinelRef.current null olabilir bu durumda
     return () => {
       if (currentRef) {
         observer.unobserve(currentRef);
@@ -135,18 +127,18 @@ const AccountPage: React.FC = () => {
     };
   }, [sentinelRef, remainingItems, intersectionCallback]);
 
-  // Show skeleton during loading
+  // Loading durumunda skeleton göster
   if (historyLoading) {
     return <AccountPageSkeleton showHistory={true} historyItemCount={6} />;
   }
 
-  // If both APIs have errors, show error component
+  // Eğer iki API'de de hata varsa hata bileşenini göster
   if (historyError && useEmptyHistoryAPI && emptyHistoryResult.error) {
     return (
       <ApiErrorMessage
         error={historyError}
         onRetry={() => {
-          // Start by trying normal API again
+          // Tekrar normal API'yi deneyerek başla
           setUseEmptyHistoryAPI(false);
           refetch();
         }}
@@ -154,7 +146,7 @@ const AccountPage: React.FC = () => {
     );
   }
 
-  // Create user's full name
+  // Kullanıcının tam adını oluştur
   const fullName = user
     ? `${user.first_name}${user.last_name ? ' ' + user.last_name : ''}`
     : 'User';
@@ -179,9 +171,9 @@ const AccountPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Two different states: History exists/doesn't exist */}
+      {/* İki farklı durum: History var/yok */}
       {visibleHistory && visibleHistory.length > 0 ? (
-        // If history exists - New Figma design
+        // History varsa - Figma'daki yeni tasarım
         <div className={styles.historyContainer}>
           {/* History Header */}
           <div className={styles.historyHeader}>
@@ -192,7 +184,7 @@ const AccountPage: React.FC = () => {
           <div className={styles.historyItems}>
             {visibleHistory.map((purchase: Purchase, index: number) => {
               const productInfo = getProductInfo(purchase.id);
-              // Create unique key - combination of timestamp + product id + index
+              // Benzersiz key oluştur - timestamp + product id + index kombinasyonu
               const uniqueKey = `${purchase.timestamp}-${purchase.id}-${index}`;
 
               return (
@@ -225,7 +217,7 @@ const AccountPage: React.FC = () => {
               );
             })}
 
-            {/* "Loading" sentinel if there's more data to load */}
+            {/* Yüklenecek daha veri varsa "Yükleniyor" sentinel */}
             {remainingItems > 0 && (
               <div ref={sentinelRef} className={styles.loadingMore}>
                 Loading more items...
@@ -234,7 +226,7 @@ const AccountPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        // If no history - Collections
+        // History yoksa - Collections
         <div className={styles.collections}>
           <div className={styles.emojiPlaceholder}>
             <div className={styles.placeholderBody}>

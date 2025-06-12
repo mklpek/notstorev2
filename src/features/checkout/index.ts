@@ -1,9 +1,3 @@
-/******************************************************************************
- * File: index.ts
- * Layer: feature
- * Desc: Checkout feature exports - prepared for future checkout functionality
- ******************************************************************************/
-
 // Checkout Feature Exports
-// This feature is prepared for future checkout operations
+// Bu feature gelecekte checkout işlemleri için hazırlanmıştır
 export * from './components/index';

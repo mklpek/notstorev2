@@ -1,18 +1,5 @@
-/******************************************************************************
- * File: wallets.ts
- * Layer: api
- * Desc: Vercel Edge Function for fetching TON blockchain wallet list with CORS support
- ******************************************************************************/
-
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-/**
- * Vercel Edge Function handler for fetching TON wallet list
- * Proxies requests to the official TON blockchain wallets repository
- * @param request - Vercel request object
- * @param response - Vercel response object with CORS headers
- * @returns Promise resolving to wallet list JSON or error response
- */
 export default async function handler(request: VercelRequest, response: VercelResponse) {
   try {
     const res = await fetch(
@@ -25,7 +12,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 
     const data = await res.text();
 
-    response.setHeader('Access-Control-Allow-Origin', '*'); // For Telegram iframe
+    response.setHeader('Access-Control-Allow-Origin', '*'); // Telegram iframe'i için
     response.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
     response.setHeader('Content-Type', 'application/json');
     response.status(200).send(data);

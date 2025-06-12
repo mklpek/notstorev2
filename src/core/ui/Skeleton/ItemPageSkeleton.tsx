@@ -1,24 +1,17 @@
-/******************************************************************************
- * File: ItemPageSkeleton.tsx
- * Layer: core
- * Desc: Item page skeleton component for product detail loading states
- ******************************************************************************/
-
 import React from 'react';
 import styles from './ItemPageSkeleton.module.css';
 import { TextSkeleton } from './SkeletonElements';
 
 /**
- * ItemPage (Product Detail) skeleton component
- * Optimized with memo for performance
- * @returns JSX element containing item page skeleton
+ * ItemPage (Ürün Detay) skeleton bileşeni
+ * Memo ile optimize edilmiştir
  */
 const ItemPageSkeleton = React.memo(() => {
-  // Create array for slider thumbnail images
+  // Slider küçük resimleri için bir dizi oluştur
   const sliderImagesCount = 5;
 
   return (
-    <div className={styles.itemPage} aria-busy="true" aria-label="Loading product details">
+    <div className={styles.itemPage} aria-busy="true" aria-label="Ürün detayı yükleniyor">
       <div className={styles.body}>
         {/* Stickers Info */}
         <div className={styles.stickersInfo}>
@@ -28,7 +21,7 @@ const ItemPageSkeleton = React.memo(() => {
             <div className={styles.header}>
               <div className={styles.left}>
                 <div className={styles.title}>
-                  {/* Title skeleton - same size as real titleText */}
+                  {/* Başlık skeleton - gerçek titleText ile aynı boyut */}
                   <TextSkeleton height={26} width="70%" />
                 </div>
               </div>
@@ -36,7 +29,7 @@ const ItemPageSkeleton = React.memo(() => {
 
             {/* Description */}
             <div className={styles.description}>
-              {/* Description skeleton - same as real descriptionText */}
+              {/* Description skeleton - gerçek descriptionText ile aynı */}
               <TextSkeleton height={17} width="100%" />
               <TextSkeleton height={17} width="85%" />
               <TextSkeleton height={17} width="60%" />
@@ -59,7 +52,7 @@ const ItemPageSkeleton = React.memo(() => {
 
         {/* Big Sticker Container */}
         <div className={styles.bigStickerContainer}>
-          <div className={styles.bigSticker}>{/* Skeleton background for large image */}</div>
+          <div className={styles.bigSticker}>{/* Büyük görsel için skeleton arka plan */}</div>
         </div>
       </div>
 
@@ -70,7 +63,7 @@ const ItemPageSkeleton = React.memo(() => {
           <div className={styles.stickersSlider}>
             {Array.from({ length: sliderImagesCount }).map((_, index) => (
               <div key={index} className={styles.sticker}>
-                {/* Background for small image skeletons */}
+                {/* Küçük görsel skeleton'ları için arka plan */}
               </div>
             ))}
           </div>
@@ -90,7 +83,7 @@ const ItemPageSkeleton = React.memo(() => {
   );
 });
 
-// Component name for React DevTools
+// React DevTools için komponent adı
 ItemPageSkeleton.displayName = 'ItemPageSkeleton';
 
 export default ItemPageSkeleton;

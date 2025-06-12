@@ -33,7 +33,7 @@
   display: block;
 }
 
-/* Cart Tag - Figma design compliant */
+/* Cart Tag - Figma tasarımına uygun */
 .cartTag {
   position: absolute;
   top: 8px;
@@ -66,7 +66,7 @@
   margin: 0;
   text-align: left;
   align-self: stretch;
-  /* If wrapping is needed in Figma overflow cases: */
+  /* Figma'da taşma durumunda sarmalama belirtilmemiş, ancak gerekirse: */
   /* white-space: normal; */
   /* overflow-wrap: break-word; */
 }

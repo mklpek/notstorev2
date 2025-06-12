@@ -1,44 +1,37 @@
-/******************************************************************************
- * File: buyNow.ts
- * Layer: feature
- * Desc: TON Connect transaction utilities for product purchases and cart payments
- ******************************************************************************/
-
 import type { SendTransactionRequest } from '@tonconnect/ui';
 import { TonConnectUI } from '@tonconnect/ui-react';
 import type { Item } from '../catalogue/api';
 import type { CartItem } from '../cart/types';
 
 /**
- * Prepares parameters for payment via TON Connect
- * Creates a transaction request for single product purchase
- * @param product - Product to be purchased
- * @param quantity - Quantity to purchase (default: 1)
+ * TON Connect üzerinden ödeme yapılması için gereken parametreleri hazırlar
+ * @param product Satın alınacak ürün
+ * @param quantity Satın alınacak ürün adedi (varsayılan: 1)
  * @returns TON Connect transaction request
  */
 export const createBuyNowTransaction = (
   product: Item,
   quantity: number = 1
 ): SendTransactionRequest => {
-  // Multiply product price by quantity
+  // Ürün fiyatını adet ile çarp
   const totalPrice = product.price * quantity;
 
-  // Convert total price to TON format (1 TON = 10^9 nanoTON)
-  // For example, 1000 NOT = 1000 TON
+  // Toplam fiyatı TON formatına çevirme (1 TON = 10^9 nanoTON)
+  // Örnek olarak 1000 NOT = 1000 TON olarak kabul ediyoruz
   const amountInNanoTons = BigInt(totalPrice) * BigInt(10 ** 9);
 
-  // For a real application, use seller address from backend
-  // Using example address for now
+  // Gerçek bir uygulama için burada backend'den alınan satıcı adresini kullanmak gerekir
+  // Şimdilik örnek bir adres kullanıyoruz
   const sellerAddress = 'UQBvW8AHQ2tW3VQ-TUH6R76BmQs6-JU0MUeIiBeR7yzYF6mJ';
 
-  // Create transaction object
+  // Transaction nesnesini oluştur
   return {
-    validUntil: Math.floor(Date.now() / 1000) + 360, // Valid for 5 minutes
+    validUntil: Math.floor(Date.now() / 1000) + 360, // 5 dakika geçerli
     messages: [
       {
         address: sellerAddress,
         amount: amountInNanoTons.toString(),
-        // Add purchase information as message (product name, category, quantity)
+        // Satın alma bilgilerini mesaj olarak ekle (ürün adı, kategori, adet)
         payload: `Buy ${quantity}x ${product.category} ${product.name} for ${totalPrice} ${product.currency}`,
       },
     ],
@@ -46,36 +39,35 @@ export const createBuyNowTransaction = (
 };
 
 /**
- * Creates bulk payment transaction for all cart items
- * Handles multiple products in a single transaction
- * @param cartItems - All items in the cart
- * @param totalAmount - Total payment amount
+ * Sepetteki tüm ürünler için toplu ödeme transaction'ı oluşturur
+ * @param cartItems Sepetteki tüm ürünler
+ * @param totalAmount Toplam ödeme tutarı
  * @returns TON Connect transaction request
  */
 export const createCartTransaction = (
   cartItems: CartItem[],
   totalAmount: number
 ): SendTransactionRequest => {
-  // Convert total amount to TON format (1 TON = 10^9 nanoTON)
+  // Toplam tutarı TON formatına çevirme (1 TON = 10^9 nanoTON)
   const amountInNanoTons = BigInt(totalAmount) * BigInt(10 ** 9);
 
-  // For a real application, use seller address from backend
-  // Using example address for now
+  // Gerçek bir uygulama için burada backend'den alınan satıcı adresini kullanmak gerekir
+  // Şimdilik örnek bir adres kullanıyoruz
   const sellerAddress = 'UQBvW8AHQ2tW3VQ-TUH6R76BmQs6-JU0MUeIiBeR7yzYF6mJ';
 
-  // Format cart items as text description
+  // Sepetteki ürünleri bir metin olarak biçimlendir
   const itemsDescription = cartItems
     .map(item => `${item.qty}x ${item.category} ${item.name}`)
     .join(', ');
 
-  // Create transaction object
+  // Transaction nesnesini oluştur
   return {
-    validUntil: Math.floor(Date.now() / 1000) + 360, // Valid for 5 minutes
+    validUntil: Math.floor(Date.now() / 1000) + 360, // 5 dakika geçerli
     messages: [
       {
         address: sellerAddress,
         amount: amountInNanoTons.toString(),
-        // Add purchase information as message (cart summary)
+        // Satın alma bilgilerini mesaj olarak ekle (sepet özeti)
         payload: `Cart purchase: ${itemsDescription} - Total: ${totalAmount} NOT`,
       },
     ],
@@ -83,29 +75,28 @@ export const createCartTransaction = (
 };
 
 /**
- * Shows modal if wallet is not connected
- * Handles wallet connection flow with timeout and polling
- * @param tonConnectUI - TonConnectUI instance
- * @param onModalOpen - Optional callback when modal opens
- * @returns Promise<boolean> - Whether user is connected to wallet
+ * Cüzdan bağlantısı yoksa açılan bir modal gösterir
+ * @param tonConnectUI TonConnectUI instance
+ * @param onModalOpen Modal açıldığında çağrılacak opsiyonel callback
+ * @returns Promise<boolean> - Kullanıcı cüzdana bağlı mı
  */
 export const ensureWalletConnection = async (
   tonConnectUI: TonConnectUI,
   onModalOpen?: () => void
 ): Promise<boolean> => {
   if (!tonConnectUI.connected) {
-    // Open modal and wait for user to connect
+    // Modal açılır ve kullanıcının bağlanmasını bekler
     tonConnectUI.openModal();
 
-    // Call callback when modal opens
+    // Modal açıldığında callback'i çağır
     if (onModalOpen) {
       onModalOpen();
     }
 
-    // Use simpler method to wait for connection status
-    // This solves the problem of missing onModalClosed method
+    // Daha basit bir yöntem kullanarak bağlantı durumunu bekle
+    // Bu, onModalClosed yönteminin olmaması sorununu çözer
     return new Promise<boolean>(resolve => {
-      // Use interval to check connection status
+      // Bağlantı durumunu kontrol etmek için bir interval kullan
       const checkInterval = setInterval(() => {
         if (tonConnectUI.connected) {
           clearInterval(checkInterval);
@@ -113,7 +104,7 @@ export const ensureWalletConnection = async (
         }
       }, 1000);
 
-      // Timeout after 30 seconds, assume no connection
+      // 30 saniye sonra timeout ile bağlantı olmadığını kabul et
       setTimeout(() => {
         clearInterval(checkInterval);
         if (!tonConnectUI.connected) {
