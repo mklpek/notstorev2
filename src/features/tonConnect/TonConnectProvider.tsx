@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: TonConnectProvider.tsx
+ * Layer: feature
+ * Desc: TON Connect provider with modal styling and DOM observation for wallet integration
+ ******************************************************************************/
+
 import React, { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { TonConnectUI } from '@tonconnect/ui';
@@ -10,24 +16,32 @@ interface TonConnectProviderProps {
   children: ReactNode;
 }
 
-// TonConnectUI sınıfını kullanarak provider oluşturacağız
-// @tonconnect/ui, TonConnectUIProvider doğrudan export etmiyor
+/**
+ * Create provider using TonConnectUI class
+ * @tonconnect/ui doesn't directly export TonConnectUIProvider
+ */
 const tonConnectUI = new TonConnectUI({
   manifestUrl: MANIFEST_URL,
   uiPreferences: TON_CONNECT_UI_CONFIG.uiPreferences,
   language: TON_CONNECT_UI_CONFIG.language as Locales,
 });
 
-// TON Connect walletsList URL'yi manuel override et
-// @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+/**
+ * Manually override TON Connect walletsList URL
+ * Use our own proxy API for wallets list
+ */
+// @ts-expect-error walletsListSource not in SDK definition, available at runtime
 if (tonConnectUI.connector && tonConnectUI.connector.walletsList) {
-  // @ts-expect-error walletsListSource SDK tanımında yok, runtime'da mevcut
+  // @ts-expect-error walletsListSource not in SDK definition, available at runtime
   tonConnectUI.connector.walletsList.walletsListSource = WALLETS_LIST_URL;
 }
 
-// TON Connect modal blur efekti için dinamik stil ekleme
+/**
+ * Add dynamic styles for TON Connect modal blur effect
+ * Prevents duplicate style injection
+ */
 const addTonConnectModalStyles = () => {
-  // Eğer stil zaten eklenmişse tekrar ekleme
+  // Don't add if styles already exist
   if (document.getElementById('ton-connect-modal-styles')) {
     return;
   }
@@ -35,7 +49,7 @@ const addTonConnectModalStyles = () => {
   const style = document.createElement('style');
   style.id = 'ton-connect-modal-styles';
   style.textContent = `
-    /* TON Connect Modal Blur Efekti - Sepet modalındaki blur yapısını birebir kopyalama */
+    /* TON Connect Modal Blur Effect - Exact copy of cart modal blur structure */
     tc-modal,
     tc-modal-backdrop,
     .tc-modal,
@@ -65,7 +79,7 @@ const addTonConnectModalStyles = () => {
       align-items: flex-end !important;
     }
 
-    /* Inline style ile oluşturulan modal backdrop'ları hedefle */
+    /* Target modal backdrops created with inline styles */
     body > div[style*="position: fixed"][style*="z-index"],
     #root ~ div[style*="position: fixed"][style*="z-index"],
     div[style*="position: fixed"][style*="top: 0"][style*="left: 0"] {
@@ -78,7 +92,11 @@ const addTonConnectModalStyles = () => {
   document.head.appendChild(style);
 };
 
-// MutationObserver ile DOM değişikliklerini izle ve modal açıldığında stil uygula
+/**
+ * Observe DOM changes with MutationObserver and apply styles when modal opens
+ * Monitors for TON Connect modal elements and applies blur effects
+ * @returns MutationObserver instance for cleanup
+ */
 const observeTonConnectModal = () => {
   const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
@@ -86,7 +104,7 @@ const observeTonConnectModal = () => {
         if (node.nodeType === Node.ELEMENT_NODE) {
           const element = node as Element;
 
-          // TON Connect modal elementlerini kontrol et
+          // Check for TON Connect modal elements
           if (
             element.tagName?.toLowerCase().includes('tc-') ||
             element.className?.includes('tonconnect') ||
@@ -96,7 +114,7 @@ const observeTonConnectModal = () => {
             (element.getAttribute('style')?.includes('position: fixed') &&
               element.getAttribute('style')?.includes('z-index'))
           ) {
-            // Modal backdrop'a blur efekti uygula
+            // Apply blur effect to modal backdrop
             const backdrop =
               element.querySelector('[class*="backdrop"], [data-backdrop]') || element;
             if (backdrop instanceof HTMLElement) {
@@ -108,7 +126,7 @@ const observeTonConnectModal = () => {
     });
   });
 
-  // Sadece modal eklendiği root'u izle
+  // Only observe root where modal is added
   const root = document.querySelector('#tc-modal-root') ?? document.body;
   observer.observe(root, {
     childList: true,
@@ -118,12 +136,18 @@ const observeTonConnectModal = () => {
   return observer;
 };
 
+/**
+ * TON Connect provider component
+ * Sets up modal styling and DOM observation for wallet integration
+ * @param children - Child components to wrap with TON Connect context
+ * @returns JSX element containing TON Connect context provider
+ */
 const TonConnectProvider: React.FC<TonConnectProviderProps> = ({ children }) => {
   useEffect(() => {
-    // Dinamik stil ekle
+    // Add dynamic styles
     addTonConnectModalStyles();
 
-    // DOM değişikliklerini izle
+    // Observe DOM changes
     const observer = observeTonConnectModal();
 
     // Cleanup

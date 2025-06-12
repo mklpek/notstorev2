@@ -1,5 +1,16 @@
+/******************************************************************************
+ * File: SearchIcon.tsx
+ * Layer: core
+ * Desc: Search magnifying glass icon component for search functionality
+ ******************************************************************************/
+
 import React from 'react';
 
+/**
+ * Search icon component with magnifying glass design
+ * Used in header for search functionality and search-related UI elements
+ * @returns JSX element containing SVG search icon
+ */
 const SearchIcon: React.FC = () => (
   <svg
     width="28"

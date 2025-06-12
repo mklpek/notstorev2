@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: EmptyState.tsx
+ * Layer: core
+ * Desc: Empty state component for displaying no-content scenarios with contextual messaging
+ ******************************************************************************/
+
 import React from 'react';
 import styles from './EmptyState.module.css';
 import hatchingChick from '../../assets/hatching_chick.svg';
@@ -9,37 +15,51 @@ interface EmptyStateProps {
   actionText?: string;
 }
 
+/**
+ * Empty state component for various no-content scenarios
+ * Provides contextual messaging and optional action buttons based on state type
+ * @param type - Type of empty state (history, cart, search)
+ * @param query - Optional search query for search empty states
+ * @param onAction - Optional callback function for action button
+ * @param actionText - Optional custom text for action button
+ * @returns JSX element containing empty state UI
+ */
 const EmptyState: React.FC<EmptyStateProps> = ({ type, query, onAction, actionText }) => {
-  // Type'a göre mesaj ve icon belirleme
+  /**
+   * Determines content based on empty state type
+   * @returns Object containing icon, title, description, and action text
+   */
   const getContent = () => {
     switch (type) {
       case 'history':
         return {
           icon: hatchingChick,
-          title: 'Henüz sipariş geçmişiniz yok',
-          description: 'Sipariş verdiğinizde burada görünecek',
-          action: actionText || 'Alışverişe Başla',
+          title: 'No order history yet',
+          description: 'Your orders will appear here when you make a purchase',
+          action: actionText || 'Start Shopping',
         };
       case 'cart':
         return {
           icon: hatchingChick,
-          title: 'Sepetiniz boş',
-          description: 'Sepetinize ürün ekleyin',
-          action: actionText || 'Alışverişe Devam Et',
+          title: 'Your cart is empty',
+          description: 'Add products to your cart',
+          action: actionText || 'Continue Shopping',
         };
       case 'search':
         return {
           icon: hatchingChick,
-          title: 'Sonuç bulunamadı',
-          description: query ? `"${query}" için sonuç bulunamadı` : 'Bu stilde ürün bulunamadı',
-          action: actionText || 'Tüm Ürünleri Göster',
+          title: 'No results found',
+          description: query
+            ? `No results found for "${query}"`
+            : 'No products found in this style',
+          action: actionText || 'Show All Products',
         };
       default:
         return {
           icon: hatchingChick,
-          title: 'İçerik bulunamadı',
-          description: 'Henüz içerik bulunmuyor',
-          action: actionText || 'Ana Sayfaya Dön',
+          title: 'No content found',
+          description: 'No content available yet',
+          action: actionText || 'Go to Home',
         };
     }
   };

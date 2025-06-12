@@ -1,7 +1,19 @@
+/******************************************************************************
+ * File: useTelegramHeader.ts
+ * Layer: core
+ * Desc: Telegram WebApp header management with version-aware API calls and navigation
+ ******************************************************************************/
+
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getTgVersion, safeCall } from '../utils/telegramHelpers';
 
+/**
+ * Custom hook for managing Telegram WebApp header functionality
+ * Handles fullscreen mode, transparent header, and navigation buttons
+ * Uses version-aware API calls for compatibility across Telegram versions
+ * @returns void
+ */
 export default function useTelegramHeader() {
   const tgVer = getTgVersion();
   const nav = useNavigate();
@@ -13,29 +25,29 @@ export default function useTelegramHeader() {
 
     wa.ready();
 
-    /* --- fullscreen / expand ------------------------------------------ */
-    // requestFullscreen sadece Bot API 7.0+ destekler
+    /* --- Fullscreen / Expand ------------------------------------------ */
+    // requestFullscreen only supported in Bot API 7.0+
     if (tgVer >= 7.0) {
       if (!safeCall('requestFullscreen')) {
         // Fallback to expand
         safeCall('expand');
       }
     } else {
-      // Eskiden beri var olan expand() metodunu kullan
+      // Use legacy expand() method for older versions
       safeCall('expand');
     }
 
-    /* --- transparent system bar --------------------------------------- */
-    // setHeaderColor sadece Bot API 8.0+ destekler
+    /* --- Transparent System Bar --------------------------------------- */
+    // setHeaderColor only supported in Bot API 8.0+
     if (tgVer >= 8.0) {
       safeCall('setHeaderColor', '#00000000');
     }
 
-    /* --- Back & Settings buttons (≥ 8.0) ------------------------------ */
+    /* --- Back & Settings Buttons (≥ 8.0) ------------------------------ */
     const isProduct = pathname.startsWith('/product/');
     const cleanupFns: (() => void)[] = [];
 
-    // BackButton sadece Bot API 8.0+ destekler
+    // BackButton only supported in Bot API 8.0+
     if (tgVer >= 8.0 && wa.BackButton) {
       try {
         if (isProduct && wa.BackButton.show) {
@@ -44,7 +56,7 @@ export default function useTelegramHeader() {
           wa.BackButton.hide();
         }
 
-        // Event listener'ı güvenli şekilde ekle
+        // Safely add event listener
         const onBack = () => nav(-1);
         if (safeCall('onEvent', 'back_button_pressed', onBack)) {
           cleanupFns.push(() => {
@@ -57,14 +69,14 @@ export default function useTelegramHeader() {
       }
     }
 
-    // SettingsButton sadece Bot API 8.0+ destekler
+    // SettingsButton only supported in Bot API 8.0+
     if (tgVer >= 8.0 && wa.SettingsButton) {
       try {
         if (wa.SettingsButton.show) {
           wa.SettingsButton.show();
         }
 
-        // Event listener'ı güvenli şekilde ekle
+        // Safely add event listener
         const openMenu = () => safeCall('openLink', 'https://t.me/notstore_bot');
         if (safeCall('onEvent', 'settings_button_pressed', openMenu)) {
           cleanupFns.push(() => {

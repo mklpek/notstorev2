@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: Footer.tsx
+ * Layer: layout
+ * Desc: Product detail footer with cart controls and TON Connect purchase functionality
+ ******************************************************************************/
+
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../core/store/hooks';
 import { addItem, changeQty, removeItem } from '../../features/cart/cartSlice';
@@ -14,22 +20,32 @@ interface FooterProps {
   product?: Item | null;
 }
 
+/**
+ * Product detail footer component
+ * Handles cart operations and TON Connect purchases
+ * @param product - Product item for cart operations
+ * @returns JSX element containing footer with cart and purchase controls
+ */
 const Footer: React.FC<FooterProps> = ({ product }) => {
   const dispatch = useAppDispatch();
 
-  // Redux'tan ürün bilgisini al (eğer sepette varsa)
+  // Get product information from Redux (if it exists in cart)
   const cartItem = product ? useAppSelector(state => selectCartItemById(state, product.id)) : null;
 
-  // TON Connect hook'unu kullan
+  // Use TON Connect hook
   const { tonConnectUI, isConnected, sendTransaction } = useTonConnect();
 
-  // Başarılı ödeme modalı için state
+  // State for success payment modal
   const [successModalOpen, setSuccessModalOpen] = useState(false);
 
-  // Store'dan direkt değerleri hesapla - yerel state tutma
+  // Calculate values directly from store - avoid local state
   const qty = cartItem?.qty ?? 0;
   const isInCart = !!cartItem;
 
+  /**
+   * Handles adding product to cart
+   * Creates new cart item with product details
+   */
   const handleAddToCart = () => {
     if (!product) return;
 
@@ -41,12 +57,16 @@ const Footer: React.FC<FooterProps> = ({ product }) => {
         price: product.price,
         currency: product.currency,
         image: product.images[0] || '',
-        // Güvenlik önlemi fallback (şimdilik yorum satırında)
+        // Security fallback (commented for now)
         // image: product.images[0] || '/images/product-1.png'
       })
     );
   };
 
+  /**
+   * Handles decreasing product quantity
+   * @param e - Mouse event to prevent propagation
+   */
   const decreaseQuantity = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!product) return;
@@ -54,6 +74,10 @@ const Footer: React.FC<FooterProps> = ({ product }) => {
     dispatch(changeQty({ id: product.id, delta: -1 }));
   };
 
+  /**
+   * Handles increasing product quantity
+   * @param e - Mouse event to prevent propagation
+   */
   const increaseQuantity = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!product) return;
@@ -61,12 +85,15 @@ const Footer: React.FC<FooterProps> = ({ product }) => {
     dispatch(changeQty({ id: product.id, delta: 1 }));
   };
 
-  // Buy Now butonuna tıklandığında
+  /**
+   * Handles Buy Now button click
+   * Manages wallet connection and transaction processing
+   */
   const handleBuyNow = async () => {
     if (!product) return;
 
     try {
-      // Cüzdan bağlantısı yoksa bağlantı modalını göster
+      // Show wallet connection modal if not connected
       const connected = await ensureWalletConnection(tonConnectUI);
 
       if (!connected) {
@@ -74,18 +101,18 @@ const Footer: React.FC<FooterProps> = ({ product }) => {
         return;
       }
 
-      // Ödeme transaction'ını oluştur - sepetteki miktarı kullan
-      // Sepette varsa sepetteki adet, yoksa 1 adet gönder
+      // Create payment transaction - use cart quantity
+      // If in cart use cart quantity, otherwise send 1 item
       const quantity = isInCart ? qty : 1;
       const transaction = createBuyNowTransaction(product, quantity);
 
-      // Transaction'ı gönder
+      // Send transaction
       await sendTransaction(transaction);
 
-      // Başarılı işlem sonrası success modal'ı göster
+      // Show success modal after successful transaction
       setSuccessModalOpen(true);
 
-      // Eğer ürün sepette varsa, sepetten kaldır
+      // If product is in cart, remove it from cart
       if (isInCart) {
         dispatch(removeItem(product.id));
       }
@@ -94,7 +121,7 @@ const Footer: React.FC<FooterProps> = ({ product }) => {
     }
   };
 
-  // Ürün detay sayfasında değilsek (ürün prop'u yoksa) standart footer göster
+  // If not on product detail page (no product prop), show standard footer
   if (!product) {
     return (
       <div className={styles.footer}>
@@ -133,7 +160,7 @@ const Footer: React.FC<FooterProps> = ({ product }) => {
         </div>
       </div>
 
-      {/* Başarılı ödeme modalı */}
+      {/* Success payment modal */}
       <SuccessModal isOpen={successModalOpen} onClose={() => setSuccessModalOpen(false)} />
     </>
   );

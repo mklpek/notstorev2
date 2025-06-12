@@ -1,3 +1,4 @@
+/* Modal overlay with backdrop blur effect */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -12,6 +13,7 @@
   backdrop-filter: blur(8px);
 }
 
+/* Modal content container with slide-up animation */
 .modalContent {
   background-color: var(--tg-theme-bg-color, #000000);
   border-radius: 20px 20px 0 0;
@@ -22,16 +24,17 @@
   animation: slideUp 0.3s ease-out;
 }
 
-/* Boş sepet modalı için sabit yükseklik */
+/* Fixed height for empty cart modal */
 .emptyModal {
   height: 320px;
 }
 
-/* Dolu sepet modalı için dinamik yükseklik */
+/* Dynamic height for filled cart modal */
 .filledModal {
-  /* Height belirtilmedi, içeriğe göre uzayacak */
+  /* Height not specified, will expand based on content */
 }
 
+/* Slide-up animation for modal appearance */
 @keyframes slideUp {
   from {
     transform: translateY(100%);

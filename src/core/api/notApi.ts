@@ -1,10 +1,15 @@
+/******************************************************************************
+ * File: notApi.ts
+ * Layer: core
+ * Desc: Legacy API re-exports for backward compatibility - use feature-specific APIs instead
+ ******************************************************************************/
+
 /**
- * @deprecated - Bu dosya feature-bazlı API kullanımına geçiş için
- * yeniden dışa aktarma sağlar. Doğrudan kullanmayın.
- * Bunun yerine, features/catalogue/api.ts veya features/account/api.ts kullanın.
+ * @deprecated - This file provides re-exports for transition to feature-based API usage.
+ * Do not use directly. Instead, use features/catalogue/api.ts or features/account/api.ts.
  */
 
-// Her modülden seçici export yaparak çakışmaları önlüyoruz
+// Selective exports from each module to prevent naming conflicts
 // Value exports
 export {
   // Products API
@@ -49,11 +54,15 @@ export type {
   UseGetEmptyHistoryQueryResult,
 } from '../../features/account/api';
 
-// API birleştirme - store.ts'de kullanılır
+// API combination - used in store.ts
 import { productsApi } from '../../features/catalogue/api';
 import { accountApi } from '../../features/account/api';
 
-// notApi adı altında dışa aktarıyoruz (uyumluluk için)
+/**
+ * Legacy notApi export for backward compatibility
+ * Combines products and account APIs under single namespace
+ * @deprecated Use individual feature APIs instead
+ */
 export const notApi = {
   ...productsApi,
   reducerPath: 'notApi',
@@ -61,7 +70,7 @@ export const notApi = {
     ...productsApi.endpoints,
     ...accountApi.endpoints,
   },
-  // Middleware ve reducer'ları doğrudan yeni API'lardan alıyoruz
+  // Middleware and reducers taken directly from new APIs
   middleware: productsApi.middleware,
   reducer: productsApi.reducer,
   util: productsApi.util,

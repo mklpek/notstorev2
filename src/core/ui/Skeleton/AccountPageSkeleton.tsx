@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: AccountPageSkeleton.tsx
+ * Layer: core
+ * Desc: Account page skeleton component with conditional history display
+ ******************************************************************************/
+
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { CircleSkeleton, TextSkeleton, ImageSkeleton } from './SkeletonElements';

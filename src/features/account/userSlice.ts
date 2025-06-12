@@ -1,6 +1,16 @@
+/******************************************************************************
+ * File: userSlice.ts
+ * Layer: feature
+ * Desc: User state management slice for Telegram user authentication and profile data
+ ******************************************************************************/
+
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
+/**
+ * Telegram user interface
+ * Represents user data from Telegram WebApp
+ */
 export interface TelegramUser {
   id: number;
   first_name: string;
@@ -13,31 +23,56 @@ export interface TelegramUser {
   cachedPhotoUrl?: string;
 }
 
-// TelegramUser | null olarak değil doğrudan TelegramUser olarak tanımlıyoruz
-// ve ilk durumda isAuthenticated false olarak ayarlıyoruz
+/**
+ * User state interface
+ * Manages authentication status and user data
+ */
 interface UserState {
   user: TelegramUser | null;
   isAuthenticated: boolean;
 }
 
+/**
+ * Initial user state
+ * User starts as unauthenticated with no user data
+ */
 const initialState: UserState = {
   user: null,
   isAuthenticated: false,
 };
 
+/**
+ * User slice for managing Telegram user state
+ */
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    /**
+     * Sets Telegram user data and marks as authenticated
+     * @param state - Current user state
+     * @param action - Payload containing Telegram user data
+     */
     setTelegramUser: (state, action: PayloadAction<TelegramUser>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
     },
+
+    /**
+     * Updates user's photo URL
+     * @param state - Current user state
+     * @param action - Payload containing new photo URL
+     */
     setUserPhotoUrl: (state, action: PayloadAction<string>) => {
       if (state.user) {
         state.user.photoUrl = action.payload;
       }
     },
+
+    /**
+     * Clears user data and marks as unauthenticated
+     * @param state - Current user state
+     */
     clearUser: state => {
       state.user = null;
       state.isAuthenticated = false;
@@ -45,5 +80,8 @@ const userSlice = createSlice({
   },
 });
 
+// Export action creators
 export const { setTelegramUser, setUserPhotoUrl, clearUser } = userSlice.actions;
+
+// Export reducer
 export default userSlice.reducer;

@@ -1,8 +1,14 @@
+/******************************************************************************
+ * File: useSafeArea.tsx
+ * Layer: core
+ * Desc: Safe area management for iOS/Android home indicators and dynamic viewport handling
+ ******************************************************************************/
+
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { getTgVersion, safeCall } from '../../utils/telegramHelpers';
 
-// Safe Area Context tipi
+// Safe Area Context type
 interface SafeAreaInsets {
   top: number;
   right: number;
@@ -18,10 +24,15 @@ export const SafeAreaContext = createContext<SafeAreaInsets>({
   left: 0,
 });
 
-// Safe Area Context hook'u
+// Safe Area Context hook
 export const useSafeAreaContext = () => useContext(SafeAreaContext);
 
-// Birleşik Safe Area Hook - önce export ediyoruz
+/**
+ * Combined Safe Area Hook for managing iOS/Android safe areas
+ * Handles home indicators, gesture bars, and dynamic viewport changes
+ * Supports both native CSS env() values and Telegram WebApp API
+ * @returns SafeAreaInsets object with top, right, bottom, left values
+ */
 export function useSafeAreaInsets() {
   const [safeAreaInsets, setSafeAreaInsets] = useState<SafeAreaInsets>({
     top: 0,
@@ -34,12 +45,15 @@ export function useSafeAreaInsets() {
     const wa = window.Telegram?.WebApp;
     if (!wa) return;
 
-    // Desktop/tablet'te erken çık
+    // Early exit for desktop/tablet devices
     if (window.visualViewport && window.visualViewport.height > 900) return;
 
     const tgVer = getTgVersion();
 
-    // CSS değişkenlerini güncelleme fonksiyonu
+    /**
+     * Updates CSS custom properties with safe area values
+     * @param insets - Safe area inset values
+     */
     const updateCSSVariables = (insets: SafeAreaInsets) => {
       document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
       document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${insets.right}px`);
@@ -49,14 +63,17 @@ export function useSafeAreaInsets() {
       );
       document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
 
-      // Ayrıca content safe area için CSS değişkeni ekle (yeni eklenen)
+      // Also add CSS variable for content safe area (newly added)
       document.documentElement.style.setProperty(
         '--tg-content-safe-area-inset-top',
         `${insets.top}px`
       );
     };
 
-    // Safe area değerlerini güncelleme fonksiyonu
+    /**
+     * Updates safe area values and CSS variables
+     * @param newInsets - Partial safe area inset updates
+     */
     const updateSafeArea = (newInsets: Partial<SafeAreaInsets>) => {
       setSafeAreaInsets(prev => {
         const updated = { ...prev, ...newInsets };
@@ -65,7 +82,9 @@ export function useSafeAreaInsets() {
       });
     };
 
-    // Viewport yüksekliğini güncelleme
+    /**
+     * Updates viewport height CSS variable
+     */
     const updateViewportHeight = () => {
       if (wa.viewportHeight) {
         document.documentElement.style.setProperty(
@@ -75,7 +94,7 @@ export function useSafeAreaInsets() {
       }
     };
 
-    // ❶ İlk yükleme - Native env() desteği kontrol et
+    // ❶ Initial load - Check native env() support
     try {
       const computedStyle = getComputedStyle(document.documentElement);
       const envTop = computedStyle.getPropertyValue('env(safe-area-inset-top)');
@@ -95,7 +114,7 @@ export function useSafeAreaInsets() {
       /* ignored */
     }
 
-    // ❷ Telegram WebApp safeAreaInset özelliği (varsa)
+    // ❷ Telegram WebApp safeAreaInset property (if available)
     if (wa.safeAreaInset) {
       updateSafeArea({
         top: wa.safeAreaInset.top || 0,
@@ -105,10 +124,10 @@ export function useSafeAreaInsets() {
       });
     }
 
-    // İlk viewport yüksekliğini ayarla
+    // Set initial viewport height
     updateViewportHeight();
 
-    // ❸ Event handler'ları
+    // ❸ Event handlers
     const viewportHandler = () => {
       updateViewportHeight();
     };
@@ -134,7 +153,7 @@ export function useSafeAreaInsets() {
       }
     };
 
-    // Content Safe Area handler'ı (yeni eklenen)
+    // Content Safe Area handler (newly added)
     const contentSafeAreaHandler = (...args: unknown[]) => {
       const data = args[0] as
         | {
@@ -146,13 +165,13 @@ export function useSafeAreaInsets() {
         | undefined;
 
       if (data && data.top !== undefined) {
-        // Content safe area CSS değişkenini güncelle
+        // Update content safe area CSS variable
         document.documentElement.style.setProperty(
           '--tg-content-safe-area-inset-top',
           `${data.top}px`
         );
 
-        // Normal safe area değerlerini de güncelle
+        // Also update normal safe area values
         const updates: Partial<SafeAreaInsets> = {};
         if (data.right !== undefined) updates.right = data.right;
         if (data.bottom !== undefined) updates.bottom = data.bottom;
@@ -164,30 +183,30 @@ export function useSafeAreaInsets() {
       }
     };
 
-    // ❹ Telegram event'lerini dinle
+    // ❹ Listen to Telegram events
     const cleanupFns: (() => void)[] = [];
 
     try {
-      // viewport_changed eventi - tüm versiyonlarda mevcut
+      // viewport_changed event - available in all versions
       if (safeCall('onEvent', 'viewport_changed', viewportHandler)) {
         cleanupFns.push(() => {
           safeCall('offEvent', 'viewport_changed', viewportHandler);
         });
       }
 
-      // Content safe area'yı aktif et (Telegram 8.0+)
+      // Activate content safe area (Telegram 8.0+)
       if (tgVer >= 8.0) {
-        // İlk content safe area isteğini yap
+        // Make initial content safe area request
         try {
-          // @ts-expect-error: Telegram.WebApp tiplerinde bu metot henüz tanımlı değil
+          // @ts-expect-error: This method is not yet defined in Telegram.WebApp types
           if (typeof wa.requestContentSafeArea === 'function') {
             wa.requestContentSafeArea();
           }
         } catch (e) {
-          // Hata durumunda sessizce devam et
+          // Continue silently on error
         }
 
-        // content_safe_area_changed event'ini dinle
+        // Listen to content_safe_area_changed event
         if (safeCall('onEvent', 'content_safe_area_changed', contentSafeAreaHandler)) {
           cleanupFns.push(() => {
             safeCall('offEvent', 'content_safe_area_changed', contentSafeAreaHandler);
@@ -195,7 +214,7 @@ export function useSafeAreaInsets() {
         }
       }
 
-      // safe_area_changed eventi - sadece TG >= 8.0
+      // safe_area_changed event - only TG >= 8.0
       if (tgVer >= 8.0 && safeCall('onEvent', 'safe_area_changed', safeAreaHandler)) {
         cleanupFns.push(() => {
           safeCall('offEvent', 'safe_area_changed', safeAreaHandler);
@@ -205,29 +224,29 @@ export function useSafeAreaInsets() {
       /* ignored */
     }
 
-    // ❺ Fallback: window.visualViewport API (throttled) - sadece mobile'da
-    let rafId: number;
+    // ❺ Visual Viewport API for keyboard handling
     const handleVisualViewportChange = () => {
-      if (rafId) cancelAnimationFrame(rafId);
+      if (!window.visualViewport) return;
 
-      rafId = requestAnimationFrame(() => {
-        if (window.visualViewport) {
-          const vvHeight = window.visualViewport.height;
-          const windowHeight = window.innerHeight;
-          const bottomInset = Math.max(0, windowHeight - vvHeight);
+      const vh = window.visualViewport.height;
+      document.documentElement.style.setProperty('--visual-viewport-height', `${vh}px`);
 
-          updateSafeArea({ bottom: bottomInset });
+      // Update safe area bottom when keyboard appears/disappears
+      const keyboardHeight = window.innerHeight - vh;
+      if (keyboardHeight > 100) {
+        // Keyboard is likely open
+        updateSafeArea({ bottom: keyboardHeight });
+      } else {
+        // Keyboard is likely closed, restore original bottom
+        if (wa.safeAreaInset?.bottom !== undefined) {
+          updateSafeArea({ bottom: wa.safeAreaInset.bottom });
         }
-      });
+      }
     };
 
-    // Sadece mobile viewport'larda dinle ve Telegram event'i yoksa
-    // safeCall ile onEvent desteğini kontrol et
-    const hasEventSupport = safeCall('onEvent', 'test', () => {}) !== undefined;
-    if (window.visualViewport && window.visualViewport.height < 900 && !hasEventSupport) {
+    if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', handleVisualViewportChange);
       cleanupFns.push(() => {
-        if (rafId) cancelAnimationFrame(rafId);
         window.visualViewport?.removeEventListener('resize', handleVisualViewportChange);
       });
     }
@@ -240,11 +259,16 @@ export function useSafeAreaInsets() {
   return safeAreaInsets;
 }
 
-// SafeAreaProvider bileşeni
 interface SafeAreaProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Safe Area Provider component
+ * Provides safe area context to child components
+ * @param children - Child components to receive safe area context
+ * @returns JSX element with SafeAreaContext.Provider
+ */
 export function SafeAreaProvider({ children }: SafeAreaProviderProps) {
   const safeAreaInsets = useSafeAreaInsets();
 

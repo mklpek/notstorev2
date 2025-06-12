@@ -9,24 +9,24 @@
   width: 100%;
   max-width: var(--container-max-width);
   margin: 0 auto;
-  min-height: 400px; /* Minimum yükseklik */
+  min-height: 400px; /* Minimum height */
   position: relative; /* Positioning context */
 }
 
 .virtualGrid {
-  width: 100% !important; /* React-window inline stillerini override et */
-  outline: none !important; /* Focus outline'ı kaldır */
-  overflow-x: hidden !important; /* Yatay scroll'u gizle */
+  width: 100% !important; /* Override React-window inline styles */
+  outline: none !important; /* Remove focus outline */
+  overflow-x: hidden !important; /* Hide horizontal scroll */
 }
 
-/* AutoSizer için içerik konteyneri */
+/* Content container for AutoSizer */
 .autoSizerContainer {
   width: 100%;
   height: 100%;
   flex: 1;
 }
 
-/* Legacy fallback stili */
+/* Legacy fallback style */
 .legacyGrid {
   display: flex;
   flex-wrap: wrap;

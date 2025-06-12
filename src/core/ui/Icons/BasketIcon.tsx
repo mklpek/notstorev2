@@ -1,5 +1,16 @@
+/******************************************************************************
+ * File: BasketIcon.tsx
+ * Layer: core
+ * Desc: Shopping basket icon component for cart functionality
+ ******************************************************************************/
+
 import React from 'react';
 
+/**
+ * Shopping basket icon component
+ * Used in header for cart access and shopping-related UI elements
+ * @returns JSX element containing SVG basket icon
+ */
 const BasketIcon: React.FC = () => (
   <svg
     width="28"

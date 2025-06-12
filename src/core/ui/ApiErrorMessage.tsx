@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: ApiErrorMessage.tsx
+ * Layer: core
+ * Desc: API error message component with retry functionality and status-based messaging
+ ******************************************************************************/
+
 import React from 'react';
 import styles from './ApiErrorMessage.module.css';
 
@@ -7,23 +13,35 @@ interface ApiErrorMessageProps {
   customMessage?: string;
 }
 
+/**
+ * API error message component
+ * Displays user-friendly error messages based on HTTP status codes
+ * Includes optional retry functionality for failed requests
+ * @param error - Error object containing status and message information
+ * @param onRetry - Optional callback function for retry button
+ * @param customMessage - Optional custom error message to override default
+ * @returns JSX element containing error message and optional retry button
+ */
 const ApiErrorMessage: React.FC<ApiErrorMessageProps> = ({ error, onRetry, customMessage }) => {
-  // HTTP hata koduna göre mesaj belirleme
+  /**
+   * Determines appropriate error message based on HTTP status code
+   * @returns User-friendly error message string
+   */
   const getErrorMessage = () => {
     if (customMessage) return customMessage;
 
-    if (!error) return 'Bilinmeyen bir hata oluştu';
+    if (!error) return 'An unknown error occurred';
 
-    // Status koduna göre mesaj belirleme
+    // Determine message based on status code
     if (error.status === 404) {
-      return 'İstenen kaynak bulunamadı';
+      return 'The requested resource was not found';
     } else if (error.status >= 500) {
-      return 'Sunucu hatası oluştu, lütfen daha sonra tekrar deneyin';
+      return 'Server error occurred, please try again later';
     } else if (error.status === 401 || error.status === 403) {
-      return 'Bu işlem için yetkiniz bulunmuyor';
+      return 'You do not have permission for this operation';
     }
 
-    return 'Bir hata oluştu, lütfen tekrar deneyin';
+    return 'An error occurred, please try again';
   };
 
   return (
@@ -51,12 +69,12 @@ const ApiErrorMessage: React.FC<ApiErrorMessageProps> = ({ error, onRetry, custo
         </svg>
       </div>
       <div className={styles.textContainer}>
-        <h2 className={styles.title}>Hata Oluştu</h2>
+        <h2 className={styles.title}>Error Occurred</h2>
         <p className={styles.description}>{getErrorMessage()}</p>
       </div>
       {onRetry && (
         <button className={styles.retryButton} onClick={onRetry}>
-          Tekrar Dene
+          Try Again
         </button>
       )}
     </div>
