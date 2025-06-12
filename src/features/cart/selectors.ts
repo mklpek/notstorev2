@@ -1,26 +1,45 @@
+/******************************************************************************
+ * File: selectors.ts
+ * Layer: feature
+ * Desc: Cart selectors using EntityAdapter for optimized cart state access
+ ******************************************************************************/
+
 import { createSelector } from '@reduxjs/toolkit';
 import { cartAdapter } from './cartSlice';
 import type { RootState } from '../../core/store';
 import type { CartItem } from './types';
 
-// Adapter selectors - Tek kaynak burasıdır
+/**
+ * Adapter selectors - Single source of truth
+ * Provides optimized access to cart items using EntityAdapter
+ */
 export const {
   selectAll: selectCartItems,
   selectById: selectCartItemById,
-  selectTotal: selectCartItemCount, // kaç tür ürün var (farklı ID'ler)
+  selectTotal: selectCartItemCount, // how many different products (different IDs)
 } = cartAdapter.getSelectors<RootState>((state: RootState) => state.cart);
 
-// Hesaplanan selektörler - memoized
+/**
+ * Calculated selectors - memoized
+ * Computes total cart value from all items
+ */
 export const selectCartTotal = createSelector(selectCartItems, (items: CartItem[]) =>
   items.reduce((total: number, item: CartItem) => total + item.price * item.qty, 0)
 );
 
-// Toplam ürün adedi
+/**
+ * Total product quantity selector
+ * Calculates total number of items in cart (sum of all quantities)
+ */
 export const selectCartCount = createSelector(selectCartItems, (items: CartItem[]) =>
   items.reduce((count: number, item: CartItem) => count + item.qty, 0)
 );
 
-// Belirli bir ürünün sepette olup olmadığını kontrol eden selektör
+/**
+ * Selector to check if a specific product is in cart
+ * @param productId - Product ID to check
+ * @returns Selector function that returns boolean
+ */
 export const selectIsInCart = (productId: number) =>
   createSelector(selectCartItems, (items: CartItem[]) =>
     items.some((item: CartItem) => item.id === productId)

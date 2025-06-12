@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: TabBar.tsx
+ * Layer: layout
+ * Desc: Bottom navigation tab bar with store and profile tabs
+ ******************************************************************************/
+
 import React from 'react';
 import StoreIcon from '../../core/ui/Icons/StoreIcon';
 import styles from './TabBar.module.css';
@@ -9,11 +15,22 @@ interface TabBarProps {
   onTabChange?: ((tab: 'store' | 'profile') => void) | undefined;
 }
 
+/**
+ * Bottom navigation tab bar component
+ * Provides navigation between store and profile sections
+ * @param activeTab - Currently active tab (default: 'store')
+ * @param onTabChange - Optional callback when tab is changed
+ * @returns JSX element containing tab bar navigation
+ */
 const TabBar: React.FC<TabBarProps> = ({ activeTab = 'store', onTabChange }) => {
-  // Redux'tan Telegram kullanıcı bilgilerini al
+  // Get Telegram user information from Redux
   const userState = useSelector((state: RootState) => state.user);
   const user = userState.user;
 
+  /**
+   * Handles tab click events
+   * @param tab - Tab identifier ('store' or 'profile')
+   */
   const handleTabClick = (tab: 'store' | 'profile') => {
     if (onTabChange) {
       onTabChange(tab);

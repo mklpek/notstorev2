@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: ProductCard.tsx
+ * Layer: feature
+ * Desc: Product card component with image gallery, cart indicator, and click handling
+ ******************************************************************************/
+
 import React, { useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom';
@@ -13,20 +19,27 @@ interface ProductCardProps {
   onProductClick?: ((productId: number) => void) | undefined;
 }
 
+/**
+ * Product card component with image gallery and cart indicator
+ * Displays product information with optimized rendering using intersection observer
+ * @param product - Product item to display
+ * @param onProductClick - Optional callback when product is clicked
+ * @returns JSX element containing product card with image gallery
+ */
 const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // InView hook optimizasyonu - daha yüksek threshold ve rootMargin
+  // InView hook optimization - higher threshold and rootMargin
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
-    rootMargin: '200px 0px', // Daha erken yükleme için 200px yukarıdan başlat
+    rootMargin: '200px 0px', // Start loading 200px earlier for better UX
   });
 
-  // Ürünün sepette olup olmadığını kontrol et
+  // Check if product is in cart
   const isInCart = useAppSelector(selectIsInCart(product.id));
 
-  // Click handler'ı memoize et
+  // Memoize click handler
   const handleCardClick = useMemo(() => {
     return () => {
       if (onProductClick) {
@@ -35,13 +48,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
     };
   }, [product.id, onProductClick]);
 
-  // Figma tasarımına göre kategori ve ismi birleştir - useMemo ile hesapla
+  // Combine category and name according to Figma design - calculate with useMemo
   const displayTitle = useMemo(
     () => `${product.category} ${product.name}`,
     [product.category, product.name]
   );
 
-  // onIndexChange fonksiyonunu memoize et
+  // Memoize onIndexChange function
   const handleIndexChange = useMemo(() => {
     return (index: number) => {
       setCurrentImageIndex(index);
@@ -51,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
   return (
     <div ref={ref} className={styles.productCard} onClick={handleCardClick}>
       <div className={styles.imageContainer}>
-        {/* İnView olduğunda render et - görünürlük tespiti yapalım */}
+        {/* Render when inView - implement visibility detection */}
         {inView && (
           <>
             <ImageGallery
@@ -59,7 +72,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
               currentIndex={currentImageIndex}
               onIndexChange={handleIndexChange}
             />
-            {/* Tag elementi - sadece ürün sepetteyse görünür */}
+            {/* Tag element - visible only when product is in cart */}
             {isInCart && (
               <div className={styles.cartTag}>
                 <CartTagIcon />
@@ -79,5 +92,5 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onProductClick }) =>
   );
 };
 
-// Bileşeni memo ile sarmalayarak gereksiz render'ları önlüyoruz
+// Wrap component with memo to prevent unnecessary renders
 export default React.memo(ProductCard);

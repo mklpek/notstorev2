@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: CartModal.tsx
+ * Layer: feature
+ * Desc: Shopping cart modal with TON Connect integration and purchase functionality
+ ******************************************************************************/
+
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../core/store/hooks';
 import { removeItem, changeQty, clearCart } from './cartSlice';
@@ -19,42 +25,56 @@ interface CartModalProps {
   onClose: () => void;
 }
 
+/**
+ * Shopping cart modal component with TON Connect integration
+ * Displays cart items, handles quantity changes, and processes purchases
+ * @param isOpen - Controls modal visibility
+ * @param onClose - Callback function when modal should be closed
+ * @returns JSX element containing cart modal
+ */
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
   const dispatch = useAppDispatch();
 
-  // Memoized selektörler kullanıyoruz
+  // Use memoized selectors for performance
   const cartItems = useAppSelector(selectCartItems);
   const cartTotal = useAppSelector(selectCartTotal);
 
-  // TON Connect hook'unu kullan
+  // TON Connect hook for blockchain transactions
   const { tonConnectUI, isConnected, sendTransaction } = useTonConnect();
 
-  // API'den ürün bilgilerini çek - entities'i direkt olarak al
+  // Fetch product information from API - get entities directly
   const { data: catalogData } = useGetCatalogueQuery();
 
-  // Başarılı ödeme modalı için state
+  // State for success payment modal
   const [successModalOpen, setSuccessModalOpen] = useState(false);
 
+  /**
+   * Handles item removal by decreasing quantity
+   * @param id - Product ID to remove
+   */
   const handleRemove = (id: number) => {
     dispatch(changeQty({ id, delta: -1 }));
   };
 
   const isEmpty = cartItems.length === 0;
 
-  // Satın alma işlemi - TON Connect entegrasyonu ile
+  /**
+   * Handles purchase process with TON Connect integration
+   * Manages wallet connection, transaction creation, and success handling
+   */
   const handlePurchase = async () => {
     if (isEmpty || cartItems.length === 0) {
       onClose();
       return;
     }
 
-    // Modal kapanmadan önce payment bilgilerini yerel değişkenlere kaydet
+    // Save payment information to local variables before modal closes
     const currentCartItems = [...cartItems];
     const currentCartTotal = cartTotal;
 
     try {
-      // Cüzdan bağlantısı yoksa bağlantı modalını göster
-      // TON Connect modalı açıldığında sepet modalını kapat
+      // Show wallet connection modal if not connected
+      // Close cart modal when TON Connect modal opens
       const connected = await ensureWalletConnection(tonConnectUI, onClose);
 
       if (!connected) {
@@ -62,34 +82,37 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
         return;
       }
 
-      // Sepet için toplu ödeme transaction'ını oluştur - kaydedilen bilgileri kullan
+      // Create bulk payment transaction for cart - use saved information
       const transaction = createCartTransaction(currentCartItems, currentCartTotal);
 
-      // Transaction'ı gönder
+      // Send transaction
       await sendTransaction(transaction);
 
-      // Başarılı işlem sonrası success modal'ı göster
+      // Show success modal after successful transaction
       setSuccessModalOpen(true);
 
-      // Sepeti temizle
+      // Clear cart
       dispatch(clearCart());
     } catch (error) {
       console.error('Transaction error:', error);
-      // Hata durumunda sepeti temizleme veya modalı kapatma
+      // Don't clear cart or close modal on error
     }
   };
 
-  // Her bir ürünü adetlerine göre tekrar ederek gösteren yapı - O(n²) karmaşıklık yerine O(n)
+  /**
+   * Expands cart items by quantity for display
+   * Uses O(n) complexity instead of O(n²) for better performance
+   */
   const expandedCartItems = React.useMemo(() => {
-    // catalogData yoksa erken dön
+    // Early return if no catalog data
     if (!catalogData) return [];
 
     return cartItems.flatMap(item => {
-      // EntityAdapter selektörünü kullanarak ürün bilgisini O(1) zamanda al
+      // Get product info using EntityAdapter selector in O(1) time
       const productFromApi = catalogSelectors.selectById(catalogData, item.id);
       const categoryToShow = item.category || productFromApi?.category || 'Product';
 
-      // Her ürün için qty kadar kopya oluştur
+      // Create qty number of copies for each product
       return Array.from({ length: item.qty }, (_, index) => ({
         ...item,
         category: categoryToShow,
@@ -103,16 +126,16 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
       <div
         className={`${styles.cartModal} ${isEmpty ? styles.emptyCartModal : styles.filledCartModal}`}
       >
-        {/* Close Button - Her zaman modalın sağ üstünde, header'dan bağımsız */}
+        {/* Close Button - Always at top right of modal, independent of header */}
         <button
           className={styles.closeButton}
           onClick={onClose}
-          // Stil boş sepetteki gibi olacak, gerekirse CSS'ten ayarlanacak
+          // Style will be like empty cart, adjust from CSS if needed
           style={
             isEmpty
               ? { position: 'absolute', top: '16px', right: '16px', zIndex: 10 }
               : {
-                  /* Dolu sepet için stiller CSS'den gelecek */
+                  /* Styles for filled cart will come from CSS */
                 }
           }
         >
@@ -146,12 +169,12 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
           </div>
         ) : (
           <>
-            {/* Header - Sadece Başlık içerir, ortalanmış */}
+            {/* Header - Contains only title, centered */}
             <div className={styles.headerContainer}>
               <h2 className={styles.title}>Cart</h2>
             </div>
 
-            {/* Lines - Figma'daki Lines yapısına uygun, header'dan footer'a kadar uzanır */}
+            {/* Lines - Following Figma Lines structure, extends from header to footer */}
             <div className={styles.lines}>
               {expandedCartItems.map(item => {
                 return (
@@ -199,7 +222,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
         </div>
       </div>
 
-      {/* Başarılı ödeme modalı */}
+      {/* Success payment modal */}
       <SuccessModal isOpen={successModalOpen} onClose={() => setSuccessModalOpen(false)} />
     </Modal>
   );

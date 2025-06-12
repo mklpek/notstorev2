@@ -1,5 +1,11 @@
+/******************************************************************************
+ * File: theme.css
+ * Layer: core
+ * Desc: Global theme variables, CSS reset, and Telegram WebApp styling
+ ******************************************************************************/
+
 /* ==========================================================================
-   GLOBAL THEME & RESET - Tek kaynak CSS dosyası
+   GLOBAL THEME & RESET - Single source CSS file
    ========================================================================== */
 
 /* Local Fonts */
@@ -23,9 +29,9 @@
   box-sizing: border-box;
 }
 
-/* Telegram WebApp Tema Değişkenleri */
+/* Telegram WebApp Theme Variables */
 :root {
-  /* Telegram tema renkleri */
+  /* Telegram theme colors */
   --tg-theme-bg-color: #000000;
   --tg-theme-text-color: #ffffff;
   --tg-theme-hint-color: rgba(255, 255, 255, 0.5);
@@ -33,23 +39,23 @@
   --tg-theme-button-color: #2481cc;
   --tg-theme-button-text-color: #ffffff;
 
-  /* Safe area insets - env() ile iOS notch desteği */
+  /* Safe area insets - env() with iOS notch support */
   --tg-safe-area-inset-top: env(safe-area-inset-top);
   --tg-safe-area-inset-right: env(safe-area-inset-right);
   --tg-safe-area-inset-bottom: env(safe-area-inset-bottom);
   --tg-safe-area-inset-left: env(safe-area-inset-left);
 
-  /* Dinamik viewport yüksekliği */
-  --tg-viewport-height: 100vh; /* başlangıç değeri */
+  /* Dynamic viewport height */
+  --tg-viewport-height: 100vh; /* initial value */
 
-  /* Uygulama renkleri */
+  /* Application colors */
   --primary-color: #646cff;
   --primary-color-hover: #535bf2;
   --text-color: var(--tg-theme-text-color);
   --background-color: var(--tg-theme-bg-color);
   --border-radius: 8px;
 
-  /* Skeleton renkleri */
+  /* Skeleton colors */
   --skeleton-base-color: rgba(255, 255, 255, 0.05);
   --skeleton-highlight-color: rgba(255, 255, 255, 0.08);
 
@@ -74,7 +80,7 @@
 }
 
 /* ==========================================================================
-   UNIVERSAL CONTAINER CLASS - Responsive design için tek kaynak
+   UNIVERSAL CONTAINER CLASS - Single source for responsive design
    ========================================================================== */
 
 .tg-container {
@@ -89,7 +95,7 @@
 html,
 body,
 #root {
-  overflow-x: hidden !important; /* Yatay kaydırmayı tamamen engelle */
+  overflow-x: hidden !important; /* Completely prevent horizontal scrolling */
 }
 
 html,
@@ -103,9 +109,9 @@ body {
   background-color: var(--background-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  max-width: var(--container-max-width); /* iOS Telegram'da yatay scroll kaçmasını engeller */
+  max-width: var(--container-max-width); /* Prevent horizontal scroll overflow in iOS Telegram */
   margin: 0 auto;
-  /* Telegram safe area inset paddingleri */
+  /* Telegram safe area inset paddings */
   padding-top: var(--tg-safe-area-inset-top, 0);
   padding-left: var(--tg-safe-area-inset-left, 0);
   padding-right: var(--tg-safe-area-inset-right, 0);
@@ -176,7 +182,7 @@ a {
   padding: var(--spacing-lg);
 }
 
-/* Safe area ile ilgili yardımcı sınıflar */
+/* Safe area helper classes */
 .tg-safe-pad-top {
   padding-top: var(--tg-safe-area-inset-top, 0);
 }
@@ -193,7 +199,7 @@ a {
   padding-right: var(--tg-safe-area-inset-right, 0);
 }
 
-/* Safe area yardımcı sınıfları */
+/* Safe area utility classes */
 .tg-safe-pad-top {
   padding-top: var(--tg-safe-area-inset-top);
 }
@@ -235,10 +241,10 @@ a {
 }
 
 /* ==========================================================================
-   TON CONNECT MODAL OVERLAY STYLING - Sepet modalındaki blur yapısını birebir kopyalama
+   TON CONNECT MODAL OVERLAY STYLING - Exact copy of cart modal blur structure
    ========================================================================== */
 
-/* TON Connect UI modal overlay - tüm olası selektörler */
+/* TON Connect UI modal overlay - all possible selectors */
 tc-modal,
 tc-modal-backdrop,
 .tc-modal,
@@ -254,7 +260,7 @@ tc-modal-backdrop,
 div[class*="modal"][class*="backdrop"],
 div[class*="tonconnect"][class*="backdrop"],
 div[class*="tc-"][class*="backdrop"],
-/* Shadow DOM içindeki elementler için */
+/* Elements inside Shadow DOM */
 :host(.tc-modal),
 :host(.tonconnect-modal) {
   position: fixed !important;
@@ -271,7 +277,7 @@ div[class*="tc-"][class*="backdrop"],
   align-items: flex-end !important;
 }
 
-/* TON Connect modal container için ek stiller */
+/* Additional styles for TON Connect modal container */
 tc-modal > *,
 .tc-modal > *,
 .tonconnect-modal > *,
@@ -280,7 +286,7 @@ tc-modal > *,
   z-index: 1001 !important;
 }
 
-/* Genel modal backdrop override - en güçlü selektör */
+/* General modal backdrop override - strongest selector */
 body > div[style*='position: fixed'][style*='z-index'],
 #root ~ div[style*='position: fixed'][style*='z-index'],
 div[style*='position: fixed'][style*='top: 0'][style*='left: 0'] {

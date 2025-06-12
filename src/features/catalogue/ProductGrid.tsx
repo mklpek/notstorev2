@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: ProductGrid.tsx
+ * Layer: feature
+ * Desc: Product grid component with search functionality and optimized rendering
+ ******************************************************************************/
+
 import React, { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProductCard from './components/ProductCard';
@@ -9,52 +15,57 @@ import NoResultsFound from './components/NoResultsFound';
 import ProductCardSkeleton from '../../core/ui/Skeleton/ProductCardSkeleton';
 import { ApiErrorMessage } from '../../core/ui';
 
-// 'count' parametresini değişken hale getiriyoruz
+// Making 'count' parameter variable
 const SKELETON_COUNT = 6;
 
+/**
+ * Product grid component with search and filtering capabilities
+ * Displays products in a responsive grid layout with debounced search
+ * @returns JSX element containing product grid with search functionality
+ */
 const ProductGrid: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rawQuery = searchParams.get('q') || '';
 
-  // Debounce ederek, kullanıcı her tuşa bastığında değil,
-  // 300ms duraklamadan sonra arama yapmasını sağlıyoruz
+  // Debounce to prevent search on every keystroke,
+  // search only after 300ms pause
   const debouncedQuery = useDebouncedValue(rawQuery.trim(), 300);
 
-  // RTK Query kullanımı - refetch fonksiyonunu doğrudan alıyoruz
+  // RTK Query usage - getting refetch function directly
   const { isLoading, error, data, refetch } = useGetCatalogueQuery();
 
-  // Filtrelenmiş ürünleri hesapla
+  // Calculate filtered products
   const filteredProducts = useMemo(() => {
     if (!data) return [];
 
-    // Tüm ürünleri adapter selektörü ile al
+    // Get all products using adapter selector
     const allProducts = catalogSelectors.selectAll(data);
 
-    // Arama yoksa tüm ürünleri döndür
+    // Return all products if no search query
     if (!debouncedQuery) {
       return allProducts;
     }
 
-    // Arama terimine göre filtrele
+    // Filter by search term
     return allProducts.filter((p: Item) =>
       `${p.category} ${p.name}`.toLowerCase().includes(debouncedQuery.toLowerCase())
     );
   }, [data, debouncedQuery]);
 
-  // handleProductClick fonksiyonunu useMemo ile optimize ediyoruz
-  // navigate fonksiyonu değişmediği sürece yeniden oluşturulmayacak
+  // Optimize handleProductClick function with useMemo
+  // Won't be recreated unless navigate function changes
   const handleProductClick = useMemo(() => {
     return (productId: number) => {
       navigate(`/product/${productId}`);
     };
   }, [navigate]);
 
-  // Skeleton render etme için memoize edilmiş bir değer kullanıyoruz
-  // isLoading değişmediği sürece bu kısım yeniden render edilmeyecek
+  // Use memoized value for skeleton rendering
+  // This section won't re-render unless isLoading changes
   const loadingContent = useMemo(
     () => (
-      <div className={styles.productGrid} aria-busy="true" aria-label="Ürünler yükleniyor">
+      <div className={styles.productGrid} aria-busy="true" aria-label="Loading products">
         <ProductCardSkeleton count={SKELETON_COUNT} />
       </div>
     ),
@@ -70,22 +81,22 @@ const ProductGrid: React.FC = () => {
       <ApiErrorMessage
         error={error}
         onRetry={() => refetch()}
-        customMessage="Ürünleri yüklerken bir sorun oluştu."
+        customMessage="An error occurred while loading products."
       />
     );
   }
 
-  // Ürün bulunamadı durumu - sadece arama yapıldığında ve sonuç bulunamadığında NoResultsFound göster
+  // No products found - show NoResultsFound only when searching and no results
   if (!filteredProducts || filteredProducts.length === 0) {
-    // Sadece arama sorgusu varsa NoResultsFound göster
+    // Show NoResultsFound only if there's a search query
     if (rawQuery.trim()) {
       return <NoResultsFound />;
     }
-    // Arama sorgusu yoksa hiçbir şey gösterme (boş grid döndür)
+    // If no search query, show empty grid
     return <div className={styles.productGrid}></div>;
   }
 
-  // ItemPage'deki optimize edilmiş yapıya benzer şekilde filtrelenmiş ürünleri göster
+  // Show filtered products similar to optimized structure in ItemPage
   return (
     <div className={styles.productGrid}>
       {filteredProducts.map((product: Item) => (
@@ -95,5 +106,5 @@ const ProductGrid: React.FC = () => {
   );
 };
 
-// Bileşeni memo ile sarmalayarak gereksiz render'ları önlüyoruz
+// Wrap component with memo to prevent unnecessary renders
 export default React.memo(ProductGrid);

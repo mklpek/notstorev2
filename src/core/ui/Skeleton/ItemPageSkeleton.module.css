@@ -17,13 +17,13 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-bottom: 174px; /* Footer (58px) + Slider (116px) için boşluk */
+  padding-bottom: 174px; /* Space for Footer (58px) + Slider (116px) */
 }
 
 /* Fixed Bottom Content */
 .fixedBottom {
   position: fixed;
-  bottom: 58px; /* Footer yüksekliği kadar yukarıda */
+  bottom: 58px; /* Above footer height */
   left: 0;
   width: 100%;
   z-index: 100;
@@ -49,7 +49,7 @@
   height: auto;
 }
 
-/* Header - Gereksiz üst boşluğu azalt */
+/* Header - Reduce unnecessary top spacing */
 .header {
   display: flex;
   flex-direction: row;
@@ -79,7 +79,7 @@
   height: auto;
 }
 
-/* Description - Gerçek ItemPage ile aynı */
+/* Description - Same as real ItemPage */
 .description {
   display: flex;
   flex-direction: column;
@@ -182,7 +182,7 @@
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Footer - Gerçek Footer ile birebir uyumlu */
+/* Footer - Exactly matching real Footer */
 .footer {
   width: 100%;
   max-width: var(--container-max-width);
@@ -196,7 +196,7 @@
   z-index: 1000;
 }
 
-/* Body Container - Gerçek Footer ile aynı */
+/* Body Container - Same as real Footer */
 .footer .body {
   display: flex;
   flex-direction: row;
@@ -237,7 +237,7 @@
   background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Skeleton shimmer efektini uygula */
+/* Apply skeleton shimmer effect */
 .itemPage :global(.react-loading-skeleton) {
   --base-color: rgba(255, 255, 255, 0.05);
   --highlight-color: rgba(255, 255, 255, 0.08);

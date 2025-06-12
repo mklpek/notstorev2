@@ -1,16 +1,23 @@
+/******************************************************************************
+ * File: telegramHelpers.ts
+ * Layer: utils
+ * Desc: Telegram WebApp utility functions for version detection and safe API calls
+ ******************************************************************************/
+
 /**
- * Mevcut Telegram WebApp versiyonunu tespit eder
+ * Detects current Telegram WebApp version
+ * @returns Version number as float, defaults to 6.0 if not detected
  */
 export function getTgVersion(): number {
   try {
-    // Native uygulamalar WebApp.version gönderir (ör. '7.2')
+    // Native apps send WebApp.version (e.g. '7.2')
     const waVer = window.Telegram?.WebApp?.version;
     if (waVer) {
       const parsed = parseFloat(waVer);
       if (!isNaN(parsed)) return parsed;
     }
 
-    // Web telegram tgWebAppVersion= parametresini URL'e ekler
+    // Web telegram adds tgWebAppVersion= parameter to URL
     const qs = new URLSearchParams(window.location.search);
     const qsVer = qs.get('tgWebAppVersion');
     if (qsVer) {
@@ -18,16 +25,18 @@ export function getTgVersion(): number {
       if (!isNaN(parsed)) return parsed;
     }
 
-    // Fallback: eğer hiçbir versiyon bilgisi yoksa 6.0 varsayalım
+    // Fallback: if no version info available, assume 6.0
     return 6.0;
   } catch {
-    // Hata durumunda güvenli versiyon döndür
+    // Return safe version in case of error
     return 6.0;
   }
 }
 
 /**
- * Belirli bir Telegram WebApp metodunun desteklenip desteklenmediğini kontrol eder
+ * Checks if a specific Telegram WebApp method is supported
+ * @param method - Method name to check for support
+ * @returns True if method is available and callable
  */
 export function canUse(method: keyof TelegramWebApp): boolean {
   try {
@@ -38,16 +47,19 @@ export function canUse(method: keyof TelegramWebApp): boolean {
 }
 
 /**
- * Telegram WebApp metodunu güvenli şekilde çağırır - Telegram 2.0 API uyumlu
- * Console warning'lerini temizler ve tip güvenliği sağlar
+ * Safely calls Telegram WebApp method - Telegram 2.0 API compatible
+ * Cleans up console warnings and provides type safety
+ * @param method - Method name to call
+ * @param args - Arguments to pass to the method
+ * @returns Method result or undefined if method unavailable
  */
 export function safeCall<T extends keyof TelegramWebApp>(method: T, ...args: unknown[]): unknown {
   try {
     const wa = window.Telegram?.WebApp;
 
-    // Fonksiyon tanımlı ve typeof === 'function' mı?
+    // Is function defined and typeof === 'function'?
     if (typeof wa?.[method] === 'function') {
-      // @ts-expect-error: dinamik çağrı - Telegram API'nin doğası gereği
+      // @ts-expect-error: dynamic call - inherent nature of Telegram API
       return wa[method](...args);
     }
 

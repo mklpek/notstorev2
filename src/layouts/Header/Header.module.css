@@ -1,3 +1,4 @@
+/* Header container with responsive design */
 .header {
   display: flex;
   justify-content: space-between;
@@ -13,18 +14,21 @@
     padding 0.2s ease-out;
 }
 
+/* Header in search mode */
 .header.searchOpen {
   height: 60px;
   backdrop-filter: blur(16px);
   padding: 12px 16px;
 }
 
+/* Left section of header */
 .headerLeft {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+/* Main title styling */
 .headerTitle {
   font-family:
     'SF Pro',
@@ -39,11 +43,13 @@
   color: var(--text-color);
 }
 
+/* Header buttons container */
 .headerButtons {
   display: flex;
   gap: 8px;
 }
 
+/* Individual header button */
 .headerButton {
   display: flex;
   justify-content: center;
@@ -69,7 +75,7 @@
   max-height: 21px;
 }
 
-/* Arama çubuğu stilleri */
+/* Search bar styles */
 .searchContainer {
   display: flex;
   flex-direction: row;
@@ -78,6 +84,7 @@
   width: 100%;
 }
 
+/* Search input container */
 .searchInput {
   display: flex;
   flex-direction: row;
@@ -91,6 +98,7 @@
   position: relative;
 }
 
+/* Search icon styling */
 .searchIcon {
   display: flex;
   justify-content: center;
@@ -100,6 +108,7 @@
   opacity: 0.2;
 }
 
+/* Search input field */
 .input {
   flex: 1;
   background: transparent;
@@ -122,7 +131,8 @@
   opacity: 0.5;
 }
 
-/* .typer {
+/* Typing cursor animation (commented out)
+.typer {
   width: 2px;
   height: 22px;
   background-color: var(--tg-theme-text-color, #ffffff);
@@ -131,6 +141,7 @@
   animation: blink 1s infinite;
 } */
 
+/* Clear search button */
 .clearButton {
   display: flex;
   justify-content: center;
@@ -149,6 +160,7 @@
   opacity: 0.7;
 }
 
+/* Cancel search button */
 .cancelButton {
   font-family:
     'SF Pro Rounded',
@@ -167,7 +179,8 @@
   white-space: nowrap;
 }
 
-/* @keyframes blink {
+/* Blinking animation for cursor (commented out)
+@keyframes blink {
   0%, 100% {
     opacity: 0.5;
   }
@@ -176,7 +189,7 @@
   }
 } */
 
-/* Cart Count Styles - Figma tasarımına uygun */
+/* Cart Count Styles - Figma design compliant */
 .cartCountContainer {
   display: flex;
   justify-content: center;
@@ -198,7 +211,7 @@
   user-select: none;
 }
 
-/* Erişilebilirlik için animasyon kontrolü */
+/* Accessibility animation control */
 @media (prefers-reduced-motion: reduce) {
   .header {
     transition: none;

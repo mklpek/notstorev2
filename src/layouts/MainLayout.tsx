@@ -1,3 +1,9 @@
+/******************************************************************************
+ * File: MainLayout.tsx
+ * Layer: layout
+ * Desc: Main application layout with header, content area, and tab bar navigation
+ ******************************************************************************/
+
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from './Header';
@@ -8,6 +14,12 @@ interface MainLayoutProps {
   onCartClick?: () => void;
 }
 
+/**
+ * Main application layout component
+ * Provides consistent layout structure with header, content, and tab bar
+ * @param onCartClick - Optional callback when cart button is clicked
+ * @returns JSX element containing main layout structure
+ */
 const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -16,10 +28,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   const activeTab: 'store' | 'profile' = pathname.startsWith('/profile') ? 'profile' : 'store';
   const showHeader = activeTab === 'store';
 
+  /**
+   * Handles search open state changes
+   * @param isOpen - Whether search is currently open
+   */
   const handleSearchOpenChange = (isOpen: boolean) => {
     setIsSearchOpen(isOpen);
   };
 
+  /**
+   * Handles tab navigation
+   * @param tab - Target tab ('store' or 'profile')
+   */
   const handleTabChange = (tab: 'store' | 'profile') => {
     navigate(tab === 'store' ? '/' : '/profile');
   };
