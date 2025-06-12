@@ -162,7 +162,7 @@ const ItemPage: React.FC = () => {
       <div className={styles.fixedBottom}>
         {/* Stickers Slider */}
         <div className={styles.sliderContainer}>
-          <div className={styles.stickersSlider} ref={sliderRef}>
+          <div className={`${styles.stickersSlider} hide-scrollbar`} ref={sliderRef}>
             {product.images.map((image, index) => (
               <div
                 key={index}

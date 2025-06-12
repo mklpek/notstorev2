@@ -267,15 +267,8 @@
   height: auto;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
-}
-
-/* Hide scrollbar */
-.stickersSlider::-webkit-scrollbar {
-  display: none;
 }
 
 /* Sticker - Figma: row, flex-end, padding 6px, 100x100px, border-radius 16px */

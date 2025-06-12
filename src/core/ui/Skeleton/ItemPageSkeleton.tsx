@@ -67,7 +67,7 @@ const ItemPageSkeleton = React.memo(() => {
       <div className={styles.fixedBottom}>
         {/* Stickers Slider */}
         <div className={styles.sliderContainer}>
-          <div className={styles.stickersSlider}>
+          <div className={`${styles.stickersSlider} hide-scrollbar`}>
             {Array.from({ length: sliderImagesCount }).map((_, index) => (
               <div key={index} className={styles.sticker}>
                 {/* Background for small image skeletons */}

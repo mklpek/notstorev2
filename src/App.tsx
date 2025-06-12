@@ -16,7 +16,6 @@ import { useSkeletonTheme } from './core/hooks/useSkeletonTheme';
 import { TonConnectProvider } from './features/tonConnect';
 import { useDispatch } from 'react-redux';
 import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
-import { getUserProfilePhoto } from './core/api/telegramApi';
 import type { TelegramUser } from './features/account/userSlice';
 import useTelegramHeader from './core/hooks/useTelegramHeader';
 
@@ -43,6 +42,9 @@ function App() {
 
   // Apply Telegram theme colors
   useEffect(() => {
+    // LOCALHOST DEVELOPMENT: Telegram tema renkleri yorum satırında
+    // Localhost'ta çalışırken sabit renkler kullanılacak
+    /*
     try {
       const wa = window.Telegram?.WebApp;
       if (!wa) return;
@@ -61,8 +63,9 @@ function App() {
         wa.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
       );
     } catch {
-      /* ignored */
+      // ignored
     }
+    */
   }, []);
 
   // Load user information from Telegram WebApp
@@ -74,14 +77,10 @@ function App() {
     const initUser = async () => {
       try {
         const { WebApp: wa } = window.Telegram || { WebApp: undefined };
+
         if (!wa?.initDataUnsafe?.user) return;
 
         const user = wa.initDataUnsafe.user;
-        const cachedPhoto = localStorage.getItem(`avatar:${user.id}`);
-
-        if (cachedPhoto) {
-          dispatch(setUserPhotoUrl(cachedPhoto));
-        }
 
         // Prepare data according to TelegramUser type
         const userDetails: TelegramUser = {
@@ -94,25 +93,25 @@ function App() {
         if (user.username) userDetails.username = user.username;
         if (user.language_code) userDetails.language_code = user.language_code;
         if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
-        if (user.photo_url) userDetails.photo_url = user.photo_url;
-        if (cachedPhoto) userDetails.cachedPhotoUrl = cachedPhoto;
+
+        // Use photo_url directly from Telegram WebApp if available
+        if (user.photo_url) {
+          userDetails.photo_url = user.photo_url;
+          userDetails.photoUrl = user.photo_url;
+          // Cache the photo URL
+          localStorage.setItem(`avatar:${user.id}`, user.photo_url);
+          dispatch(setUserPhotoUrl(user.photo_url));
+        } else {
+          // Check for cached photo
+          const cachedPhoto = localStorage.getItem(`avatar:${user.id}`);
+          if (cachedPhoto && cachedPhoto !== 'none') {
+            userDetails.photoUrl = cachedPhoto;
+            userDetails.cachedPhotoUrl = cachedPhoto;
+            dispatch(setUserPhotoUrl(cachedPhoto));
+          }
+        }
 
         dispatch(setTelegramUser(userDetails));
-
-        // Fast path: if photo_url exists, use immediately and cache
-        if (user.photo_url) {
-          dispatch(setUserPhotoUrl(user.photo_url));
-          localStorage.setItem(`avatar:${user.id}`, user.photo_url);
-          return; // Skip Bot API call
-        }
-
-        // Fallback: if no photo_url and cache is empty, call API
-        if (!cachedPhoto) {
-          const photoUrl = await getUserProfilePhoto(user.id);
-          const finalPhotoUrl = photoUrl ?? 'none'; // Cache as 'none' if no API response
-          localStorage.setItem(`avatar:${user.id}`, finalPhotoUrl);
-          dispatch(setUserPhotoUrl(finalPhotoUrl));
-        }
       } catch (error) {
         console.error('Failed to initialize user:', error);
       }

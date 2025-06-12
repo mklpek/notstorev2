@@ -66,9 +66,10 @@
   margin: 0;
   text-align: left;
   align-self: stretch;
-  /* If wrapping is needed in Figma overflow cases: */
-  /* white-space: normal; */
-  /* overflow-wrap: break-word; */
+  /* Figma uyumlu - tek satır, ellipsis ile kesme */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .productPrice {

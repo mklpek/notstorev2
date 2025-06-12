@@ -161,13 +161,6 @@
   height: auto;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-}
-
-/* Hide scrollbar */
-.stickersSlider::-webkit-scrollbar {
-  display: none;
 }
 
 /* Sticker */
