@@ -198,7 +198,6 @@ export function useSafeAreaInsets() {
       if (tgVer >= 8.0) {
         // Make initial content safe area request
         try {
-          // @ts-expect-error: This method is not yet defined in Telegram.WebApp types
           if (typeof wa.requestContentSafeArea === 'function') {
             wa.requestContentSafeArea();
           }
