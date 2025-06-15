@@ -42,6 +42,9 @@ function App() {
 
   // Apply Telegram theme colors
   useEffect(() => {
+    // LOCALHOST DEVELOPMENT: Telegram tema renkleri yorum satırında
+    // Localhost'ta çalışırken sabit renkler kullanılacak
+    /*
     try {
       const wa = window.Telegram?.WebApp;
       if (!wa) return;
@@ -62,6 +65,7 @@ function App() {
     } catch {
       // ignored
     }
+    */
   }, []);
 
   // Load user information from Telegram WebApp

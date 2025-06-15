@@ -45,6 +45,9 @@ export function useSafeAreaInsets() {
     const wa = window.Telegram?.WebApp;
     if (!wa) return;
 
+    // Early exit for desktop/tablet devices
+    if (window.visualViewport && window.visualViewport.height > 900) return;
+
     const tgVer = getTgVersion();
 
     /**
