@@ -165,29 +165,27 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className={styles.accountPage}>
-      {/* Safe Area Debug Info - Only in development */}
-      {import.meta.env.DEV && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '10px',
-            right: '10px',
-            background: 'rgba(0,0,0,0.8)',
-            color: 'white',
-            padding: '8px',
-            fontSize: '12px',
-            borderRadius: '4px',
-            zIndex: 9999,
-            fontFamily: 'monospace',
-          }}
-        >
-          <div>Safe Area Debug:</div>
-          <div>Top: {safeAreaInsets.top}px</div>
-          <div>Bottom: {safeAreaInsets.bottom}px</div>
-          <div>Left: {safeAreaInsets.left}px</div>
-          <div>Right: {safeAreaInsets.right}px</div>
-        </div>
-      )}
+      {/* Safe Area Debug Info */}
+      <div
+        style={{
+          position: 'fixed',
+          top: '10px',
+          right: '10px',
+          background: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '8px',
+          fontSize: '12px',
+          borderRadius: '4px',
+          zIndex: 9999,
+          fontFamily: 'monospace',
+        }}
+      >
+        <div>Safe Area Debug:</div>
+        <div>Top: {safeAreaInsets.top}px</div>
+        <div>Bottom: {safeAreaInsets.bottom}px</div>
+        <div>Left: {safeAreaInsets.left}px</div>
+        <div>Right: {safeAreaInsets.right}px</div>
+      </div>
 
       {/* Account Header */}
       <div className={styles.accountHeader}>

@@ -17,6 +17,7 @@
   flex-direction: column;
   gap: var(--spacing-lg);
   padding-bottom: 80px; /* Space for tab bar (without Home Indicator) */
+  padding-top: 8px; /* Space between header and content */
 }
 
 /* Content without header styling */
