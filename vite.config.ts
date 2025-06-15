@@ -39,6 +39,9 @@ export default defineConfig(({ mode }) => {
       sourcemap: !isProduction,
       rollupOptions: {
         output: {
+          // Daha güçlü hash sistemi - timestamp ekle
+          entryFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+          chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
           manualChunks: {
             // Temel kütüphaneleri ayrı chunk'lara böl
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
