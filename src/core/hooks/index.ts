@@ -7,4 +7,5 @@ export {
   SafeAreaProvider,
   useSafeAreaContext,
   SafeAreaContext,
-} from './useSafeArea';
+} from './useSafeArea/index';
+export { SafeAreaExample } from './useSafeArea/example';

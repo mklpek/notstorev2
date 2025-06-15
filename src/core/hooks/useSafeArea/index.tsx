@@ -1,12 +1,12 @@
 /******************************************************************************
- * File: useSafeArea.tsx
+ * File: useSafeArea/index.tsx
  * Layer: core
  * Desc: Safe area management for iOS/Android home indicators and dynamic viewport handling
  ******************************************************************************/
 
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import { getTgVersion, safeCall } from '../../utils/telegramHelpers';
+import { getTgVersion, safeCall } from '../../../utils/telegramHelpers';
 
 // Safe Area Context type
 interface SafeAreaInsets {
@@ -49,21 +49,6 @@ export function useSafeAreaInsets() {
     }
 
     console.log('🔄 SafeArea: Initializing...');
-
-    // ❶ Telegram WebApp'i tam ekran yap
-    try {
-      if (typeof wa.expand === 'function') {
-        wa.expand();
-        console.log('📱 Telegram WebApp expanded to fullscreen');
-      }
-      if (typeof wa.ready === 'function') {
-        wa.ready();
-        console.log('📱 Telegram WebApp ready');
-      }
-    } catch (error) {
-      console.log('❌ Error expanding WebApp:', error);
-    }
-
     const tgVer = getTgVersion();
     console.log('📱 Telegram version:', tgVer);
 
@@ -124,10 +109,10 @@ export function useSafeAreaInsets() {
       console.log('🔍 Native env() values:', { envTop, envRight, envBottom, envLeft });
 
       const initialInsets: SafeAreaInsets = {
-        top: envTop ? parseInt(envTop, 10) || 0 : 0,
-        right: envRight ? parseInt(envRight, 10) || 0 : 0,
-        bottom: envBottom ? parseInt(envBottom, 10) || 0 : 0,
-        left: envLeft ? parseInt(envLeft, 10) || 0 : 0,
+        top: envTop ? parseFloat(envTop) || 0 : 0,
+        right: envRight ? parseFloat(envRight) || 0 : 0,
+        bottom: envBottom ? parseFloat(envBottom) || 0 : 0,
+        left: envLeft ? parseFloat(envLeft) || 0 : 0,
       };
 
       console.log('📏 Initial insets from env():', initialInsets);
@@ -147,6 +132,16 @@ export function useSafeAreaInsets() {
       });
     } else {
       console.log('⚠️ Telegram safeAreaInset not available');
+    }
+
+    // Android statusBar height tahmini
+    if (wa.platform === 'android' && (!wa.safeAreaInset || wa.safeAreaInset.top === 0)) {
+      console.log('🤖 Android platform detected with zero top inset');
+      const statusBarHeight = Math.max(0, window.outerHeight - window.innerHeight);
+      if (statusBarHeight > 0) {
+        console.log('📏 Estimated Android status bar height:', statusBarHeight);
+        updateSafeArea({ top: statusBarHeight });
+      }
     }
 
     // Set initial viewport height
@@ -264,7 +259,7 @@ export function useSafeAreaInsets() {
       document.documentElement.style.setProperty('--visual-viewport-height', `${vh}px`);
 
       // Update safe area bottom when keyboard appears/disappears
-      const keyboardHeight = window.innerHeight - vh;
+      const keyboardHeight = Math.max(0, window.innerHeight - vh);
       if (keyboardHeight > 100) {
         // Keyboard is likely open
         console.log('⌨️ Keyboard detected, height:', keyboardHeight);

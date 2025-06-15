@@ -1,11 +1,11 @@
 /******************************************************************************
- * File: useSafeAreaExample.tsx
+ * File: useSafeArea/example.tsx
  * Layer: core
  * Desc: Example component demonstrating safe area usage with JavaScript and CSS
  ******************************************************************************/
 
 import React from 'react';
-import { useSafeAreaContext } from './useSafeArea.tsx';
+import { useSafeAreaContext } from './index';
 
 /**
  * Example component showing how to use Safe Area values in JavaScript

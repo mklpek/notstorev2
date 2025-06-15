@@ -15,7 +15,7 @@
   transform: translateX(-50%);
   z-index: 1000;
   /* Use only CSS variables from SafeAreaProvider */
-  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
+  padding-bottom: var(--tg-safe-area-inset-bottom, 0px);
 }
 
 /* Body Container */
