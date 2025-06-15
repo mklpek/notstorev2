@@ -13,7 +13,7 @@ import { useGetCatalogueQuery, catalogSelectors } from '../../../core/api/notApi
 import styles from './ItemPage.module.css';
 import ItemPageSkeleton from '../../../core/ui/Skeleton/ItemPageSkeleton';
 import ProgressiveImage from '../../../core/ui/ProgressiveImage';
-import { shareProduct } from '../../../utils/telegramHelpers';
+import { shareProduct } from '../../../core/utils/telegramHelpers';
 
 /**
  * Product detail page component

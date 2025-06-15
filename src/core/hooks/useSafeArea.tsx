@@ -6,7 +6,7 @@
 
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import { getTgVersion, safeCall } from '../../utils/telegramHelpers';
+import { getTgVersion, safeCall } from '../utils/telegramHelpers';
 
 // Safe Area Context type
 interface SafeAreaInsets {
@@ -49,6 +49,11 @@ export function useSafeAreaInsets() {
     }
 
     console.log('🔄 SafeArea: Initializing...');
+
+    // ❶ FIRST: Call ready() to initialize WebApp
+    wa.ready();
+    console.log('✅ Telegram WebApp ready() called');
+
     const tgVer = getTgVersion();
     console.log('📱 Telegram version:', tgVer);
 
@@ -132,6 +137,17 @@ export function useSafeAreaInsets() {
       });
     } else {
       console.log('⚠️ Telegram safeAreaInset not available');
+      // Fallback: Set reasonable defaults for mobile devices
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        console.log('📱 Mobile detected, setting fallback safe area values');
+        updateSafeArea({
+          top: 44, // Status bar height
+          bottom: 34, // Home indicator height
+          left: 0,
+          right: 0,
+        });
+      }
     }
 
     // Set initial viewport height
