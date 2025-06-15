@@ -78,25 +78,6 @@ function App() {
     if (buildTimestamp) {
       localStorage.setItem('app-build-timestamp', buildTimestamp);
     }
-
-    // Apply Telegram theme colors - PRODUCTION MODE ACTIVE
-    try {
-      // Set theme colors as CSS variables
-      document.documentElement.style.setProperty(
-        '--tg-theme-bg-color',
-        wa.themeParams.bg_color || '#000000'
-      );
-      document.documentElement.style.setProperty(
-        '--tg-theme-text-color',
-        wa.themeParams.text_color || '#ffffff'
-      );
-      document.documentElement.style.setProperty(
-        '--tg-theme-hint-color',
-        wa.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)'
-      );
-    } catch {
-      // ignored
-    }
   }, []);
 
   // Get Telegram user information
