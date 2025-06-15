@@ -58,6 +58,17 @@ export function useSafeAreaInsets() {
      */
     const updateCSSVariables = (insets: SafeAreaInsets) => {
       console.log('🎨 Updating CSS variables:', insets);
+
+      // Legacy variables (keep for backward compatibility)
+      document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
+      document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${insets.right}px`);
+      document.documentElement.style.setProperty(
+        '--tg-safe-area-inset-bottom',
+        `${insets.bottom}px`
+      );
+      document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
+
+      // SDK-compatible variables (match @telegram-apps/sdk-react naming)
       document.documentElement.style.setProperty(
         '--tg-viewport-safe-area-inset-top',
         `${insets.top}px`
@@ -75,6 +86,7 @@ export function useSafeAreaInsets() {
         `${insets.left}px`
       );
 
+      // Content safe area variables (for header content)
       document.documentElement.style.setProperty(
         '--tg-viewport-content-safe-area-inset-top',
         `${insets.top}px`
@@ -94,14 +106,19 @@ export function useSafeAreaInsets() {
     };
 
     /**
-     * Updates safe area values and CSS variables
+     * Updates safe area values and CSS variables (with diff check)
      * @param newInsets - Partial safe area inset updates
      */
     const updateSafeArea = (newInsets: Partial<SafeAreaInsets>) => {
       setSafeAreaInsets(prev => {
-        const updated = { ...prev, ...newInsets };
-        updateCSSVariables(updated);
-        return updated;
+        const merged = { ...prev, ...newInsets };
+        // Only update if values actually changed
+        if (JSON.stringify(prev) === JSON.stringify(merged)) {
+          console.log('🔄 Safe area values unchanged, skipping update');
+          return prev;
+        }
+        updateCSSVariables(merged);
+        return merged;
       });
     };
 
@@ -200,7 +217,7 @@ export function useSafeAreaInsets() {
       if (data && data.top !== undefined) {
         // Update content safe area CSS variable
         document.documentElement.style.setProperty(
-          '--tg-viewport-content-safe-area-inset-top',
+          '--tg-content-safe-area-inset-top',
           `${data.top}px`
         );
 
@@ -268,14 +285,15 @@ export function useSafeAreaInsets() {
       const vh = window.visualViewport.height;
       document.documentElement.style.setProperty('--visual-viewport-height', `${vh}px`);
 
-      // Update safe area bottom when keyboard appears/disappears
-      const keyboardHeight = window.innerHeight - vh;
+      // Calculate keyboard height but don't override Telegram's bottom inset
+      const keyboardHeight = Math.max(0, window.innerHeight - vh);
       if (keyboardHeight > 100) {
-        // Keyboard is likely open
+        // Keyboard is likely open - ADD to existing bottom inset
         console.log('⌨️ Keyboard detected, height:', keyboardHeight);
-        updateSafeArea({ bottom: keyboardHeight });
+        const originalBottom = wa.safeAreaInset?.bottom || 0;
+        updateSafeArea({ bottom: originalBottom + keyboardHeight });
       } else {
-        // Keyboard is likely closed, restore original bottom
+        // Keyboard is likely closed - restore original bottom inset
         if (wa.safeAreaInset?.bottom !== undefined) {
           console.log('⌨️ Keyboard closed, restoring bottom:', wa.safeAreaInset.bottom);
           updateSafeArea({ bottom: wa.safeAreaInset.bottom });

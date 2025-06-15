@@ -9,38 +9,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getTgVersion, safeCall } from '../utils/telegramHelpers';
 
 /**
- * Handles theme changes and sends color commands to Telegram
- * @param isDark - Whether the theme is dark
- */
-const handleTheme = (isDark: boolean) => {
-  const bgColor = isDark ? '#000000' : '#ffffff';
-  const textColor = isDark ? '#ffffff' : '#000000';
-
-  // Set theme data attribute
-  document.body.dataset.theme = isDark ? 'dark' : 'light';
-
-  // Update CSS variables
-  document.documentElement.style.setProperty('--bg-color', bgColor);
-  document.documentElement.style.setProperty('--text-color', textColor);
-
-  // Send color commands to Telegram (Bot API 7.6+)
-  const wa = window.Telegram?.WebApp;
-  if (wa) {
-    try {
-      // Use postEvent for direct communication
-      wa.postEvent?.('web_app_set_header_color', { color: bgColor });
-      wa.postEvent?.('web_app_set_background_color', { color: bgColor });
-      wa.postEvent?.('web_app_set_bottom_bar_color', { color: bgColor });
-      console.log('🎨 Theme colors sent to Telegram:', { bgColor, textColor, isDark });
-    } catch (error) {
-      console.log('❌ Error setting Telegram colors:', error);
-    }
-  }
-};
-
-/**
  * Custom hook for managing Telegram WebApp header functionality
- * Handles fullscreen mode, transparent header, navigation buttons, and theme
+ * Handles fullscreen mode, transparent header, and navigation buttons
  * Uses version-aware API calls for compatibility across Telegram versions
  * @returns void
  */
@@ -55,15 +25,6 @@ export default function useTelegramHeader() {
 
     wa.ready();
 
-    /* --- Theme Detection and Setup ------------------------------------ */
-    // Detect theme from Telegram
-    const isDark =
-      wa.themeParams?.bg_color === '#000000' ||
-      wa.themeParams?.bg_color === '#1c1c1e' ||
-      !wa.themeParams?.bg_color; // Default to dark if no theme
-
-    handleTheme(isDark);
-
     /* --- Fullscreen / Expand ------------------------------------------ */
     // requestFullscreen only supported in Bot API 7.0+
     if (tgVer >= 7.0) {
@@ -76,12 +37,21 @@ export default function useTelegramHeader() {
       safeCall('expand');
     }
 
-    /* --- Header Color (No Padding) ------------------------------------ */
-    // setHeaderColor only supported in Bot API 8.0+
+    /* --- Transparent System Bar --------------------------------------- */
     if (tgVer >= 8.0) {
-      // Use theme-aware header color instead of transparent
-      const headerColor = isDark ? '#000000' : '#ffffff';
-      safeCall('setHeaderColor', headerColor);
+      // setHeaderColor only supported in Bot API 8.0+
+      safeCall('setHeaderColor', '#00000000');
+    } else {
+      // Legacy transparent header for older versions (< 8.0)
+      safeCall('expand');
+      // Force transparent header using old API if available
+      if (wa.HeaderColor && typeof wa.HeaderColor.setColor === 'function') {
+        try {
+          wa.HeaderColor.setColor('#00000000');
+        } catch {
+          /* ignored */
+        }
+      }
     }
 
     /* --- Back & Settings Buttons (≥ 8.0) ------------------------------ */

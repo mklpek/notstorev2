@@ -19,16 +19,6 @@ import { setTelegramUser, setUserPhotoUrl } from './features/account/userSlice';
 import type { TelegramUser } from './features/account/userSlice';
 import useTelegramHeader from './core/hooks/useTelegramHeader';
 
-// Telegram Apps SDK imports
-import {
-  bindMiniAppCssVars,
-  bindViewportCssVars,
-  bindThemeParamsCssVars,
-  init,
-  miniApp,
-  viewport,
-} from '@telegram-apps/sdk-react';
-
 // Lazy loaded components for code splitting
 const MainLayout = lazy(() => import('./layouts/MainLayout'));
 const ProductGrid = lazy(() => import('./features/catalogue/ProductGrid'));
@@ -49,52 +39,6 @@ function App() {
 
   // Memoize skeleton theme values for performance
   const skeletonTheme = useSkeletonTheme();
-
-  // Initialize Telegram Apps SDK
-  useEffect(() => {
-    try {
-      console.log('🚀 Initializing Telegram Apps SDK...');
-
-      // Initialize SDK
-      init();
-      console.log('✅ SDK initialized');
-
-      // Mount viewport and bind CSS variables
-      if (viewport.mount.isAvailable()) {
-        viewport.mount();
-        bindViewportCssVars();
-        console.log('✅ Viewport mounted and CSS vars bound');
-      }
-
-      // Mount mini app and bind CSS variables
-      if (miniApp.mount.isAvailable()) {
-        miniApp.mount();
-        bindMiniAppCssVars();
-        bindThemeParamsCssVars();
-        console.log('✅ MiniApp mounted and theme CSS vars bound');
-      }
-
-      // Manual CSS variable binding for safe areas
-      const wa = window.Telegram?.WebApp;
-      if (wa) {
-        const { safeAreaInset, contentSafeAreaInset } = wa;
-
-        for (const k of ['top', 'right', 'bottom', 'left']) {
-          document.documentElement.style.setProperty(
-            `--tg-viewport-safe-area-inset-${k}`,
-            `${safeAreaInset?.[k as keyof typeof safeAreaInset] || 0}px`
-          );
-          document.documentElement.style.setProperty(
-            `--tg-viewport-content-safe-area-inset-${k}`,
-            `${contentSafeAreaInset?.[k as keyof typeof contentSafeAreaInset] || 0}px`
-          );
-        }
-        console.log('✅ Safe area CSS variables set:', { safeAreaInset, contentSafeAreaInset });
-      }
-    } catch (error) {
-      console.log('❌ SDK initialization error:', error);
-    }
-  }, []);
 
   // Telegram WebApp cache busting and initialization
   useEffect(() => {

@@ -1,12 +1,11 @@
 /* Main layout container with safe area handling */
 .mainLayout {
   min-height: 100vh;
-  /* Use content safe area for header/status bar */
-  padding-top: var(--tg-viewport-content-safe-area-inset-top, 0);
+  /* Safe area padding handled by utility class */
   display: flex;
   flex-direction: column;
-  background: var(--bg-color, var(--background-color));
-  color: var(--text-color, var(--tg-theme-text-color));
+  background: var(--background-color);
+  color: var(--text-color);
   position: relative;
 }
 
