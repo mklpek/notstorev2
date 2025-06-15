@@ -43,18 +43,21 @@ export function useSafeAreaInsets() {
 
   useEffect(() => {
     const wa = window.Telegram?.WebApp;
-    if (!wa) return;
+    if (!wa) {
+      console.log('🚫 Telegram WebApp not available');
+      return;
+    }
 
-    // Early exit for desktop/tablet devices
-    if (window.visualViewport && window.visualViewport.height > 900) return;
-
+    console.log('🔄 SafeArea: Initializing...');
     const tgVer = getTgVersion();
+    console.log('📱 Telegram version:', tgVer);
 
     /**
      * Updates CSS custom properties with safe area values
      * @param insets - Safe area inset values
      */
     const updateCSSVariables = (insets: SafeAreaInsets) => {
+      console.log('🎨 Updating CSS variables:', insets);
       document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
       document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${insets.right}px`);
       document.documentElement.style.setProperty(
@@ -87,6 +90,7 @@ export function useSafeAreaInsets() {
      */
     const updateViewportHeight = () => {
       if (wa.viewportHeight) {
+        console.log('📐 Viewport height:', wa.viewportHeight);
         document.documentElement.style.setProperty(
           '--tg-viewport-height',
           `${wa.viewportHeight}px`
@@ -102,6 +106,8 @@ export function useSafeAreaInsets() {
       const envBottom = computedStyle.getPropertyValue('env(safe-area-inset-bottom)');
       const envLeft = computedStyle.getPropertyValue('env(safe-area-inset-left)');
 
+      console.log('🔍 Native env() values:', { envTop, envRight, envBottom, envLeft });
+
       const initialInsets: SafeAreaInsets = {
         top: envTop ? parseInt(envTop, 10) || 0 : 0,
         right: envRight ? parseInt(envRight, 10) || 0 : 0,
@@ -109,19 +115,23 @@ export function useSafeAreaInsets() {
         left: envLeft ? parseInt(envLeft, 10) || 0 : 0,
       };
 
+      console.log('📏 Initial insets from env():', initialInsets);
       updateSafeArea(initialInsets);
-    } catch {
-      /* ignored */
+    } catch (error) {
+      console.log('❌ Error reading env() values:', error);
     }
 
     // ❷ Telegram WebApp safeAreaInset property (if available)
     if (wa.safeAreaInset) {
+      console.log('📱 Telegram safeAreaInset:', wa.safeAreaInset);
       updateSafeArea({
         top: wa.safeAreaInset.top || 0,
         right: wa.safeAreaInset.right || 0,
         bottom: wa.safeAreaInset.bottom || 0,
         left: wa.safeAreaInset.left || 0,
       });
+    } else {
+      console.log('⚠️ Telegram safeAreaInset not available');
     }
 
     // Set initial viewport height
@@ -129,10 +139,12 @@ export function useSafeAreaInsets() {
 
     // ❸ Event handlers
     const viewportHandler = () => {
+      console.log('📐 Viewport changed');
       updateViewportHeight();
     };
 
     const safeAreaHandler = (...args: unknown[]) => {
+      console.log('🔄 Safe area changed:', args);
       const data = args[0] as
         | {
             top?: number;
@@ -155,6 +167,7 @@ export function useSafeAreaInsets() {
 
     // Content Safe Area handler (newly added)
     const contentSafeAreaHandler = (...args: unknown[]) => {
+      console.log('🔄 Content safe area changed:', args);
       const data = args[0] as
         | {
             top?: number;
@@ -189,6 +202,7 @@ export function useSafeAreaInsets() {
     try {
       // viewport_changed event - available in all versions
       if (safeCall('onEvent', 'viewport_changed', viewportHandler)) {
+        console.log('✅ Listening to viewport_changed');
         cleanupFns.push(() => {
           safeCall('offEvent', 'viewport_changed', viewportHandler);
         });
@@ -196,17 +210,20 @@ export function useSafeAreaInsets() {
 
       // Activate content safe area (Telegram 8.0+)
       if (tgVer >= 8.0) {
+        console.log('🚀 Telegram 8.0+ detected, requesting content safe area');
         // Make initial content safe area request
         try {
           if (typeof wa.requestContentSafeArea === 'function') {
             wa.requestContentSafeArea();
+            console.log('✅ Content safe area requested');
           }
         } catch (e) {
-          // Continue silently on error
+          console.log('❌ Error requesting content safe area:', e);
         }
 
         // Listen to content_safe_area_changed event
         if (safeCall('onEvent', 'content_safe_area_changed', contentSafeAreaHandler)) {
+          console.log('✅ Listening to content_safe_area_changed');
           cleanupFns.push(() => {
             safeCall('offEvent', 'content_safe_area_changed', contentSafeAreaHandler);
           });
@@ -215,12 +232,13 @@ export function useSafeAreaInsets() {
 
       // safe_area_changed event - only TG >= 8.0
       if (tgVer >= 8.0 && safeCall('onEvent', 'safe_area_changed', safeAreaHandler)) {
+        console.log('✅ Listening to safe_area_changed');
         cleanupFns.push(() => {
           safeCall('offEvent', 'safe_area_changed', safeAreaHandler);
         });
       }
-    } catch {
-      /* ignored */
+    } catch (error) {
+      console.log('❌ Error setting up event listeners:', error);
     }
 
     // ❺ Visual Viewport API for keyboard handling
@@ -234,16 +252,19 @@ export function useSafeAreaInsets() {
       const keyboardHeight = window.innerHeight - vh;
       if (keyboardHeight > 100) {
         // Keyboard is likely open
+        console.log('⌨️ Keyboard detected, height:', keyboardHeight);
         updateSafeArea({ bottom: keyboardHeight });
       } else {
         // Keyboard is likely closed, restore original bottom
         if (wa.safeAreaInset?.bottom !== undefined) {
+          console.log('⌨️ Keyboard closed, restoring bottom:', wa.safeAreaInset.bottom);
           updateSafeArea({ bottom: wa.safeAreaInset.bottom });
         }
       }
     };
 
     if (window.visualViewport) {
+      console.log('✅ Visual Viewport API available');
       window.visualViewport.addEventListener('resize', handleVisualViewportChange);
       cleanupFns.push(() => {
         window.visualViewport?.removeEventListener('resize', handleVisualViewportChange);
@@ -251,6 +272,7 @@ export function useSafeAreaInsets() {
     }
 
     return () => {
+      console.log('🧹 Cleaning up safe area listeners');
       cleanupFns.forEach(fn => fn());
     };
   }, []);
