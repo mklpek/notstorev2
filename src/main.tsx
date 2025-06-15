@@ -18,7 +18,7 @@ import 'virtual:svg-icons-register'; // SVG sprite plugin registration
 /**
  * Application entry point
  * Sets up all providers and renders the main App component
- * Includes Redux store, router, persistence, and safe area management
+ * Includes Redux store, router, persistence, and centralized safe area management
  */
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -111,11 +111,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   max-width: var(--container-max-width); /* Prevent horizontal scroll overflow in iOS Telegram */
   margin: 0 auto;
-  /* Telegram safe area inset paddings */
-  padding-top: var(--tg-safe-area-inset-top, 0);
-  padding-left: var(--tg-safe-area-inset-left, 0);
-  padding-right: var(--tg-safe-area-inset-right, 0);
-  padding-bottom: var(--tg-safe-area-inset-bottom, 0);
+  /* Safe area padding removed - now handled by SafeAreaProvider */
 }
 
 #root {
@@ -182,46 +178,29 @@ a {
   padding: var(--spacing-lg);
 }
 
-/* Safe area helper classes */
+/* Safe area utility classes - Merkezi yönetim için */
 .tg-safe-pad-top {
   padding-top: var(--tg-safe-area-inset-top, 0);
 }
-
+.tg-safe-pad-right {
+  padding-right: var(--tg-safe-area-inset-right, 0);
+}
 .tg-safe-pad-bottom {
   padding-bottom: var(--tg-safe-area-inset-bottom, 0);
 }
-
 .tg-safe-pad-left {
   padding-left: var(--tg-safe-area-inset-left, 0);
 }
 
-.tg-safe-pad-right {
-  padding-right: var(--tg-safe-area-inset-right, 0);
-}
-
-/* Safe area utility classes */
-.tg-safe-pad-top {
-  padding-top: var(--tg-safe-area-inset-top);
-}
-.tg-safe-pad-right {
-  padding-right: var(--tg-safe-area-inset-right);
-}
-.tg-safe-pad-bottom {
-  padding-bottom: var(--tg-safe-area-inset-bottom);
-}
-.tg-safe-pad-left {
-  padding-left: var(--tg-safe-area-inset-left);
-}
-
 .tg-safe-height-top {
-  height: var(--tg-safe-area-inset-top);
+  height: var(--tg-safe-area-inset-top, 0);
 }
 .tg-safe-height-bot {
-  height: var(--tg-safe-area-inset-bottom);
+  height: var(--tg-safe-area-inset-bottom, 0);
 }
 
 .tg-viewport-height {
-  height: var(--tg-viewport-height);
+  height: var(--tg-viewport-height, 100vh);
 }
 
 /* Animations */
