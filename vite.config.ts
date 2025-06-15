@@ -3,9 +3,24 @@ import react from '@vitejs/plugin-react';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import path from 'path';
 
+// Build timestamp replacement plugin
+const buildTimestampPlugin = () => {
+  return {
+    name: 'build-timestamp',
+    generateBundle() {
+      // Bu plugin build sırasında timestamp'i replace eder
+    },
+    transformIndexHtml(html: string) {
+      // BUILD_TIMESTAMP_PLACEHOLDER'ı gerçek timestamp ile değiştir
+      return html.replace('BUILD_TIMESTAMP_PLACEHOLDER', Date.now().toString());
+    },
+  };
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production';
+  const buildTimestamp = Date.now();
 
   return {
     plugins: [
@@ -30,6 +45,7 @@ export default defineConfig(({ mode }) => {
           ],
         },
       }),
+      buildTimestampPlugin(),
     ],
     // Font dosyalarının asset olarak işlenmesi için
     assetsInclude: ['**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.otf'],
@@ -40,8 +56,8 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           // Daha güçlü hash sistemi - timestamp ekle
-          entryFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
-          chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+          entryFileNames: `assets/[name]-[hash]-${buildTimestamp}.js`,
+          chunkFileNames: `assets/[name]-[hash]-${buildTimestamp}.js`,
           manualChunks: {
             // Temel kütüphaneleri ayrı chunk'lara böl
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
@@ -70,6 +86,8 @@ export default defineConfig(({ mode }) => {
       ...(isProduction && {
         'process.env.NODE_ENV': JSON.stringify('production'),
       }),
+      // Build timestamp'i global olarak tanımla
+      __BUILD_TIMESTAMP__: JSON.stringify(buildTimestamp),
     },
   };
 });

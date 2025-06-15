@@ -40,15 +40,47 @@ function App() {
   // Memoize skeleton theme values for performance
   const skeletonTheme = useSkeletonTheme();
 
-  // Apply Telegram theme colors
+  // Telegram WebApp cache busting and initialization
   useEffect(() => {
-    // LOCALHOST DEVELOPMENT: Telegram tema renkleri yorum satırında
-    // Localhost'ta çalışırken sabit renkler kullanılacak
-    /*
-    try {
-      const wa = window.Telegram?.WebApp;
-      if (!wa) return;
+    const wa = window.Telegram?.WebApp;
+    if (!wa) return;
 
+    // Force cache clear on app start for development
+    const isDev = import.meta.env.DEV;
+    if (isDev) {
+      console.log('🔄 Development mode: Clearing all caches');
+      localStorage.clear();
+      sessionStorage.clear();
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        });
+      }
+    }
+
+    // Version-based cache busting
+    const buildTimestamp = document
+      .querySelector('meta[name="build-timestamp"]')
+      ?.getAttribute('content');
+    const storedTimestamp = localStorage.getItem('app-build-timestamp');
+
+    if (buildTimestamp && storedTimestamp && storedTimestamp !== buildTimestamp) {
+      console.log('🔄 New build detected: Clearing caches');
+      localStorage.clear();
+      sessionStorage.clear();
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        });
+      }
+    }
+
+    if (buildTimestamp) {
+      localStorage.setItem('app-build-timestamp', buildTimestamp);
+    }
+
+    // Apply Telegram theme colors - PRODUCTION MODE ACTIVE
+    try {
       // Set theme colors as CSS variables
       document.documentElement.style.setProperty(
         '--tg-theme-bg-color',
@@ -65,63 +97,54 @@ function App() {
     } catch {
       // ignored
     }
-    */
   }, []);
 
-  // Load user information from Telegram WebApp
+  // Get Telegram user information
   useEffect(() => {
-    /**
-     * Initialize user data from Telegram WebApp
-     * Handles user profile, photo caching, and Redux state updates
-     */
-    const initUser = async () => {
-      try {
-        const { WebApp: wa } = window.Telegram || { WebApp: undefined };
+    const wa = window.Telegram?.WebApp;
+    if (!wa?.initDataUnsafe?.user) return;
 
-        if (!wa?.initDataUnsafe?.user) return;
+    const telegramUser = wa.initDataUnsafe.user;
 
-        const user = wa.initDataUnsafe.user;
-
-        // Prepare data according to TelegramUser type
-        const userDetails: TelegramUser = {
-          id: user.id,
-          first_name: user.first_name,
-        };
-
-        // Add optional fields after checking
-        if (user.last_name) userDetails.last_name = user.last_name;
-        if (user.username) userDetails.username = user.username;
-        if (user.language_code) userDetails.language_code = user.language_code;
-        if (user.is_premium !== undefined) userDetails.is_premium = user.is_premium;
-
-        // Use photo_url directly from Telegram WebApp if available
-        if (user.photo_url) {
-          userDetails.photo_url = user.photo_url;
-          userDetails.photoUrl = user.photo_url;
-          // Cache the photo URL
-          localStorage.setItem(`avatar:${user.id}`, user.photo_url);
-          dispatch(setUserPhotoUrl(user.photo_url));
-        } else {
-          // Check for cached photo
-          const cachedPhoto = localStorage.getItem(`avatar:${user.id}`);
-          if (cachedPhoto && cachedPhoto !== 'none') {
-            userDetails.photoUrl = cachedPhoto;
-            userDetails.cachedPhotoUrl = cachedPhoto;
-            dispatch(setUserPhotoUrl(cachedPhoto));
-          }
-        }
-
-        dispatch(setTelegramUser(userDetails));
-      } catch (error) {
-        console.error('Failed to initialize user:', error);
-      }
+    const user: TelegramUser = {
+      id: telegramUser.id,
+      first_name: telegramUser.first_name,
+      ...(telegramUser.last_name && { last_name: telegramUser.last_name }),
+      ...(telegramUser.username && { username: telegramUser.username }),
+      ...(telegramUser.language_code && { language_code: telegramUser.language_code }),
+      ...(telegramUser.is_premium !== undefined && { is_premium: telegramUser.is_premium }),
     };
 
-    initUser();
+    dispatch(setTelegramUser(user));
+
+    // Get user photo if available
+    if (user.id) {
+      fetch(
+        `https://api.telegram.org/bot${import.meta.env.VITE_BOT_TOKEN}/getUserProfilePhotos?user_id=${user.id}&limit=1`
+      )
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok && data.result.total_count > 0) {
+            const fileId = data.result.photos[0][0].file_id;
+            return fetch(
+              `https://api.telegram.org/bot${import.meta.env.VITE_BOT_TOKEN}/getFile?file_id=${fileId}`
+            );
+          }
+          return null;
+        })
+        .then(response => response?.json())
+        .then(data => {
+          if (data?.ok) {
+            const photoUrl = `https://api.telegram.org/file/bot${import.meta.env.VITE_BOT_TOKEN}/${data.result.file_path}`;
+            dispatch(setUserPhotoUrl(photoUrl));
+          }
+        })
+        .catch(() => {
+          // Ignore photo fetch errors
+        });
+    }
   }, [dispatch]);
 
-  // Wrap functions with useCallback for performance
-  // They will only be recreated when dependencies change
   const handleCartClick = useCallback(() => {
     setIsCartModalOpen(true);
   }, []);
