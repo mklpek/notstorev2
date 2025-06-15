@@ -18,6 +18,7 @@ import { AccountPageSkeleton } from '../../core/ui/Skeleton';
 import { ApiErrorMessage } from '../../core/ui';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../core/store';
+import { useSafeAreaContext } from '../../core/hooks/useSafeArea';
 
 /**
  * Account page component
@@ -28,6 +29,9 @@ const AccountPage: React.FC = () => {
   // Get Telegram user information from Redux
   const userState = useSelector((state: RootState) => state.user);
   const user = userState.user;
+
+  // Get safe area values for debugging
+  const safeAreaInsets = useSafeAreaContext();
 
   // State to track number of visible items
   const [visibleCount, setVisibleCount] = useState(20);
@@ -161,6 +165,28 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className={styles.accountPage}>
+      {/* Safe Area Debug Info */}
+      <div
+        style={{
+          position: 'fixed',
+          top: '10px',
+          right: '10px',
+          background: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '8px',
+          fontSize: '12px',
+          borderRadius: '4px',
+          zIndex: 9999,
+          fontFamily: 'monospace',
+        }}
+      >
+        <div>Safe Area Debug:</div>
+        <div>Top: {safeAreaInsets.top}px</div>
+        <div>Bottom: {safeAreaInsets.bottom}px</div>
+        <div>Left: {safeAreaInsets.left}px</div>
+        <div>Right: {safeAreaInsets.right}px</div>
+      </div>
+
       {/* Account Header */}
       <div className={styles.accountHeader}>
         <div className={styles.avatar}>
