@@ -5,7 +5,7 @@
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
-  background-color: #000000;
+  background-color: var(--bg-color, #000000);
   border-top: 0.33px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
@@ -14,11 +14,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  /* Use Telegram SDK CSS variables */
-  padding-bottom: calc(
-    var(--tg-viewport-safe-area-inset-bottom, 0px) +
-      var(--tg-viewport-content-safe-area-inset-bottom, 0px)
-  );
+  /* Use content safe area for home indicator */
+  padding-bottom: var(--tg-viewport-content-safe-area-inset-bottom, 0);
 }
 
 /* Modern browser support */
@@ -44,11 +41,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: calc(
-    var(--tg-viewport-safe-area-inset-bottom, 0px) +
-      var(--tg-viewport-content-safe-area-inset-bottom, 0px)
-  );
-  background: #000000;
+  height: var(--tg-viewport-content-safe-area-inset-bottom, 0);
+  background: var(--bg-color, #000000);
   z-index: -1;
 }
 

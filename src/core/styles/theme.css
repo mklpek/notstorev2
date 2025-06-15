@@ -39,6 +39,18 @@
   --tg-theme-button-color: #2481cc;
   --tg-theme-button-text-color: #ffffff;
 
+  /* Safe area insets - Telegram WebApp API values */
+  --tg-viewport-safe-area-inset-top: 0px;
+  --tg-viewport-safe-area-inset-right: 0px;
+  --tg-viewport-safe-area-inset-bottom: 0px;
+  --tg-viewport-safe-area-inset-left: 0px;
+
+  /* Content safe area insets - for header/status bar */
+  --tg-viewport-content-safe-area-inset-top: 0px;
+  --tg-viewport-content-safe-area-inset-right: 0px;
+  --tg-viewport-content-safe-area-inset-bottom: 0px;
+  --tg-viewport-content-safe-area-inset-left: 0px;
+
   /* Dynamic viewport height */
   --tg-viewport-height: 100vh; /* initial value */
 

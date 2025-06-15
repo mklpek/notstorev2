@@ -1,15 +1,12 @@
 /* Main layout container with safe area handling */
 .mainLayout {
   min-height: 100vh;
-  /* Use Telegram SDK CSS variables */
-  padding-top: calc(
-    var(--tg-viewport-safe-area-inset-top, 0px) +
-      var(--tg-viewport-content-safe-area-inset-top, 0px)
-  );
+  /* Use content safe area for header/status bar */
+  padding-top: var(--tg-viewport-content-safe-area-inset-top, 0);
   display: flex;
   flex-direction: column;
-  background: var(--background-color);
-  color: var(--text-color);
+  background: var(--bg-color, var(--background-color));
+  color: var(--text-color, var(--tg-theme-text-color));
   position: relative;
 }
 

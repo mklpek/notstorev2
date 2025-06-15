@@ -129,7 +129,14 @@ interface TelegramWebApp {
   SettingsButton?: TelegramWebAppButton;
   onEvent?: (eventType: string, handler: (...args: unknown[]) => void) => void;
   offEvent?: (eventType: string, handler: (...args: unknown[]) => void) => void;
+  postEvent?: (eventType: string, data?: Record<string, unknown>) => void;
   safeAreaInset?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  contentSafeAreaInset?: {
     top: number;
     right: number;
     bottom: number;
