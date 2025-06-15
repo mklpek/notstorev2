@@ -49,6 +49,21 @@ export function useSafeAreaInsets() {
     }
 
     console.log('🔄 SafeArea: Initializing...');
+
+    // ❶ Telegram WebApp'i tam ekran yap
+    try {
+      if (typeof wa.expand === 'function') {
+        wa.expand();
+        console.log('📱 Telegram WebApp expanded to fullscreen');
+      }
+      if (typeof wa.ready === 'function') {
+        wa.ready();
+        console.log('📱 Telegram WebApp ready');
+      }
+    } catch (error) {
+      console.log('❌ Error expanding WebApp:', error);
+    }
+
     const tgVer = getTgVersion();
     console.log('📱 Telegram version:', tgVer);
 
