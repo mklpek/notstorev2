@@ -52,17 +52,6 @@ export function useSafeAreaInsets() {
     const tgVer = getTgVersion();
     console.log('📱 Telegram version:', tgVer);
 
-    // Viewport-fit=cover kontrolü
-    const viewportMeta = document.querySelector('meta[name="viewport"]');
-    const viewportContent = viewportMeta?.getAttribute('content') || '';
-
-    if (!viewportContent.includes('viewport-fit=cover')) {
-      console.log('⚠️ viewport-fit=cover eksik! Ekleniyor...');
-      viewportMeta?.setAttribute('content', `${viewportContent}, viewport-fit=cover`);
-    } else {
-      console.log('✅ viewport-fit=cover mevcut');
-    }
-
     /**
      * Updates CSS custom properties with safe area values
      * @param insets - Safe area inset values
@@ -81,17 +70,6 @@ export function useSafeAreaInsets() {
       document.documentElement.style.setProperty(
         '--tg-content-safe-area-inset-top',
         `${insets.top}px`
-      );
-
-      // Debug - DOM'a değerleri yazdır
-      console.log('📏 DOM CSS Variables:');
-      console.log(
-        '--tg-safe-area-inset-top:',
-        getComputedStyle(document.documentElement).getPropertyValue('--tg-safe-area-inset-top')
-      );
-      console.log(
-        '--tg-safe-area-inset-bottom:',
-        getComputedStyle(document.documentElement).getPropertyValue('--tg-safe-area-inset-bottom')
       );
     };
 
@@ -154,27 +132,6 @@ export function useSafeAreaInsets() {
       });
     } else {
       console.log('⚠️ Telegram safeAreaInset not available');
-
-      // Telegram safeAreaInset yoksa manuel değerler atayalım
-      try {
-        // env() değerlerini tekrar kontrol et
-        const computedStyle = getComputedStyle(document.documentElement);
-        const envTop = computedStyle.getPropertyValue('env(safe-area-inset-top)');
-        const envBottom = computedStyle.getPropertyValue('env(safe-area-inset-bottom)');
-
-        // iPhone X+ için tipik değerler
-        if (envTop === '' && envBottom === '') {
-          console.log('⚠️ Native env() değerleri de yok, manuel değerler atanıyor');
-          updateSafeArea({
-            top: 47, // iPhone notch için tipik değer
-            bottom: 34, // iPhone home indicator için tipik değer
-            left: 0,
-            right: 0,
-          });
-        }
-      } catch (error) {
-        console.log('❌ Manuel değer atama hatası:', error);
-      }
     }
 
     // Set initial viewport height

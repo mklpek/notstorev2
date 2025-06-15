@@ -18,6 +18,13 @@
   padding-bottom: var(--tg-safe-area-inset-bottom, 0);
 }
 
+/* Modern browser support */
+@supports (padding: max(0px)) {
+  .tabBar {
+    padding-block-end: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
 /* Body Container */
 .body {
   display: flex;
