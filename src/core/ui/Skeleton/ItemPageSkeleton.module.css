@@ -17,13 +17,15 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-bottom: 174px; /* Space for Footer (58px) + Slider (116px) */
+  /* Dynamic padding with safe area support: Footer (58px) + Slider (116px) + Safe Area */
+  padding-bottom: calc(174px + var(--tg-safe-area-inset-bottom, 0));
 }
 
 /* Fixed Bottom Content */
 .fixedBottom {
   position: fixed;
-  bottom: 58px; /* Above footer height */
+  /* Dynamic bottom positioning with safe area support */
+  bottom: calc(58px + var(--tg-safe-area-inset-bottom, 0));
   left: 0;
   width: 100%;
   z-index: 100;
