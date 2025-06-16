@@ -135,10 +135,6 @@ interface TelegramWebApp {
     bottom: number;
     left: number;
   };
-  // Legacy header color API (older versions)
-  HeaderColor?: {
-    setColor: (color: string) => void;
-  };
   // Telegram WebApp 2.0 (Bot API 8.0+) new methods
   requestContentSafeArea?: () => void;
   viewportHeight?: number;

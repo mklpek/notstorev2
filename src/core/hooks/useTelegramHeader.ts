@@ -38,20 +38,9 @@ export default function useTelegramHeader() {
     }
 
     /* --- Transparent System Bar --------------------------------------- */
+    // setHeaderColor only supported in Bot API 8.0+
     if (tgVer >= 8.0) {
-      // setHeaderColor only supported in Bot API 8.0+
       safeCall('setHeaderColor', '#00000000');
-    } else {
-      // Legacy transparent header for older versions (< 8.0)
-      safeCall('expand');
-      // Force transparent header using old API if available
-      if (wa.HeaderColor && typeof wa.HeaderColor.setColor === 'function') {
-        try {
-          wa.HeaderColor.setColor('#00000000');
-        } catch {
-          /* ignored */
-        }
-      }
     }
 
     /* --- Back & Settings Buttons (≥ 8.0) ------------------------------ */

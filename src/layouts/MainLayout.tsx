@@ -45,7 +45,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ onCartClick }) => {
   };
 
   return (
-    <div className={`${styles.mainLayout} tg-pad-top`}>
+    <div className={styles.mainLayout}>
       {showHeader && (
         <Header {...(onCartClick && { onCartClick })} onSearchOpen={handleSearchOpenChange} />
       )}

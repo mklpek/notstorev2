@@ -178,29 +178,42 @@ a {
   padding: var(--spacing-lg);
 }
 
-/* Safe Area Utility Classes - Single Source */
-.tg-pad-top {
+/* Safe area helper classes */
+.tg-safe-pad-top {
   padding-top: var(--tg-safe-area-inset-top, 0);
 }
 
-.tg-pad-bot {
+.tg-safe-pad-bottom {
   padding-bottom: var(--tg-safe-area-inset-bottom, 0);
 }
 
-.tg-pad-left {
+.tg-safe-pad-left {
   padding-left: var(--tg-safe-area-inset-left, 0);
 }
 
-.tg-pad-right {
+.tg-safe-pad-right {
   padding-right: var(--tg-safe-area-inset-right, 0);
 }
 
-.tg-safe-height-top {
-  height: var(--tg-safe-area-inset-top, 0);
+/* Safe area utility classes */
+.tg-safe-pad-top {
+  padding-top: var(--tg-safe-area-inset-top);
+}
+.tg-safe-pad-right {
+  padding-right: var(--tg-safe-area-inset-right);
+}
+.tg-safe-pad-bottom {
+  padding-bottom: var(--tg-safe-area-inset-bottom);
+}
+.tg-safe-pad-left {
+  padding-left: var(--tg-safe-area-inset-left);
 }
 
+.tg-safe-height-top {
+  height: var(--tg-safe-area-inset-top);
+}
 .tg-safe-height-bot {
-  height: var(--tg-safe-area-inset-bottom, 0);
+  height: var(--tg-safe-area-inset-bottom);
 }
 
 .tg-viewport-height {
