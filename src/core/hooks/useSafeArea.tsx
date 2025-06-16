@@ -71,6 +71,18 @@ export function useSafeAreaInsets() {
         '--tg-content-safe-area-inset-top',
         `${insets.top}px`
       );
+
+      // Debug: Check if CSS variables are actually set
+      const topVar = document.documentElement.style.getPropertyValue('--tg-safe-area-inset-top');
+      const bottomVar = document.documentElement.style.getPropertyValue(
+        '--tg-safe-area-inset-bottom'
+      );
+      console.log('🔍 CSS Variables after update:', {
+        topVar,
+        bottomVar,
+        topValue: insets.top,
+        bottomValue: insets.bottom,
+      });
     };
 
     /**
@@ -98,21 +110,36 @@ export function useSafeAreaInsets() {
       }
     };
 
-    // ❶ Initial load - Check native env() support
+    // ❶ Initial load - Check native env() support with proper method
     try {
-      const computedStyle = getComputedStyle(document.documentElement);
-      const envTop = computedStyle.getPropertyValue('env(safe-area-inset-top)');
-      const envRight = computedStyle.getPropertyValue('env(safe-area-inset-right)');
-      const envBottom = computedStyle.getPropertyValue('env(safe-area-inset-bottom)');
-      const envLeft = computedStyle.getPropertyValue('env(safe-area-inset-left)');
+      // Create a temporary element to test env() support
+      const testElement = document.createElement('div');
+      testElement.style.cssText = `
+        position: fixed;
+        top: env(safe-area-inset-top);
+        right: env(safe-area-inset-right);
+        bottom: env(safe-area-inset-bottom);
+        left: env(safe-area-inset-left);
+        pointer-events: none;
+        visibility: hidden;
+      `;
+      document.body.appendChild(testElement);
+
+      const computedStyle = getComputedStyle(testElement);
+      const envTop = computedStyle.top;
+      const envRight = computedStyle.right;
+      const envBottom = computedStyle.bottom;
+      const envLeft = computedStyle.left;
+
+      document.body.removeChild(testElement);
 
       console.log('🔍 Native env() values:', { envTop, envRight, envBottom, envLeft });
 
       const initialInsets: SafeAreaInsets = {
-        top: envTop ? parseInt(envTop, 10) || 0 : 0,
-        right: envRight ? parseInt(envRight, 10) || 0 : 0,
-        bottom: envBottom ? parseInt(envBottom, 10) || 0 : 0,
-        left: envLeft ? parseInt(envLeft, 10) || 0 : 0,
+        top: envTop && envTop !== 'auto' ? parseInt(envTop, 10) || 0 : 0,
+        right: envRight && envRight !== 'auto' ? parseInt(envRight, 10) || 0 : 0,
+        bottom: envBottom && envBottom !== 'auto' ? parseInt(envBottom, 10) || 0 : 0,
+        left: envLeft && envLeft !== 'auto' ? parseInt(envLeft, 10) || 0 : 0,
       };
 
       console.log('📏 Initial insets from env():', initialInsets);
@@ -124,14 +151,29 @@ export function useSafeAreaInsets() {
     // ❷ Telegram WebApp safeAreaInset property (if available)
     if (wa.safeAreaInset) {
       console.log('📱 Telegram safeAreaInset:', wa.safeAreaInset);
-      updateSafeArea({
+      console.log('🔍 Telegram safeAreaInset.top specifically:', wa.safeAreaInset.top);
+      console.log('🔍 Telegram safeAreaInset.bottom specifically:', wa.safeAreaInset.bottom);
+
+      const telegramInsets = {
         top: wa.safeAreaInset.top || 0,
         right: wa.safeAreaInset.right || 0,
         bottom: wa.safeAreaInset.bottom || 0,
         left: wa.safeAreaInset.left || 0,
-      });
+      };
+
+      console.log('📱 Processed Telegram insets:', telegramInsets);
+      updateSafeArea(telegramInsets);
     } else {
       console.log('⚠️ Telegram safeAreaInset not available');
+
+      // Try to get from Telegram WebApp properties directly
+      console.log('🔍 Checking Telegram WebApp object:', {
+        hasWebApp: !!wa,
+        webAppKeys: wa ? Object.keys(wa) : [],
+        safeAreaInset: wa?.safeAreaInset,
+        viewportHeight: wa?.viewportHeight,
+        viewportStableHeight: wa?.viewportStableHeight,
+      });
     }
 
     // Set initial viewport height
@@ -156,9 +198,15 @@ export function useSafeAreaInsets() {
 
       if (data) {
         const updates: Partial<SafeAreaInsets> = {};
-        if (data.top !== undefined) updates.top = data.top;
+        if (data.top !== undefined) {
+          updates.top = data.top;
+          console.log('🔝 Top safe area updated via safe_area_changed:', data.top);
+        }
         if (data.right !== undefined) updates.right = data.right;
-        if (data.bottom !== undefined) updates.bottom = data.bottom;
+        if (data.bottom !== undefined) {
+          updates.bottom = data.bottom;
+          console.log('🔽 Bottom safe area updated via safe_area_changed:', data.bottom);
+        }
         if (data.left !== undefined) updates.left = data.left;
 
         updateSafeArea(updates);
@@ -177,20 +225,24 @@ export function useSafeAreaInsets() {
           }
         | undefined;
 
-      if (data && data.top !== undefined) {
-        // Update content safe area CSS variable
-        document.documentElement.style.setProperty(
-          '--tg-content-safe-area-inset-top',
-          `${data.top}px`
-        );
+      if (data) {
+        // Update content safe area CSS variable for top
+        if (data.top !== undefined) {
+          document.documentElement.style.setProperty(
+            '--tg-content-safe-area-inset-top',
+            `${data.top}px`
+          );
+        }
 
-        // Also update normal safe area values
+        // Update ALL normal safe area values including TOP
         const updates: Partial<SafeAreaInsets> = {};
+        if (data.top !== undefined) updates.top = data.top;
         if (data.right !== undefined) updates.right = data.right;
         if (data.bottom !== undefined) updates.bottom = data.bottom;
         if (data.left !== undefined) updates.left = data.left;
 
         if (Object.keys(updates).length > 0) {
+          console.log('🔄 Updating safe area from content safe area:', updates);
           updateSafeArea(updates);
         }
       }
@@ -270,6 +322,53 @@ export function useSafeAreaInsets() {
         window.visualViewport?.removeEventListener('resize', handleVisualViewportChange);
       });
     }
+
+    // ❸ Alternative methods for top safe area detection
+    const detectTopSafeArea = () => {
+      let detectedTop = 0;
+
+      // Method 1: Check if we're in iOS Safari with notch
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const hasNotch =
+        window.screen &&
+        ((window.screen.height === 812 && window.screen.width === 375) || // iPhone X/XS
+          (window.screen.height === 896 && window.screen.width === 414) || // iPhone XR/XS Max
+          (window.screen.height === 844 && window.screen.width === 390) || // iPhone 12/13 mini
+          (window.screen.height === 926 && window.screen.width === 428) || // iPhone 12/13 Pro Max
+          (window.screen.height === 932 && window.screen.width === 430)); // iPhone 14 Pro Max
+
+      if (isIOS && hasNotch) {
+        detectedTop = 44; // Standard iOS notch height
+        console.log('📱 iOS device with notch detected, setting top safe area to 44px');
+      }
+
+      // Method 2: Check viewport vs window height difference
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const windowHeight = window.outerHeight;
+      const heightDiff = windowHeight - viewportHeight;
+
+      if (heightDiff > 20 && heightDiff < 100) {
+        detectedTop = Math.max(detectedTop, heightDiff);
+        console.log(`📐 Height difference detected: ${heightDiff}px, using as top safe area`);
+      }
+
+      // Method 3: Try to detect from Telegram WebApp context
+      if (wa && wa.viewportHeight && window.innerHeight) {
+        const telegramHeightDiff = window.innerHeight - wa.viewportHeight;
+        if (telegramHeightDiff > 0 && telegramHeightDiff < 100) {
+          detectedTop = Math.max(detectedTop, telegramHeightDiff);
+          console.log(`📱 Telegram viewport difference: ${telegramHeightDiff}px`);
+        }
+      }
+
+      if (detectedTop > 0) {
+        console.log(`🔍 Alternative top safe area detected: ${detectedTop}px`);
+        updateSafeArea({ top: detectedTop });
+      }
+    };
+
+    // Run alternative detection
+    detectTopSafeArea();
 
     return () => {
       console.log('🧹 Cleaning up safe area listeners');
