@@ -39,11 +39,17 @@
   --tg-theme-button-color: #2481cc;
   --tg-theme-button-text-color: #ffffff;
 
-  /* Safe area insets - env() with iOS notch support */
-  --tg-safe-area-inset-top: env(safe-area-inset-top);
-  --tg-safe-area-inset-right: env(safe-area-inset-right);
-  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom);
-  --tg-safe-area-inset-left: env(safe-area-inset-left);
+  /* Safe area insets - env() with iOS notch support and fallbacks */
+  --tg-safe-area-inset-top: env(safe-area-inset-top, 0);
+  --tg-safe-area-inset-right: env(safe-area-inset-right, 0);
+  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
+  --tg-safe-area-inset-left: env(safe-area-inset-left, 0);
+
+  /* Content safe area insets - Telegram WebApp 8.0+ */
+  --tg-content-safe-area-inset-top: 0;
+  --tg-content-safe-area-inset-right: 0;
+  --tg-content-safe-area-inset-bottom: 0;
+  --tg-content-safe-area-inset-left: 0;
 
   /* Dynamic viewport height */
   --tg-viewport-height: 100vh; /* initial value */
@@ -178,7 +184,7 @@ a {
   padding: var(--spacing-lg);
 }
 
-/* Safe area helper classes */
+/* Safe area helper classes - Single definitions with fallbacks */
 .tg-safe-pad-top {
   padding-top: var(--tg-safe-area-inset-top, 0);
 }
@@ -195,25 +201,17 @@ a {
   padding-right: var(--tg-safe-area-inset-right, 0);
 }
 
-/* Safe area utility classes */
-.tg-safe-pad-top {
-  padding-top: var(--tg-safe-area-inset-top);
-}
-.tg-safe-pad-right {
-  padding-right: var(--tg-safe-area-inset-right);
-}
-.tg-safe-pad-bottom {
-  padding-bottom: var(--tg-safe-area-inset-bottom);
-}
-.tg-safe-pad-left {
-  padding-left: var(--tg-safe-area-inset-left);
+.tg-safe-height-top {
+  height: var(--tg-safe-area-inset-top, 0);
 }
 
-.tg-safe-height-top {
-  height: var(--tg-safe-area-inset-top);
-}
 .tg-safe-height-bot {
-  height: var(--tg-safe-area-inset-bottom);
+  height: var(--tg-safe-area-inset-bottom, 0);
+}
+
+/* Content safe area helper classes - Telegram WebApp 8.0+ */
+.tg-content-safe-pad-top {
+  padding-top: var(--tg-content-safe-area-inset-top, 0);
 }
 
 .tg-viewport-height {
