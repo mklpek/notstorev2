@@ -1,7 +1,7 @@
 /* Main layout container with safe area handling */
 .mainLayout {
   min-height: 100vh;
-  /* Use content safe area first, then fallback to regular safe area */
+  /* Use content safe area first, then fall back to physical safe area */
   padding-top: var(--tg-content-safe-area-inset-top, var(--tg-safe-area-inset-top, 0));
   display: flex;
   flex-direction: column;

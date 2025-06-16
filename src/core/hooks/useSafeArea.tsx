@@ -7,7 +7,7 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { getTgVersion, safeCall } from '../../utils/telegramHelpers';
-import { keepIfPositive } from '../utils/safeAreaHelpers';
+import { keepIfPositive } from '../../utils/telegramHelpers';
 
 // Safe Area Context type
 interface SafeAreaInsets {
@@ -122,28 +122,19 @@ export function useSafeAreaInsets() {
       console.log('❌ Error reading env() values:', error);
     }
 
-    // ❂ Telegram WebApp safeAreaInset property (if available)
+    // ❷ Telegram WebApp safeAreaInset property (if available)
     if (wa.safeAreaInset) {
       console.log('📱 Telegram safeAreaInset:', wa.safeAreaInset);
-      const updates: Partial<SafeAreaInsets> = {};
-
-      // Only update if we have positive values - prevents overwriting env() values with 0
-      if (keepIfPositive(wa.safeAreaInset.top) !== undefined) {
-        updates.top = wa.safeAreaInset.top;
-      }
-      if (keepIfPositive(wa.safeAreaInset.right) !== undefined) {
-        updates.right = wa.safeAreaInset.right;
-      }
-      if (keepIfPositive(wa.safeAreaInset.bottom) !== undefined) {
-        updates.bottom = wa.safeAreaInset.bottom;
-      }
-      if (keepIfPositive(wa.safeAreaInset.left) !== undefined) {
-        updates.left = wa.safeAreaInset.left;
-      }
-
-      if (Object.keys(updates).length > 0) {
-        updateSafeArea(updates);
-      }
+      updateSafeArea({
+        ...(keepIfPositive(wa.safeAreaInset.top) !== undefined && { top: wa.safeAreaInset.top }),
+        ...(keepIfPositive(wa.safeAreaInset.right) !== undefined && {
+          right: wa.safeAreaInset.right,
+        }),
+        ...(keepIfPositive(wa.safeAreaInset.bottom) !== undefined && {
+          bottom: wa.safeAreaInset.bottom,
+        }),
+        ...(keepIfPositive(wa.safeAreaInset.left) !== undefined && { left: wa.safeAreaInset.left }),
+      });
     } else {
       console.log('⚠️ Telegram safeAreaInset not available');
     }
@@ -170,24 +161,16 @@ export function useSafeAreaInsets() {
 
       if (data) {
         const updates: Partial<SafeAreaInsets> = {};
-
-        // Only update if we have positive values - prevents overwriting env() values with 0
-        if (data.top !== undefined && keepIfPositive(data.top) !== undefined) {
+        if (data.top !== undefined && keepIfPositive(data.top) !== undefined)
           updates.top = data.top;
-        }
-        if (data.right !== undefined && keepIfPositive(data.right) !== undefined) {
+        if (data.right !== undefined && keepIfPositive(data.right) !== undefined)
           updates.right = data.right;
-        }
-        if (data.bottom !== undefined && keepIfPositive(data.bottom) !== undefined) {
+        if (data.bottom !== undefined && keepIfPositive(data.bottom) !== undefined)
           updates.bottom = data.bottom;
-        }
-        if (data.left !== undefined && keepIfPositive(data.left) !== undefined) {
+        if (data.left !== undefined && keepIfPositive(data.left) !== undefined)
           updates.left = data.left;
-        }
 
-        if (Object.keys(updates).length > 0) {
-          updateSafeArea(updates);
-        }
+        updateSafeArea(updates);
       }
     };
 

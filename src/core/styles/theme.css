@@ -45,9 +45,6 @@
   --tg-safe-area-inset-bottom: env(safe-area-inset-bottom);
   --tg-safe-area-inset-left: env(safe-area-inset-left);
 
-  /* Content safe area insets - updated by Telegram WebApp API */
-  --tg-content-safe-area-inset-top: 0px; /* initial value, updated by JS */
-
   /* Dynamic viewport height */
   --tg-viewport-height: 100vh; /* initial value */
 
@@ -183,7 +180,7 @@ a {
 
 /* Safe area helper classes */
 .tg-safe-pad-top {
-  padding-top: var(--tg-content-safe-area-inset-top, var(--tg-safe-area-inset-top, 0));
+  padding-top: var(--tg-safe-area-inset-top, 0);
 }
 
 .tg-safe-pad-bottom {
@@ -200,7 +197,7 @@ a {
 
 /* Safe area utility classes */
 .tg-safe-pad-top {
-  padding-top: var(--tg-content-safe-area-inset-top, var(--tg-safe-area-inset-top));
+  padding-top: var(--tg-safe-area-inset-top);
 }
 .tg-safe-pad-right {
   padding-right: var(--tg-safe-area-inset-right);
@@ -213,7 +210,7 @@ a {
 }
 
 .tg-safe-height-top {
-  height: var(--tg-content-safe-area-inset-top, var(--tg-safe-area-inset-top));
+  height: var(--tg-safe-area-inset-top);
 }
 .tg-safe-height-bot {
   height: var(--tg-safe-area-inset-bottom);
