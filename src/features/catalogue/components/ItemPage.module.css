@@ -17,15 +17,15 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  /* Dynamic padding with safe area support: Footer (58px) + Slider (116px) + Safe Area */
-  padding-bottom: calc(174px + var(--tg-safe-area-inset-bottom, 0));
+  /* 🔧 3) Tek değişken kullanımı - Dynamic padding with safe area support */
+  padding-bottom: calc(174px + var(--tg-viewport-safe-area-inset-bottom, 0));
 }
 
 /* Fixed Bottom Content - Fix slider above footer */
 .fixedBottom {
   position: fixed;
-  /* Dynamic bottom positioning with safe area support */
-  bottom: calc(58px + var(--tg-safe-area-inset-bottom, 0));
+  /* 🔧 3) Tek değişken kullanımı - Dynamic bottom positioning with safe area support */
+  bottom: calc(58px + var(--tg-viewport-safe-area-inset-bottom, 0));
   left: 0;
   width: 100%;
   z-index: 101; /* Lower than footer (9999) but higher than others */

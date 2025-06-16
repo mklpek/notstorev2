@@ -165,26 +165,35 @@ const AccountPage: React.FC = () => {
 
   return (
     <div className={styles.accountPage}>
-      {/* Safe Area Debug Info */}
+      {/* Safe Area Debug Info - 🔧 Enhanced Debug Panel */}
       <div
         style={{
           position: 'fixed',
           top: '10px',
           right: '10px',
-          background: 'rgba(0,0,0,0.8)',
+          background: 'rgba(0,0,0,0.9)',
           color: 'white',
-          padding: '8px',
-          fontSize: '12px',
-          borderRadius: '4px',
+          padding: '12px',
+          fontSize: '11px',
+          borderRadius: '6px',
           zIndex: 9999,
           fontFamily: 'monospace',
+          maxWidth: '200px',
+          lineHeight: '1.3',
         }}
       >
-        <div>Safe Area Debug:</div>
-        <div>Top: {safeAreaInsets.top}px</div>
-        <div>Bottom: {safeAreaInsets.bottom}px</div>
-        <div>Left: {safeAreaInsets.left}px</div>
-        <div>Right: {safeAreaInsets.right}px</div>
+        <div style={{ fontWeight: 'bold', marginBottom: '6px' }}>🔧 Safe Area Debug:</div>
+        <div>Hook Values:</div>
+        <div>• Top: {safeAreaInsets.top}px</div>
+        <div>• Bottom: {safeAreaInsets.bottom}px</div>
+        <div>• Left: {safeAreaInsets.left}px</div>
+        <div>• Right: {safeAreaInsets.right}px</div>
+        <div style={{ marginTop: '6px' }}>CSS Variables:</div>
+        <div>• --tg-viewport-safe-area-inset-top</div>
+        <div>• --tg-viewport-safe-area-inset-bottom</div>
+        <div style={{ marginTop: '6px', fontSize: '10px', opacity: '0.7' }}>
+          Telegram v{window.Telegram?.WebApp ? 'Available' : 'N/A'}
+        </div>
       </div>
 
       {/* Account Header */}
