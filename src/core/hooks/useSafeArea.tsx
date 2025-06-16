@@ -52,24 +52,50 @@ export function useSafeAreaInsets() {
     const tgVer = getTgVersion();
     console.log('📱 Telegram version:', tgVer);
 
+    // Test: Set initial values to verify CSS variable system works
+    console.log('🧪 Testing CSS variable system...');
+    document.documentElement.style.setProperty('--tg-safe-area-inset-top', '25px', 'important');
+    setTimeout(() => {
+      const testValue = getComputedStyle(document.documentElement).getPropertyValue(
+        '--tg-safe-area-inset-top'
+      );
+      console.log('🧪 Test CSS variable value:', testValue);
+    }, 100);
+
     /**
      * Updates CSS custom properties with safe area values
      * @param insets - Safe area inset values
      */
     const updateCSSVariables = (insets: SafeAreaInsets) => {
       console.log('🎨 Updating CSS variables:', insets);
-      document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
-      document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${insets.right}px`);
+
+      // Use setProperty with priority to override any existing values
+      document.documentElement.style.setProperty(
+        '--tg-safe-area-inset-top',
+        `${insets.top}px`,
+        'important'
+      );
+      document.documentElement.style.setProperty(
+        '--tg-safe-area-inset-right',
+        `${insets.right}px`,
+        'important'
+      );
       document.documentElement.style.setProperty(
         '--tg-safe-area-inset-bottom',
-        `${insets.bottom}px`
+        `${insets.bottom}px`,
+        'important'
       );
-      document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
+      document.documentElement.style.setProperty(
+        '--tg-safe-area-inset-left',
+        `${insets.left}px`,
+        'important'
+      );
 
       // Also add CSS variable for content safe area (newly added)
       document.documentElement.style.setProperty(
         '--tg-content-safe-area-inset-top',
-        `${insets.top}px`
+        `${insets.top}px`,
+        'important'
       );
 
       // Debug: Check if CSS variables are actually set
@@ -77,9 +103,17 @@ export function useSafeAreaInsets() {
       const bottomVar = document.documentElement.style.getPropertyValue(
         '--tg-safe-area-inset-bottom'
       );
+
+      // Also check computed style to see what's actually being used
+      const computedStyle = getComputedStyle(document.documentElement);
+      const computedTop = computedStyle.getPropertyValue('--tg-safe-area-inset-top');
+      const computedBottom = computedStyle.getPropertyValue('--tg-safe-area-inset-bottom');
+
       console.log('🔍 CSS Variables after update:', {
         topVar,
         bottomVar,
+        computedTop,
+        computedBottom,
         topValue: insets.top,
         bottomValue: insets.bottom,
       });
@@ -361,9 +395,26 @@ export function useSafeAreaInsets() {
         }
       }
 
+      // Method 4: Force minimum safe area for Telegram WebApp
+      if (isIOS && detectedTop === 0) {
+        detectedTop = 20; // Minimum safe area for iOS in Telegram
+        console.log('📱 iOS detected in Telegram, forcing minimum 20px top safe area');
+      }
+
+      // Method 5: Check if we're in fullscreen mode (might indicate safe area needed)
+      if (
+        (window.navigator as any).standalone ||
+        window.matchMedia('(display-mode: standalone)').matches
+      ) {
+        detectedTop = Math.max(detectedTop, 24);
+        console.log('📱 Standalone mode detected, ensuring minimum 24px top safe area');
+      }
+
       if (detectedTop > 0) {
         console.log(`🔍 Alternative top safe area detected: ${detectedTop}px`);
         updateSafeArea({ top: detectedTop });
+      } else {
+        console.log('⚠️ No top safe area detected, using 0px');
       }
     };
 
