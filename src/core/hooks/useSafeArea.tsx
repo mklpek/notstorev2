@@ -58,19 +58,14 @@ export function useSafeAreaInsets() {
      */
     const updateCSSVariables = (insets: SafeAreaInsets) => {
       console.log('🎨 Updating CSS variables:', insets);
-      document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
-      document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${insets.right}px`);
-      document.documentElement.style.setProperty(
-        '--tg-safe-area-inset-bottom',
-        `${insets.bottom}px`
-      );
-      document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
+      const root = document.documentElement;
+      root.style.setProperty('--tg-safe-area-inset-top', `${insets.top}px`);
+      root.style.setProperty('--tg-safe-area-inset-right', `${insets.right}px`);
+      root.style.setProperty('--tg-safe-area-inset-bottom', `${insets.bottom}px`);
+      root.style.setProperty('--tg-safe-area-inset-left', `${insets.left}px`);
 
       // Also add CSS variable for content safe area (newly added)
-      document.documentElement.style.setProperty(
-        '--tg-content-safe-area-inset-top',
-        `${insets.top}px`
-      );
+      root.style.setProperty('--tg-content-safe-area-inset-top', `${insets.top}px`);
     };
 
     /**
@@ -98,27 +93,86 @@ export function useSafeAreaInsets() {
       }
     };
 
-    // ❶ Initial load - Check native env() support
+    // Force immediate Telegram WebApp expansion and safe area request
     try {
-      const computedStyle = getComputedStyle(document.documentElement);
-      const envTop = computedStyle.getPropertyValue('env(safe-area-inset-top)');
-      const envRight = computedStyle.getPropertyValue('env(safe-area-inset-right)');
-      const envBottom = computedStyle.getPropertyValue('env(safe-area-inset-bottom)');
-      const envLeft = computedStyle.getPropertyValue('env(safe-area-inset-left)');
+      console.log('🚀 Force expanding Telegram WebApp...');
+      wa.ready();
+      wa.expand();
 
-      console.log('🔍 Native env() values:', { envTop, envRight, envBottom, envLeft });
+      // For Telegram 8.0+: Request content safe area immediately and repeatedly
+      if (tgVer >= 8.0 && typeof wa.requestContentSafeArea === 'function') {
+        console.log('🔄 Requesting content safe area (Telegram 8.0+)');
+        wa.requestContentSafeArea();
 
-      const initialInsets: SafeAreaInsets = {
-        top: envTop ? parseInt(envTop, 10) || 0 : 0,
-        right: envRight ? parseInt(envRight, 10) || 0 : 0,
-        bottom: envBottom ? parseInt(envBottom, 10) || 0 : 0,
-        left: envLeft ? parseInt(envLeft, 10) || 0 : 0,
-      };
+        // Request again after short delay to ensure it's applied
+        setTimeout(() => {
+          try {
+            if (typeof wa.requestContentSafeArea === 'function') {
+              wa.requestContentSafeArea();
+              console.log('🔄 Second content safe area request sent');
+            }
+          } catch (e) {
+            console.log('❌ Second content safe area request failed:', e);
+          }
+        }, 100);
+      }
+    } catch (e) {
+      console.log('❌ Error expanding WebApp:', e);
+    }
 
-      console.log('📏 Initial insets from env():', initialInsets);
-      updateSafeArea(initialInsets);
-    } catch (error) {
-      console.log('❌ Error reading env() values:', error);
+    // ❶ Initial load - Check native env() support with retry mechanism
+    const readEnvValues = () => {
+      try {
+        const computedStyle = getComputedStyle(document.documentElement);
+        const envTop = computedStyle.getPropertyValue('env(safe-area-inset-top)');
+        const envRight = computedStyle.getPropertyValue('env(safe-area-inset-right)');
+        const envBottom = computedStyle.getPropertyValue('env(safe-area-inset-bottom)');
+        const envLeft = computedStyle.getPropertyValue('env(safe-area-inset-left)');
+
+        console.log('🔍 Native env() values:', { envTop, envRight, envBottom, envLeft });
+
+        const initialInsets: SafeAreaInsets = {
+          top: envTop ? parseInt(envTop, 10) || 0 : 0,
+          right: envRight ? parseInt(envRight, 10) || 0 : 0,
+          bottom: envBottom ? parseInt(envBottom, 10) || 0 : 0,
+          left: envLeft ? parseInt(envLeft, 10) || 0 : 0,
+        };
+
+        console.log('📏 Initial insets from env():', initialInsets);
+
+        // Only update if we got meaningful values
+        if (
+          initialInsets.top > 0 ||
+          initialInsets.bottom > 0 ||
+          initialInsets.left > 0 ||
+          initialInsets.right > 0
+        ) {
+          updateSafeArea(initialInsets);
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log('❌ Error reading env() values:', error);
+        return false;
+      }
+    };
+
+    // Try reading env() values immediately and with retries
+    let envReadSuccess = readEnvValues();
+    if (!envReadSuccess) {
+      // Retry after DOM is fully ready
+      setTimeout(() => {
+        console.log('🔄 Retrying env() values reading...');
+        envReadSuccess = readEnvValues();
+      }, 50);
+
+      // Another retry after longer delay
+      setTimeout(() => {
+        if (!envReadSuccess) {
+          console.log('🔄 Final attempt to read env() values...');
+          readEnvValues();
+        }
+      }, 200);
     }
 
     // ❷ Telegram WebApp safeAreaInset property (if available)

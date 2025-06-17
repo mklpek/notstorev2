@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Not Store - Telegram Mini App" />
 
@@ -61,6 +61,115 @@
           localStorage.setItem('telegram-app-version', currentVersion);
         }
       }
+    </script>
+
+    <!-- Telegram WebApp viewport ve safe area initialization -->
+    <script>
+      // Immediate safe area initialization before React loads
+      (function() {
+        // Initialize CSS variables immediately
+        const root = document.documentElement;
+        
+        // Check if we're in Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp) {
+          const wa = window.Telegram.WebApp;
+          
+          // Apply Telegram theme immediately
+          if (wa.themeParams) {
+            root.style.setProperty('--tg-theme-bg-color', wa.themeParams.bg_color || '#000000');
+            root.style.setProperty('--tg-theme-text-color', wa.themeParams.text_color || '#ffffff');
+            root.style.setProperty('--tg-theme-hint-color', wa.themeParams.hint_color || 'rgba(255, 255, 255, 0.5)');
+          }
+          
+          // Set initial safe area values
+          if (wa.safeAreaInset) {
+            root.style.setProperty('--tg-safe-area-inset-top', `${wa.safeAreaInset.top || 0}px`);
+            root.style.setProperty('--tg-safe-area-inset-right', `${wa.safeAreaInset.right || 0}px`);
+            root.style.setProperty('--tg-safe-area-inset-bottom', `${wa.safeAreaInset.bottom || 0}px`);
+            root.style.setProperty('--tg-safe-area-inset-left', `${wa.safeAreaInset.left || 0}px`);
+          }
+          
+          // Expand the WebApp immediately
+          try {
+            wa.ready();
+            wa.expand();
+            
+            // For Telegram 8.0+: Request content safe area immediately
+            const version = parseFloat(wa.version || '0');
+            if (version >= 8.0 && typeof wa.requestContentSafeArea === 'function') {
+              wa.requestContentSafeArea();
+            }
+          } catch (e) {
+            console.log('Error initializing Telegram WebApp:', e);
+          }
+        }
+        
+        // Fallback to CSS env() values
+        try {
+          const computedStyle = getComputedStyle(root);
+          const envTop = computedStyle.getPropertyValue('env(safe-area-inset-top)');
+          const envRight = computedStyle.getPropertyValue('env(safe-area-inset-right)');
+          const envBottom = computedStyle.getPropertyValue('env(safe-area-inset-bottom)');
+          const envLeft = computedStyle.getPropertyValue('env(safe-area-inset-left)');
+          
+          if (envTop) root.style.setProperty('--tg-safe-area-inset-top', envTop);
+          if (envRight) root.style.setProperty('--tg-safe-area-inset-right', envRight);
+          if (envBottom) root.style.setProperty('--tg-safe-area-inset-bottom', envBottom);
+          if (envLeft) root.style.setProperty('--tg-safe-area-inset-left', envLeft);
+        } catch (e) {
+          console.log('Error reading env() values:', e);
+        }
+      })();
+    </script>
+
+    <!-- Debug script for safe area troubleshooting -->
+    <script>
+      // Debug safe area values after page load
+      window.addEventListener('load', function() {
+        setTimeout(() => {
+          console.log('=== SAFE AREA DEBUG INFO ===');
+          const root = document.documentElement;
+          const computedStyle = getComputedStyle(root);
+          
+          // Check CSS variables
+          console.log('CSS Variables:');
+          console.log('  --tg-safe-area-inset-top:', computedStyle.getPropertyValue('--tg-safe-area-inset-top'));
+          console.log('  --tg-safe-area-inset-bottom:', computedStyle.getPropertyValue('--tg-safe-area-inset-bottom'));
+          console.log('  --tg-safe-area-inset-left:', computedStyle.getPropertyValue('--tg-safe-area-inset-left'));
+          console.log('  --tg-safe-area-inset-right:', computedStyle.getPropertyValue('--tg-safe-area-inset-right'));
+          
+          // Check env() values
+          console.log('Native env() values:');
+          console.log('  env(safe-area-inset-top):', computedStyle.getPropertyValue('env(safe-area-inset-top)'));
+          console.log('  env(safe-area-inset-bottom):', computedStyle.getPropertyValue('env(safe-area-inset-bottom)'));
+          console.log('  env(safe-area-inset-left):', computedStyle.getPropertyValue('env(safe-area-inset-left)'));
+          console.log('  env(safe-area-inset-right):', computedStyle.getPropertyValue('env(safe-area-inset-right)'));
+          
+          // Check Telegram WebApp API
+          if (window.Telegram && window.Telegram.WebApp) {
+            const wa = window.Telegram.WebApp;
+            console.log('Telegram WebApp Info:');
+            console.log('  Version:', wa.version);
+            console.log('  Platform:', wa.platform);
+            console.log('  ViewportHeight:', wa.viewportHeight);
+            console.log('  isExpanded:', wa.isExpanded);
+            console.log('  SafeAreaInset:', wa.safeAreaInset);
+          }
+          
+          // Check viewport
+          console.log('Viewport Info:');
+          console.log('  window.innerHeight:', window.innerHeight);
+          console.log('  window.innerWidth:', window.innerWidth);
+          console.log('  screen.height:', screen.height);
+          console.log('  screen.width:', screen.width);
+          if (window.visualViewport) {
+            console.log('  visualViewport.height:', window.visualViewport.height);
+            console.log('  visualViewport.width:', window.visualViewport.width);
+          }
+          
+          console.log('=== END SAFE AREA DEBUG ===');
+        }, 1000);
+      });
     </script>
   </body>
 </html>
