@@ -10,7 +10,21 @@ import { TonConnectUI } from '@tonconnect/ui';
 import type { Locales } from '@tonconnect/ui';
 import { MANIFEST_URL, TON_CONNECT_UI_CONFIG, WALLETS_LIST_URL } from './config';
 import { TonConnectUIContext } from './TonConnectContext';
-import { setBlur } from './utils/dom';
+
+/**
+ * Helper function that applies blur effect to HTMLElement
+ * Sets background color and backdrop filter with WebKit prefix support
+ * @param el - HTML element to apply blur effect to
+ * @param color - Background color for the blur effect (default: semi-transparent black)
+ */
+function setBlur(el: HTMLElement, color: string = 'rgba(0, 0, 0, 0.7)'): void {
+  el.style.backgroundColor = color;
+  el.style.backdropFilter = 'blur(8px)';
+
+  // Type extension for WebKit prefix
+  const css = el.style as CSSStyleDeclaration & { webkitBackdropFilter?: string };
+  css.webkitBackdropFilter = 'blur(8px)';
+}
 
 interface TonConnectProviderProps {
   children: ReactNode;

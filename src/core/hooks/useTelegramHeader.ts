@@ -6,7 +6,7 @@
 
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getTgVersion, safeCall } from '../utils/telegramHelpers';
+import { getTgVersion, safeCall } from '../../utils/telegramHelpers';
 
 /**
  * Custom hook for managing Telegram WebApp header functionality

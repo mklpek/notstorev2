@@ -155,7 +155,7 @@ const Footer: React.FC<FooterProps> = ({ product }) => {
             </div>
           </button>
           <button className={`${styles.button} ${styles.buyNow}`} onClick={handleBuyNow}>
-            <div className={styles.labels}>Buy lor</div>
+            <div className={styles.labels}>Buy now</div>
           </button>
         </div>
       </div>
