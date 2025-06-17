@@ -7,7 +7,6 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { getTgVersion, safeCall } from '../../utils/telegramHelpers';
-import { keepIfPositive } from '../../utils/telegramHelpers';
 
 // Safe Area Context type
 interface SafeAreaInsets {
@@ -126,14 +125,10 @@ export function useSafeAreaInsets() {
     if (wa.safeAreaInset) {
       console.log('📱 Telegram safeAreaInset:', wa.safeAreaInset);
       updateSafeArea({
-        ...(keepIfPositive(wa.safeAreaInset.top) !== undefined && { top: wa.safeAreaInset.top }),
-        ...(keepIfPositive(wa.safeAreaInset.right) !== undefined && {
-          right: wa.safeAreaInset.right,
-        }),
-        ...(keepIfPositive(wa.safeAreaInset.bottom) !== undefined && {
-          bottom: wa.safeAreaInset.bottom,
-        }),
-        ...(keepIfPositive(wa.safeAreaInset.left) !== undefined && { left: wa.safeAreaInset.left }),
+        top: wa.safeAreaInset.top || 0,
+        right: wa.safeAreaInset.right || 0,
+        bottom: wa.safeAreaInset.bottom || 0,
+        left: wa.safeAreaInset.left || 0,
       });
     } else {
       console.log('⚠️ Telegram safeAreaInset not available');
@@ -161,14 +156,10 @@ export function useSafeAreaInsets() {
 
       if (data) {
         const updates: Partial<SafeAreaInsets> = {};
-        if (data.top !== undefined && keepIfPositive(data.top) !== undefined)
-          updates.top = data.top;
-        if (data.right !== undefined && keepIfPositive(data.right) !== undefined)
-          updates.right = data.right;
-        if (data.bottom !== undefined && keepIfPositive(data.bottom) !== undefined)
-          updates.bottom = data.bottom;
-        if (data.left !== undefined && keepIfPositive(data.left) !== undefined)
-          updates.left = data.left;
+        if (data.top !== undefined) updates.top = data.top;
+        if (data.right !== undefined) updates.right = data.right;
+        if (data.bottom !== undefined) updates.bottom = data.bottom;
+        if (data.left !== undefined) updates.left = data.left;
 
         updateSafeArea(updates);
       }

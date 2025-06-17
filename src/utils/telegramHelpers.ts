@@ -76,10 +76,3 @@ export function shareProduct(prod: any) {
     safeCall('openLink', link, { tryInstantView: false });
   }
 }
-
-/**
- * Sadece pozitif değerleri korur, sıfır veya negatif değerleri undefined olarak döndürür
- * @param v - Kontrol edilecek değer
- * @returns Pozitif ise değeri, değilse undefined
- */
-export const keepIfPositive = (v?: number) => (typeof v === 'number' && v > 0 ? v : undefined);
