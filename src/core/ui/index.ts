@@ -6,6 +6,8 @@ export { default as ProgressiveImage } from './ProgressiveImage';
 export { default as BasketIcon } from './Icons/BasketIcon';
 export { default as CartTagIcon } from './Icons/CartTagIcon';
 export { default as DeleteIcon } from './Icons/DeleteIcon';
+export { default as MinusIcon } from './Icons/MinusIcon';
+export { default as PlusIcon } from './Icons/PlusIcon';
 export { default as SearchIcon } from './Icons/SearchIcon';
 export { default as ShareIcon } from './Icons/ShareIcon';
 export { default as StoreIcon } from './Icons/StoreIcon';
